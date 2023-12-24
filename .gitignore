@@ -1,2 +1,6 @@
 mnist_test.csv
 mnist_train.csv
+X_test.csv
+X_train.csv
+Y_test.csv
+Y_train.csv
