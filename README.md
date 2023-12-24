@@ -1,6 +1,8 @@
 # Deep Learning from Scratch in C Accelerated by CUDA
 This repository includes the code for implementing a Deep Neural Network from scratch in C accelerated by CUDA.The problem being solved is the training a Neural Network to classifiy handwritten digits from the MNIST dataset. A detailed explanation of the underlying linear algebra and calculus behing forward and backward propagation is provided below.
 
+The dataset used for this project can be found here: https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
+
 ## Forward Propagation
 
 The forward propagation algorithm has the following steps:
