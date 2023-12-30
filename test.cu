@@ -19,31 +19,20 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////
 // Functions for reading data from csv files
 // Loading and Preview Functions
-void read_csv(const char* filename, Matrix* matrix, int num_rows, int num_cols) {
+void read_csv(const char* filename, Matrix* matrix) {
     // Open the file with the filename provided.
     // 'r' opens the file for reading.
     FILE* file = fopen(filename, "r");
 
-    // Allocate memory for 2D Array
-    float** data = (float**)malloc(num_rows * sizeof(float*));
-    for (int row = 0; row < num_rows; ++row) {
-        data[row] = (float*)malloc(num_cols * sizeof(float));
-    }
-
     // Iterate over the number of rows
-    for (int row = 0; row < num_rows; ++row) {
+    for (int row = 0; row < matrix->rows; ++row) {
         // Iterate over the number of columns
-        for (int col = 0; col < num_cols; ++col) {
+        for (int col = 0; col < matrix->cols; ++col) {
             // Reads a float value from the file and stores
             // it in the data array at the correct position.
-            fscanf(file, "%f,", &data[row][col]);
+	    fscanf(file, "%f,", &matrix->data[row][col]);
         }
     }
-
-    // Store the data, rows and cols in the Matrix struct
-    matrix->data = data;
-    matrix->rows = num_rows;
-    matrix->cols = num_cols;
 
     // Close the file
     fclose(file);
@@ -52,9 +41,6 @@ void read_csv(const char* filename, Matrix* matrix, int num_rows, int num_cols) 
 ////////////////////////////////////////////////////////////////////////
 // Functions for randomly intializing vectors and matrices
 void random_vector(Vector* v) {
-    // Allocate memory for vector
-    v->data = (float*)malloc(v->rows * sizeof(float));
-
     // Iterate over the rows
     for (int i = 0; i < v->rows; i++) {
 	// Generate random float between -0.5 and 0.5
@@ -66,12 +52,6 @@ void random_vector(Vector* v) {
 }
 
 void random_matrix(Matrix* m) {
-    // Allocate memory for matrix
-    m->data = (float**)malloc(m->rows * sizeof(float*));
-    for (int i = 0; i < m->rows; i++) {
-	m->data[i] = (float*)malloc(m->cols * sizeof(float));
-    }
-
     // Iterate over the rows
     for (int i = 0; i < m->rows; i++) {
 	// Iterate over the columns
@@ -184,6 +164,28 @@ void preview_image(Matrix* m, int row_index, int image_size_x, int image_size_y)
 }
 
 ////////////////////////////////////////////////////////////////////////
+// Functions for initializing vectors and matrices
+void initialize_vector(Vector* v, int rows) {
+    // Allocate memory for vector
+    v->data = (float*)malloc(rows * sizeof(float));
+
+    // Set number of rows
+    v->rows = rows;
+}
+
+void initialize_matrix(Matrix* m, int rows, int cols) {
+    // Allocate memory for matrix
+    m->data = (float**)malloc(rows * sizeof(float*));
+    for (int i = 0; i < rows; i++) {
+	m->data[i] = (float*)malloc(cols * sizeof(float));
+    }
+
+    // Set number of rows and columns
+    m->rows = rows;
+    m->cols = cols;
+}
+
+////////////////////////////////////////////////////////////////////////
 // Functions to free memory allocated for vectors and matrices
 void free_vector(Vector* v) {
     free(v->data);
@@ -218,15 +220,6 @@ void normalize_matrix(Matrix* m, float min, float max) {
 }
 
 void transpose_matrix(Matrix* original, Matrix* transpose) {
-    // Allocate memory for transposed matrix
-    transpose->data = (float**)malloc(original->cols * sizeof(float*));
-    for (int i = 0; i < original->cols; i++) {
-	transpose->data[i] = (float*)malloc(original->rows * sizeof(float));
-    }
-    // Set number of rows and columns
-    transpose->rows = original->cols;
-    transpose->cols = original->rows;
-
     // Transpose matrix
     for(int i = 0; i < original->rows; ++i) {
         for(int j = 0; j < original->cols; ++j) {
@@ -236,17 +229,6 @@ void transpose_matrix(Matrix* original, Matrix* transpose) {
 }
 
 void matrix_multiply(Matrix* m1, Matrix* m2, Matrix* result) {
-    // Allocate memory for result matrix
-    result->data = (float**)malloc(m1->rows * sizeof(float*));
-    for (int i = 0; i < m1->rows; i++) {
-	result->data[i] = (float*)malloc(m2->cols * sizeof(float));
-    }
-
-    // Set number of rows and columns
-    result->rows = m1->rows;
-    result->cols = m2->cols;
-
-    // Multiply matrices
     // Iterate over the rows
     for(int i = 0; i < m1->rows; ++i) {
 	// Iterate over the columns
@@ -262,6 +244,17 @@ void matrix_multiply(Matrix* m1, Matrix* m2, Matrix* result) {
     }
 }
 
+void matrix_subtract(Matrix* m1, Matrix* m2, Matrix* result) {
+    // Iterate over the rows
+    for (int i = 0; i < m1->rows; i++) {
+	// Iterate over the columns
+	for (int j = 0; j < m1->cols; j++) {
+	    // Subtract matrix element from matrix element
+	    result->data[i][j] = m1->data[i][j] - m2->data[i][j];
+	}
+    }
+}
+
 void add_vector_to_matrix(Matrix* m, Vector* v) {
     // Iterate over the columns
     for (int j = 0; j < m->cols; j++) {
@@ -273,20 +266,34 @@ void add_vector_to_matrix(Matrix* m, Vector* v) {
     }
 }
 
+void argmax(Matrix* m, Vector* v) {
+    // Iterate over the columns
+    for (int j = 0; j < m->cols; j++) {
+	// Set max to first element
+	float max = m->data[0][j];
+	// Iterate over the rows
+	for (int i = 0; i < m->rows; i++) {
+	    // If current element is greater than max
+	    if (m->data[i][j] > max) {
+		// Set max to current element
+		max = m->data[i][j];
+	    }
+	}
+	// Iterate over the rows
+	for (int i = 0; i < m->rows; i++) {
+	    // If current element is equal to max
+	    if (m->data[i][j] == max) {
+		// Set vector element to row index
+		v->data[j] = i;
+	    }
+	}
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////
 // Activation Functions
 void ReLU(Matrix* m, Matrix* a) {
-    // Allocate memory for result matrix
-    a->data = (float**)malloc(m->rows * sizeof(float*));
-    for (int i = 0; i < m->rows; i++) {
-	a->data[i] = (float*)malloc(m->cols * sizeof(float));
-    }
-
-    // Set number of rows and columns
-    a->rows = m->rows;
-    a->cols = m->cols;
-
-    // Apply ReLU to matrix
     // Iterate over the rows
     for (int i = 0; i < m->rows; i++) {
 	// Iterate over the columns
@@ -297,42 +304,132 @@ void ReLU(Matrix* m, Matrix* a) {
     }
 }
 
+void softmax(Matrix* m, Matrix* a) {
+    // Loop over the columns
+    for (int i = 0; i < m->cols; i++) {
+	// Calculate the sum of the exponentials
+	// for the current column
+	float sum = 0;
+	for (int j = 0; j < m->rows; j++) {
+	    sum += exp(m->data[j][i]);
+	}
+	// Loop through each row
+	for (int j = 0; j < m->rows; j++) {
+	    // Apply Softmax to matrix element
+	    a->data[j][i] = exp(m->data[j][i]) / sum;
+	}
+    }
+
+}
+
 ////////////////////////////////////////////////////////////////////////
 // Forward Propagation Function
 void forward_propagation(Matrix* X_T,
 		Matrix* W1, Vector* b1,
 		Matrix* WOutput, Vector* bOutput,
 		Matrix* Z1, Matrix* A1, Matrix* ZOutput, Matrix* AOutput) {
-    printf("Forward Propagation:\n");
-
     // Multiply W1 and X_T
     matrix_multiply(W1, X_T, Z1);
-    printf("Z1:\n");
-    preview_matrix(Z1, 2);
+    // printf("Z1:\n");
+    // preview_matrix(Z1, 2);
 
     // Add b1 to Z1
     add_vector_to_matrix(Z1, b1);
-    printf("Z1:\n");
-    preview_matrix(Z1, 2);
+    // printf("Z1:\n");
+    // preview_matrix(Z1, 2);
 
     // Apply ReLU to Z1
     ReLU(Z1, A1);
-    printf("A1:\n");
-    preview_matrix(A1, 2);
+    // printf("A1:\n");
+    // preview_matrix(A1, 2);
 
     // Multiply WOutput and A1
     matrix_multiply(WOutput, A1, ZOutput);
-    printf("ZOutput:\n");
-    preview_matrix(ZOutput, 2);
+    // printf("ZOutput:\n");
+    // preview_matrix(ZOutput, 2);
 
     // Add bOutput to ZOutput
     add_vector_to_matrix(ZOutput, bOutput);
-    printf("ZOutput:\n");
-    preview_matrix(ZOutput, 2);
+    // printf("ZOutput:\n");
+    // preview_matrix(ZOutput, 2);
 
     // Apply Softmax to ZOutput
+    softmax(ZOutput, AOutput);
+    // printf("AOutput:\n");
+    // preview_matrix(AOutput, 2);
 
 }
+
+////////////////////////////////////////////////////////////////////////
+// Backward Propagation Function
+void backward_propagation(Matrix* X_T, Matrix* Y_T,
+			  Matrix* W1, Vector* b1,
+			  Matrix* WOutput, Vector* bOutput,
+			  Matrix* Z1, Matrix* A1,
+			  Matrix* ZOutput, Matrix* AOutput,
+			  Matrix* dW1, Vector* db1,
+			  Matrix* dWOutput, Vector* dbOutput,
+			  Matrix* dZ1, Matrix* dZOutput) {
+    printf("Backward Propagation:\n");
+
+    // Subtract Y_T from AOutput
+    printf("AOutput:\n");
+    preview_matrix(AOutput, 2);
+    matrix_subtract(AOutput, Y_T, dZOutput);
+    preview_matrix(Y_T, 2);
+    matrix_subtract(AOutput, Y_T, dZOutput);
+    preview_matrix(dZOutput, 2);
+}
+
+////////////////////////////////////////////////////////////////////////
+// Prediction Function
+void predict(Matrix* AOutput, Vector* Y_hat,
+	     Matrix* X, int row_index, int image_size_x, int image_size_y) {
+    printf("Prediction:\n");
+
+    // Preview the image for the row_index
+    printf("Image:\n");
+    preview_image(X, row_index, image_size_x, image_size_y);
+
+    // Print the prediction
+    argmax(AOutput, Y_hat);
+    printf("Prediction: %d\n", (int)Y_hat->data[row_index]);
+    printf("\n");
+}
+
+////////////////////////////////////////////////////////////////////////
+// Training Function
+void train(Matrix* X_T, Matrix* Y_T,
+	   Matrix* W1, Vector* b1,
+	   Matrix* WOutput, Vector* bOutput,
+	   Matrix* Z1, Matrix* A1, Matrix* ZOutput, Matrix* AOutput,
+	   Matrix* dW1, Vector* db1, Matrix* dWOutput, Vector* dbOutput,
+	   Matrix* dZ1, Matrix* dZOutput,
+	   int epochs, float learning_rate) {
+    printf("Training:\n");
+
+    // Loop over the epochs
+    for (int epoch = 0; epoch < epochs; epoch++) {
+	printf("Epoch %d:\n", epoch);
+
+	// Forward Propagation
+	forward_propagation(X_T,
+			W1, b1,
+			WOutput, bOutput,
+			Z1, A1, ZOutput, AOutput);
+
+	// Backward Propagation
+	backward_propagation(X_T, Y_T,
+			     W1, b1,
+			     WOutput, bOutput,
+			     Z1, A1,
+			     ZOutput, AOutput,
+			     dW1, db1,
+			     dWOutput, dbOutput,
+			     dZ1, dZOutput);
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 // Main function
@@ -343,25 +440,29 @@ int main() {
 
     // Read in data from X_train.csv
     Matrix X_train;
-    read_csv("X_train.csv", &X_train, 60000, 784);
+    initialize_matrix(&X_train, 60000, 784);
+    read_csv("X_train.csv", &X_train);
     printf("X_train:\n");
     preview_matrix(&X_train, 2);
 
     // Read in data from Y_train.csv
     Matrix Y_train;
-    read_csv("Y_train.csv", &Y_train, 60000, 10);
+    initialize_matrix(&Y_train, 60000, 10);
+    read_csv("Y_train.csv", &Y_train);
     printf("Y_train:\n");
     preview_matrix(&Y_train, 2);
 
     // Read in data from X_test.csv
     Matrix X_test;
-    read_csv("X_test.csv", &X_test, 10000, 784);
+    initialize_matrix(&X_test, 10000, 784);
+    read_csv("X_test.csv", &X_test);
     printf("X_test:\n");
     preview_matrix(&X_test, 2);
 
     // Read in data from Y_test.csv
     Matrix Y_test;
-    read_csv("Y_test.csv", &Y_test, 10000, 10);
+    initialize_matrix(&Y_test, 10000, 10);
+    read_csv("Y_test.csv", &Y_test);
     printf("Y_test:\n");
     preview_matrix(&Y_test, 2);
 
@@ -371,56 +472,105 @@ int main() {
 
     // Transpose and normalize X_train
     Matrix X_train_T;
+    initialize_matrix(&X_train_T, X_train.cols, X_train.rows);
     transpose_matrix(&X_train, &X_train_T);
     normalize_matrix(&X_train_T, 0, 255);
-    printf("X_train_T:\n");
-    preview_matrix(&X_train_T, 2);
+    //printf("X_train_T:\n");
+    // preview_matrix(&X_train_T, 2);
+
+    // Transpose Y_train
+    Matrix Y_train_T;
+    initialize_matrix(&Y_train_T, Y_train.cols, Y_train.rows);
+    transpose_matrix(&Y_train, &Y_train_T);
+    // printf("Y_train_T:\n");
+    // preview_matrix(&Y_train_T, 2);
 
     // Transpose and normalize X_test
     Matrix X_test_T;
+    initialize_matrix(&X_test_T, X_test.cols, X_test.rows);
     transpose_matrix(&X_test, &X_test_T);
     normalize_matrix(&X_test_T, 0, 255);
-    printf("X_test_T:\n");
-    preview_matrix(&X_test_T, 2);
+    // printf("X_test_T:\n");
+    // preview_matrix(&X_test_T, 2);
+
+    // Transpose Y_test
+    Matrix Y_test_T;
+    initialize_matrix(&Y_test_T, Y_test.cols, Y_test.rows);
+    transpose_matrix(&Y_test, &Y_test_T);
+    // printf("Y_test_T:\n");
+    // preview_matrix(&Y_test_T, 2);
 
     // Initialize Layer 1 Weights
     Matrix W1;
-    W1.rows = 10;
-    W1.cols = 784;
+    initialize_matrix(&W1, 10, 784);
     random_matrix(&W1);
-    printf("W1:\n");
-    preview_matrix(&W1, 2);
+    // printf("W1:\n");
+    // preview_matrix(&W1, 2);
 
     // Initialize Layer 1 Biases
     Vector b1;
-    b1.rows = 10;
+    initialize_vector(&b1, 10);
     random_vector(&b1);
-    printf("b1:\n");
-    preview_vector(&b1, 2);
+    // printf("b1:\n");
+    // preview_vector(&b1, 2);
 
     // Initialize Output Layer Weights
     Matrix WOutput;
-    WOutput.rows = 10;
-    WOutput.cols = 10;
+    initialize_matrix(&WOutput, 10, 10);
     random_matrix(&WOutput);
-    printf("WOutput:\n");
-    preview_matrix(&WOutput, 2);
+    // printf("WOutput:\n");
+    // preview_matrix(&WOutput, 2);
 
     // Initialize Output Layer Biases
     Vector bOutput;
-    bOutput.rows = 10;
+    initialize_vector(&bOutput, 10);
     random_vector(&bOutput);
-    printf("bOutput:\n");
-    preview_vector(&bOutput, 2);
+    // printf("bOutput:\n");
+    // preview_vector(&bOutput, 2);
 
     // Initialize Z1, A1, ZOutput, AOutput
     Matrix Z1;
+    initialize_matrix(&Z1, 10, 60000);
     Matrix A1;
+    initialize_matrix(&A1, 10, 60000);
     Matrix ZOutput;
+    initialize_matrix(&ZOutput, 10, 60000);
     Matrix AOutput;
+    initialize_matrix(&AOutput, 10, 60000);
 
     // Forward Propagation
-    forward_propagation(&X_train_T, &W1, &b1, &WOutput, &bOutput, &Z1, &A1, &ZOutput, &AOutput);
+    // forward_propagation(&X_train_T,
+    // 		    &W1, &b1, &WOutput, &bOutput,
+    // 		    &Z1, &A1, &ZOutput, &AOutput);
+
+    // Make Prediction with Untrained Model
+    // Vector Y_hat;
+    // initialize_vector(&Y_hat, 60000);
+    // predict(&AOutput, &Y_hat, &X_train, 0, 28, 28);
+
+    // Initialize dW1, db1,
+    // 	          dWOutput, dbOutput,
+    //             dZ1, dZOutput
+    Matrix dW1;
+    initialize_matrix(&dW1, W1.rows, W1.cols);
+    Vector db1;
+    initialize_vector(&db1, b1.rows);
+    Matrix dZ1;
+    initialize_matrix(&dZ1, Z1.rows, Z1.cols);
+    Matrix dWOutput;
+    initialize_matrix(&dWOutput, WOutput.rows, WOutput.cols);
+    Vector dbOutput;
+    initialize_vector(&dbOutput, bOutput.rows);
+    Matrix dZOutput;
+    initialize_matrix(&dZOutput, ZOutput.rows, ZOutput.cols);
+
+    // Train Model
+    train(&X_train_T, &Y_train_T,
+	  &W1, &b1,&WOutput, &bOutput,
+	  &Z1, &A1, &ZOutput, &AOutput,
+	  &dW1, &db1, &dWOutput, &dbOutput,
+          &dZ1, &dZOutput,
+	  1, 0.01);
 
 
     // Free memory
