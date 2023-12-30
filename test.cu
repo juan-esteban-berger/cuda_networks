@@ -266,6 +266,30 @@ void add_vector_to_matrix(Matrix* m, Vector* v) {
     }
 }
 
+void divide_matrix_by_scalar(Matrix* m, float scalar) {
+    // Iterate over the rows
+    for (int i = 0; i < m->rows; i++) {
+	// Iterate over the columns
+	for (int j = 0; j < m->cols; j++) {
+	    // Divide matrix element by scalar
+	    m->data[i][j] /= scalar;
+	}
+    }
+}
+
+void sum_matrix(Matrix* m, float* result) {
+    // Set result to 0
+    *result = 0;
+    // Iterate over the rows
+    for (int i = 0; i < m->rows; i++) {
+	// Iterate over the columns
+	for (int j = 0; j < m->cols; j++) {
+	    // Add matrix element to result
+	    *result += m->data[i][j];
+	}
+    }
+}
+
 void argmax(Matrix* m, Vector* v) {
     // Iterate over the columns
     for (int j = 0; j < m->cols; j++) {
@@ -300,6 +324,21 @@ void ReLU(Matrix* m, Matrix* a) {
 	for (int j = 0; j < m->cols; j++) {
 	    // Apply ReLU to matrix element
 	    a->data[i][j] = fmax(0, m->data[i][j]);
+	}
+    }
+}
+
+void ReLU_derivative(Matrix* m, Matrix* a) {
+    // Iterate over the rows
+    for (int i = 0; i < m->rows; i++) {
+	// Iterate over the columns
+	for (int j = 0; j < m->cols; j++) {
+	    // Apply ReLU derivative to matrix element
+	    if (m->data[i][j] > 0) {
+		a->data[i][j] = 1;
+	    } else {
+		a->data[i][j] = 0;
+	    }
 	}
     }
 }
@@ -365,20 +404,61 @@ void forward_propagation(Matrix* X_T,
 void backward_propagation(Matrix* X_T, Matrix* Y_T,
 			  Matrix* W1, Vector* b1,
 			  Matrix* WOutput, Vector* bOutput,
-			  Matrix* Z1, Matrix* A1,
+			  Matrix* Z1, Matrix* Z1_deac, Matrix* A1,
 			  Matrix* ZOutput, Matrix* AOutput,
-			  Matrix* dW1, Vector* db1,
-			  Matrix* dWOutput, Vector* dbOutput,
-			  Matrix* dZ1, Matrix* dZOutput) {
+			  Matrix* dW1, float* db1,
+			  Matrix* dWOutput, float* dbOutput,
+			  Matrix* dZ1, Matrix* dZOutput,
+			  Matrix* A1_T, Matrix* X) {
     printf("Backward Propagation:\n");
 
     // Subtract Y_T from AOutput
     printf("AOutput:\n");
     preview_matrix(AOutput, 2);
     matrix_subtract(AOutput, Y_T, dZOutput);
+    printf("dZOutput:\n");
     preview_matrix(Y_T, 2);
     matrix_subtract(AOutput, Y_T, dZOutput);
+    printf("dZOutput:\n");
     preview_matrix(dZOutput, 2);
+
+    // Transpose A1
+    transpose_matrix(A1, A1_T);
+    printf("A1_T:\n");
+    preview_matrix(A1_T, 2);
+
+    // Multiply dZOutput and A1_T
+    matrix_multiply(dZOutput, A1_T, dWOutput);
+    printf("dWOutput:\n");
+    preview_matrix(dWOutput, 2);
+
+    // Divide dWOutput by number of training examples
+    divide_matrix_by_scalar(dWOutput, AOutput->cols);
+    printf("dWOutput:\n");
+    preview_matrix(dWOutput, 2);
+
+    // Sum dZOutput
+    sum_matrix(dZOutput, dbOutput);
+    printf("dbOutput:\n");
+    printf("%f\n", *dbOutput);
+    printf("\n");
+
+    // Divide dbOutput by number of training examples
+    *dbOutput /= AOutput->cols;
+    printf("dbOutput:\n");
+    printf("%f\n", *dbOutput);
+    printf("\n");
+
+    // Multiply WOutput_T and dZOutput
+
+    // Pass Z1 through ReLU derivative
+    ReLU_derivative(Z1, Z1_deac);
+    printf("Z1_deac:\n");
+    preview_matrix(Z1_deac, 2);
+
+    // Multiply ...
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -402,9 +482,11 @@ void predict(Matrix* AOutput, Vector* Y_hat,
 void train(Matrix* X_T, Matrix* Y_T,
 	   Matrix* W1, Vector* b1,
 	   Matrix* WOutput, Vector* bOutput,
-	   Matrix* Z1, Matrix* A1, Matrix* ZOutput, Matrix* AOutput,
-	   Matrix* dW1, Vector* db1, Matrix* dWOutput, Vector* dbOutput,
+	   Matrix* Z1, Matrix* Z1_deac,
+	   Matrix* A1, Matrix* ZOutput, Matrix* AOutput,
+	   Matrix* dW1, float* db1, Matrix* dWOutput, float* dbOutput,
 	   Matrix* dZ1, Matrix* dZOutput,
+	   Matrix* A1_T, Matrix* X,
 	   int epochs, float learning_rate) {
     printf("Training:\n");
 
@@ -422,11 +504,12 @@ void train(Matrix* X_T, Matrix* Y_T,
 	backward_propagation(X_T, Y_T,
 			     W1, b1,
 			     WOutput, bOutput,
-			     Z1, A1,
+			     Z1, Z1_deac, A1,
 			     ZOutput, AOutput,
 			     dW1, db1,
 			     dWOutput, dbOutput,
-			     dZ1, dZOutput);
+			     dZ1, dZOutput,
+			     A1_T, X);
     }
 }
 
@@ -538,6 +621,10 @@ int main() {
     Matrix AOutput;
     initialize_matrix(&AOutput, 10, 60000);
 
+    // Initialize Z1_deac
+    Matrix Z1_deac;
+    initialize_matrix(&Z1_deac, Z1.rows, Z1.cols);
+
     // Forward Propagation
     // forward_propagation(&X_train_T,
     // 		    &W1, &b1, &WOutput, &bOutput,
@@ -553,23 +640,33 @@ int main() {
     //             dZ1, dZOutput
     Matrix dW1;
     initialize_matrix(&dW1, W1.rows, W1.cols);
-    Vector db1;
-    initialize_vector(&db1, b1.rows);
     Matrix dZ1;
     initialize_matrix(&dZ1, Z1.rows, Z1.cols);
     Matrix dWOutput;
     initialize_matrix(&dWOutput, WOutput.rows, WOutput.cols);
-    Vector dbOutput;
-    initialize_vector(&dbOutput, bOutput.rows);
     Matrix dZOutput;
     initialize_matrix(&dZOutput, ZOutput.rows, ZOutput.cols);
+
+    // Initialize db1 and dbOutput
+    float db1;
+    float dbOutput;
+
+    // Initialize A1_T
+    Matrix A1_T;
+    initialize_matrix(&A1_T, A1.cols, A1.rows);
+    
+    // Initialize X_T_original
+    Matrix X_T_original;
+    initialize_matrix(&X_T_original, X_train_T.cols, X_train_T.rows);
 
     // Train Model
     train(&X_train_T, &Y_train_T,
 	  &W1, &b1,&WOutput, &bOutput,
-	  &Z1, &A1, &ZOutput, &AOutput,
+	  &Z1, &Z1_deac,
+	  &A1, &ZOutput, &AOutput,
 	  &dW1, &db1, &dWOutput, &dbOutput,
           &dZ1, &dZOutput,
+	  &A1_T, &X_T_original,
 	  1, 0.01);
 
 
