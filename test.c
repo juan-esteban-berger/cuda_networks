@@ -618,30 +618,10 @@ void train(Matrix* X_T, Matrix* Y_T,
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Prediction Function
-void predict(Matrix* AOutput, Vector* Y_hat,
-	     Matrix* X, int row_index, int image_size_x, int image_size_y) {
-    // Initialize Z1, AT1, ZOutput, AOutput depending on the
-    // size of testing data...
-    // // Forward Propagation
-    // forward_propagation(&X_train_T,
-    // 		    &W1, &b1, &WOutput, &bOutput,
-    // 		    &Z1, &A1, &ZOutput, &AOutput);
+// Function to make predictions
 
-
-
-    // Create Separate Function to Preview Predictions...
-    printf("Prediction:\n");
-
-    // Preview the image for the row_index
-    printf("Image:\n");
-    preview_image(X, row_index, image_size_x, image_size_y);
-
-    // Print the prediction
-    argmax(AOutput, Y_hat);
-    printf("Prediction: %d\n", (int)Y_hat->data[row_index]);
-    printf("\n");
-}
+////////////////////////////////////////////////////////////////////////
+// Functions to compare actual and predicted values
 
 ////////////////////////////////////////////////////////////////////////
 // Main function
@@ -693,13 +673,19 @@ int main() {
     printf("First image from X_train:\n");
     preview_image(&X_train, 0, 28, 28);
 
+    // Normalize X_train and X_test
+    normalize_matrix(&X_train, 0, 255);
+    normalize_matrix(&X_test, 0, 255);
+
+
 ////////////////////////////////////////////////////////////////////////
-// Data Preparation
+// Data Preparation (this can go inside of the train/predict functions)
+    // Include this code, don't need to include code to transpose again
+    // since we can also use original argument
     // Transpose and normalize X_train
     Matrix X_train_T;
     initialize_matrix(&X_train_T, X_train.cols, X_train.rows);
     transpose_matrix(&X_train, &X_train_T);
-    normalize_matrix(&X_train_T, 0, 255);
 
     // Transpose Y_train
     Matrix Y_train_T;
@@ -710,7 +696,6 @@ int main() {
     Matrix X_test_T;
     initialize_matrix(&X_test_T, X_test.cols, X_test.rows);
     transpose_matrix(&X_test, &X_test_T);
-    normalize_matrix(&X_test_T, 0, 255);
 
     // Transpose Y_test
     Matrix Y_test_T;
@@ -746,24 +731,7 @@ int main() {
 	  100, 0.1);
 
 ////////////////////////////////////////////////////////////////////////
-// Test Model
-    // Predict Function...
-
-    // // Forward Propagation
-    // forward_propagation(&X_train_T,
-    // 		    &W1, &b1, &WOutput, &bOutput,
-    // 		    &Z1, &A1, &ZOutput, &AOutput);
-
-    // // Show images and Predicted Values
-    // predict(&AOutput, &Y_hat, &X_train, 0, 28, 28);
-    // predict(&AOutput, &Y_hat, &X_train, 33, 28, 28);
-    // predict(&AOutput, &Y_hat, &X_train, 10, 28, 28);
-    // predict(&AOutput, &Y_hat, &X_train, 70, 28, 28);
-    // predict(&AOutput, &Y_hat, &X_train, 500, 28, 28);
-    // predict(&AOutput, &Y_hat, &X_train, 740, 28, 28);
-    // predict(&AOutput, &Y_hat, &X_train, 123, 28, 28);
-    // predict(&AOutput, &Y_hat, &X_train, 55, 28, 28);
-    // predict(&AOutput, &Y_hat, &X_train, 432, 28, 28);
+// Test Model (finish organizing code first, then do the testing part...)
 
 ////////////////////////////////////////////////////////////////////////
 // Free memory
