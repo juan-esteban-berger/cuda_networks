@@ -325,6 +325,39 @@ void argmax(Matrix* m, Vector* v) {
 }
 
 ////////////////////////////////////////////////////////////////////////
+// Neural Network Struct
+typedef struct neural_network {
+    Matrix W1;
+    Vector b1;
+    Matrix WOutput;
+    Vector bOutput;
+} NeuralNetwork;
+
+////////////////////////////////////////////////////////////////////////
+// Function to Initialize Neural Network
+void initialize_neural_network(NeuralNetwork* nn, int input_neurons, int hidden_neurons, int output_neurons) {
+    initialize_matrix(&nn->W1, hidden_neurons, input_neurons);
+    random_matrix(&nn->W1);
+
+    initialize_vector(&nn->b1, hidden_neurons);
+    random_vector(&nn->b1);
+
+    initialize_matrix(&nn->WOutput, output_neurons, hidden_neurons);
+    random_matrix(&nn->WOutput);
+
+    initialize_vector(&nn->bOutput, output_neurons);
+    random_vector(&nn->bOutput);
+}
+
+////////////////////////////////////////////////////////////////////////
+// Function to free memory allocated for Neural Network
+void free_neural_network(NeuralNetwork* nn) {
+    free_matrix(&nn->W1);
+    free_vector(&nn->b1);
+    free_matrix(&nn->WOutput);
+    free_vector(&nn->bOutput);
+}
+////////////////////////////////////////////////////////////////////////
 // Activation Functions
 void ReLU(Matrix* m, Matrix* a) {
     // Iterate over the rows
@@ -494,10 +527,9 @@ void calculate_accuracy(Vector* Y, Vector* Y_hat) {
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Training Function
-void train(Matrix* X, Matrix* Y,
-	   Matrix* W1, Vector* b1,
-	   Matrix* WOutput, Vector* bOutput,
+// Training Function with Struct Input
+void train(NeuralNetwork* nn,
+	   Matrix* X, Matrix* Y,
 	   int epochs, float learning_rate) {
     printf("Training:\n");
 
@@ -517,15 +549,15 @@ void train(Matrix* X, Matrix* Y,
 // Initialize Vectors and Matrices needed in Forward Propagation
     // Initialize Z1 and A1 used in Forward Propagation
     Matrix Z1;
-    initialize_matrix(&Z1, W1->rows, X_T.cols);
+    initialize_matrix(&Z1, nn->W1.rows, X_T.cols);
     Matrix A1;
-    initialize_matrix(&A1, W1->rows, X_T.cols);
+    initialize_matrix(&A1, nn->W1.rows, X_T.cols);
 
     // Initialize ZOutput and AOutput used in Forward Propagation
     Matrix ZOutput;
-    initialize_matrix(&ZOutput, WOutput->rows, X_T.cols);
+    initialize_matrix(&ZOutput, nn->WOutput.rows, X_T.cols);
     Matrix AOutput;
-    initialize_matrix(&AOutput, WOutput->rows, X_T.cols);
+    initialize_matrix(&AOutput, nn->WOutput.rows, X_T.cols);
 
 ////////////////////////////////////////////////////////////////////////
 // Initialize Vectors and Matrices needed in Backward Propagation
@@ -535,7 +567,7 @@ void train(Matrix* X, Matrix* Y,
 
     // Initialize intermediate vars needed for dWOutput calculation
     Matrix dWOutput;
-    initialize_matrix(&dWOutput, WOutput->rows, WOutput->cols);
+    initialize_matrix(&dWOutput, nn->WOutput.rows, nn->WOutput.cols);
     Matrix A1_T;
     initialize_matrix(&A1_T, A1.cols, A1.rows);
 
@@ -546,7 +578,7 @@ void train(Matrix* X, Matrix* Y,
     Matrix dZ1;
     initialize_matrix(&dZ1, Z1.rows, Z1.cols);
     Matrix WOutput_T; // Transpose of WOutput
-    initialize_matrix(&WOutput_T, WOutput->cols, WOutput->rows);
+    initialize_matrix(&WOutput_T, nn->WOutput.cols, nn->WOutput.rows);
     Matrix WOutput_dZOutput; // Product of WOutput_T and dZOutput
     initialize_matrix(&WOutput_dZOutput, WOutput_T.rows, dZOutput.cols);
     Matrix Z1_deac; // Z1 with ReLU derivative applied, for backprop
@@ -554,7 +586,7 @@ void train(Matrix* X, Matrix* Y,
 
     // Initialize intermediate vars needed for dW1 calculation
     Matrix dW1;
-    initialize_matrix(&dW1, W1->rows, W1->cols);
+    initialize_matrix(&dW1, nn->W1.rows, nn->W1.cols);
 
     // Initialize intermediate vars needed for db1 calculation
     float db1;
@@ -575,14 +607,14 @@ void train(Matrix* X, Matrix* Y,
 
 	// Forward Propagation
 	forward_propagation(&X_T,
-			W1, b1,
-			WOutput, bOutput,
+			&(nn->W1), &(nn->b1),
+			&(nn->WOutput), &(nn->bOutput),
 			&Z1, &A1, &ZOutput, &AOutput);
 
 	// Backward Propagation
 	backward_propagation(&X_T, &Y_T,
-			     W1, b1,
-			     WOutput, bOutput,
+			     &(nn->W1), &(nn->b1),
+			     &(nn->WOutput), &(nn->bOutput),
 			     &Z1, &Z1_deac, &A1,
 			     &ZOutput, &AOutput,
 			     &dW1, &db1,
@@ -593,14 +625,14 @@ void train(Matrix* X, Matrix* Y,
 			     &A1_T, X);
 
 	// Update Parameters
-	update_parameters(W1, b1, WOutput,
-		   bOutput, &dW1, db1, &dWOutput,
+	update_parameters(&(nn->W1), &(nn->b1), &(nn->WOutput),
+		   &(nn->bOutput), &dW1, db1, &dWOutput,
 		   dbOutput, learning_rate);
-	
+
 	// Get Predictions
 	argmax(&Y_T, &Y_true);
 	argmax(&AOutput, &Y_hat);
-	
+
 	// Calculate Accuracy
 	calculate_accuracy(&Y_true, &Y_hat);
     }
@@ -655,7 +687,7 @@ int main() {
     const int NUM_NEURONS_OUTPUT = 10;
 
 ////////////////////////////////////////////////////////////////////////
-// Load and Preview Data
+// Load, Preprocess, and Preview Data
     // Read in data from X_train.csv
     Matrix X_train;
     initialize_matrix(&X_train, NUM_ROWS_TRAIN, NUM_NEURONS_INPUT);
@@ -674,56 +706,56 @@ int main() {
     Matrix X_test;
     initialize_matrix(&X_test, NUM_ROWS_TEST, NUM_NEURONS_INPUT);
     read_csv("X_test.csv", &X_test);
-    printf("X_test:\n");
-    preview_matrix(&X_test, 2);
 
     // Read in data from Y_test.csv
     Matrix Y_test;
     initialize_matrix(&Y_test, NUM_ROWS_TEST, NUM_NEURONS_OUTPUT);
     read_csv("Y_test.csv", &Y_test);
-    printf("Y_test:\n");
-    preview_matrix(&Y_test, 2);
 
     // Preview the first image from X_train
     printf("First image from X_train:\n");
     preview_image(&X_train, 0, 28, 28);
 
-    // Normalize X_train and X_test
+    // Normalize X_train and X_test (after previewing image)
     normalize_matrix(&X_train, 0, 255);
     normalize_matrix(&X_test, 0, 255);
 
-
 ////////////////////////////////////////////////////////////////////////
-// Initialize Weights and Biases (create network struct,
-	                       // after organizing code)
-    // Initialize Layer 1 Weights
-    Matrix W1;
-    initialize_matrix(&W1, NUM_NEURONS_HIDDEN_1, NUM_NEURONS_INPUT);
-    random_matrix(&W1);
-
-    // Initialize Layer 1 Biases
-    Vector b1;
-    initialize_vector(&b1, NUM_NEURONS_HIDDEN_1);
-    random_vector(&b1);
-
-    // Initialize Output Layer Weights
-    Matrix WOutput;
-    initialize_matrix(&WOutput, NUM_NEURONS_OUTPUT, NUM_NEURONS_HIDDEN_1);
-    random_matrix(&WOutput);
-
-    // Initialize Output Layer Biases
-    Vector bOutput;
-    initialize_vector(&bOutput, NUM_NEURONS_OUTPUT);
-    random_vector(&bOutput);
+// Initialize Neural Network
+    NeuralNetwork nn;
+    initialize_neural_network(&nn,
+			      NUM_NEURONS_INPUT,
+			      NUM_NEURONS_HIDDEN_1,
+	                      NUM_NEURONS_OUTPUT);
 
 ////////////////////////////////////////////////////////////////////////
 // Train Model
-    train(&X_train, &Y_train,
-	  &W1, &b1, &WOutput, &bOutput,
-	  100, 0.1);
+    train(&nn, &X_train, &Y_train, 100, 0.1);
 
 ////////////////////////////////////////////////////////////////////////
-// Test Model (finish organizing code first, then do the testing part...)
+// TODO
+	// Function to Make Predictions
+	// Function to Compare Predictions (Print Image and Pred)
+	// Function to Save Weights and Biases to csv
+	// Function to Load Model to csv
+	// Add one more layer (so it count as deep learning)
+		// Modify Code so it works
+	// Separate into multiple files (for order)
+		// and create Makefile
+	// Modify code to work with both cuda and c
+		// Make sure it works with cuda
+
+////////////////////////////////////////////////////////////////////////
+// Save Model
+
+////////////////////////////////////////////////////////////////////////
+// Load Model
+
+////////////////////////////////////////////////////////////////////////
+// Make Predictions
+
+////////////////////////////////////////////////////////////////////////
+// Compare Predictions
 
 ////////////////////////////////////////////////////////////////////////
 // Free memory
@@ -732,10 +764,7 @@ int main() {
     free_matrix(&X_test);
     free_matrix(&Y_test);
 
-    free_matrix(&W1);
-    free_matrix(&WOutput);
-    free_vector(&b1);
-    free_vector(&bOutput);
+    free_neural_network(&nn);
 
     return 0;
 }
