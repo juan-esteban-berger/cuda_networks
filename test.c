@@ -324,7 +324,6 @@ void argmax(Matrix* m, Vector* v) {
     }
 }
 
-
 ////////////////////////////////////////////////////////////////////////
 // Activation Functions
 void ReLU(Matrix* m, Matrix* a) {
@@ -488,22 +487,6 @@ void update_parameters(Matrix* W1, Vector* b1,
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Prediction Function
-void predict(Matrix* AOutput, Vector* Y_hat,
-	     Matrix* X, int row_index, int image_size_x, int image_size_y) {
-    printf("Prediction:\n");
-
-    // Preview the image for the row_index
-    printf("Image:\n");
-    preview_image(X, row_index, image_size_x, image_size_y);
-
-    // Print the prediction
-    argmax(AOutput, Y_hat);
-    printf("Prediction: %d\n", (int)Y_hat->data[row_index]);
-    printf("\n");
-}
-
-////////////////////////////////////////////////////////////////////////
 // Calculate Accuracy Function
 void calculate_accuracy(Vector* Y, Vector* Y_hat) {
     // Calculate the number of correct predictions
@@ -522,18 +505,59 @@ void calculate_accuracy(Vector* Y, Vector* Y_hat) {
 
 ////////////////////////////////////////////////////////////////////////
 // Training Function
-void train(Matrix* X_T, Matrix* Y_T, Vector* Y, Vector* Y_hat,
+void train(Matrix* X_T, Matrix* Y_T,
 	   Matrix* W1, Vector* b1,
 	   Matrix* WOutput, Vector* bOutput,
-	   Matrix* Z1, Matrix* Z1_deac,
-	   Matrix* A1, Matrix* ZOutput, Matrix* AOutput,
-	   Matrix* dW1, float* db1, Matrix* dWOutput, float* dbOutput,
-	   Matrix* dZ1, Matrix* dZOutput,
-	   Matrix* WOutput_T,
-	   Matrix* WOutput_dZOutput,
-	   Matrix* A1_T, Matrix* X,
 	   int epochs, float learning_rate) {
     printf("Training:\n");
+
+    // Initialize Intermediate Matrices and Vectors
+    Matrix Z1; // Dot Product of W1 and X_T
+    initialize_matrix(&Z1, W1->rows, X_T->cols);
+    Matrix A1;
+    initialize_matrix(&A1, W1->rows, X_T->cols);
+    Matrix ZOutput;
+    initialize_matrix(&ZOutput, WOutput->rows, X_T->cols);
+    Matrix AOutput;
+    initialize_matrix(&AOutput, WOutput->rows, X_T->cols);
+
+    Matrix Z1_deac; // Z1 with ReLU derivative applied, for backprop
+    initialize_matrix(&Z1_deac, Z1.rows, Z1.cols);
+
+    // Initialize Gradients
+    Matrix dW1;
+    initialize_matrix(&dW1, W1->rows, W1->cols);
+    Matrix dZ1;
+    initialize_matrix(&dZ1, Z1.rows, Z1.cols);
+    Matrix dWOutput;
+    initialize_matrix(&dWOutput, WOutput->rows, WOutput->cols);
+    Matrix dZOutput;
+    initialize_matrix(&dZOutput, ZOutput.rows, ZOutput.cols);
+    float db1;
+    float dbOutput;
+
+    // Initialize WOutput_T
+    Matrix WOutput_T; // Transpose of WOutput
+    initialize_matrix(&WOutput_T, WOutput->cols, WOutput->rows);
+
+    // Initialize WOutput_dZOutput
+    Matrix WOutput_dZOutput; // Product of WOutput_T and dZOutput
+    initialize_matrix(&WOutput_dZOutput, WOutput_T.rows, dZOutput.cols);
+
+    // Initialize A1_T
+    Matrix A1_T;
+    initialize_matrix(&A1_T, A1.cols, A1.rows);
+
+    // Initialize X
+    Matrix X;
+    initialize_matrix(&X, X_T->cols, X_T->rows);
+    transpose_matrix(X_T, &X);
+
+    // Initialize Vectors for Y and Y_hat (to calculate accuracy)
+    Vector Y;
+    initialize_vector(&Y, X_T->cols);
+    Vector Y_hat;
+    initialize_vector(&Y_hat, X_T->cols);
 
     // Loop over the epochs
     for (int epoch = 0; epoch < epochs; epoch++) {
@@ -543,35 +567,81 @@ void train(Matrix* X_T, Matrix* Y_T, Vector* Y, Vector* Y_hat,
 	forward_propagation(X_T,
 			W1, b1,
 			WOutput, bOutput,
-			Z1, A1, ZOutput, AOutput);
+			&Z1, &A1, &ZOutput, &AOutput);
 
 	// Backward Propagation
 	backward_propagation(X_T, Y_T,
 			     W1, b1,
 			     WOutput, bOutput,
-			     Z1, Z1_deac, A1,
-			     ZOutput, AOutput,
-			     dW1, db1,
-			     dWOutput, dbOutput,
-			     dZ1, dZOutput,
-		      	     WOutput_T,
-		             WOutput_dZOutput,
-			     A1_T, X);
+			     &Z1, &Z1_deac, &A1,
+			     &ZOutput, &AOutput,
+			     &dW1, &db1,
+			     &dWOutput, &dbOutput,
+			     &dZ1, &dZOutput,
+		      	     &WOutput_T,
+		             &WOutput_dZOutput,
+			     &A1_T, &X);
 
 	// Update Parameters
-	update_parameters(W1, b1, WOutput, bOutput, 
-                          dW1, *db1, dWOutput, *dbOutput, 
-                          learning_rate);
+	update_parameters(W1, b1, WOutput,
+		   bOutput, &dW1, db1, &dWOutput,
+		   dbOutput, learning_rate);
 	
 	// Get Predictions
-	argmax(Y_T, Y);
-	argmax(AOutput, Y_hat);
+	argmax(Y_T, &Y);
+	argmax(&AOutput, &Y_hat);
 	
 	// Calculate Accuracy
-	calculate_accuracy(Y, Y_hat);
+	calculate_accuracy(&Y, &Y_hat);
     }
+
+    // Free memory from intermediate matrices and vectors
+    free_matrix(&Z1);
+    free_matrix(&A1);
+    free_matrix(&ZOutput);
+    free_matrix(&AOutput);
+    free_matrix(&Z1_deac);
+    free_matrix(&WOutput_T);
+    free_matrix(&WOutput_dZOutput);
+    free_matrix(&A1_T);
+    free_matrix(&X);
+
+    // Free memory from gradients
+    free_matrix(&dW1);
+    free_matrix(&dZ1);
+    free_matrix(&dWOutput);
+    free_matrix(&dZOutput);
+
+    // Free memory from Y and Y_hat
+    free_vector(&Y);
+    free_vector(&Y_hat);
 }
 
+////////////////////////////////////////////////////////////////////////
+// Prediction Function
+void predict(Matrix* AOutput, Vector* Y_hat,
+	     Matrix* X, int row_index, int image_size_x, int image_size_y) {
+    // Initialize Z1, AT1, ZOutput, AOutput depending on the
+    // size of testing data...
+    // // Forward Propagation
+    // forward_propagation(&X_train_T,
+    // 		    &W1, &b1, &WOutput, &bOutput,
+    // 		    &Z1, &A1, &ZOutput, &AOutput);
+
+
+
+    // Create Separate Function to Preview Predictions...
+    printf("Prediction:\n");
+
+    // Preview the image for the row_index
+    printf("Image:\n");
+    preview_image(X, row_index, image_size_x, image_size_y);
+
+    // Print the prediction
+    argmax(AOutput, Y_hat);
+    printf("Prediction: %d\n", (int)Y_hat->data[row_index]);
+    printf("\n");
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Main function
@@ -648,7 +718,7 @@ int main() {
     transpose_matrix(&Y_test, &Y_test_T);
 
 ////////////////////////////////////////////////////////////////////////
-// Initialize Variables to be Used in Network
+// Initialize Weights and Biases
     // Initialize Layer 1 Weights
     Matrix W1;
     initialize_matrix(&W1, NUM_NEURONS_HIDDEN_1, NUM_NEURONS_INPUT);
@@ -669,72 +739,16 @@ int main() {
     initialize_vector(&bOutput, NUM_NEURONS_OUTPUT);
     random_vector(&bOutput);
 
-    // Initialize Z1, A1, ZOutput, AOutput
-    Matrix Z1;
-    initialize_matrix(&Z1, NUM_NEURONS_HIDDEN_1, NUM_ROWS_TRAIN);
-    Matrix A1;
-    initialize_matrix(&A1, NUM_NEURONS_HIDDEN_1, NUM_ROWS_TRAIN);
-    Matrix ZOutput;
-    initialize_matrix(&ZOutput, NUM_NEURONS_OUTPUT, NUM_ROWS_TRAIN);
-    Matrix AOutput;
-    initialize_matrix(&AOutput, NUM_NEURONS_OUTPUT, NUM_ROWS_TRAIN);
-
-    // Initialize Z1_deac
-    Matrix Z1_deac;
-    initialize_matrix(&Z1_deac, Z1.rows, Z1.cols);
-
-
-    // Initialize dW1, dWOutput, dZ1, dZOutput
-    Matrix dW1;
-    initialize_matrix(&dW1, W1.rows, W1.cols);
-    Matrix dZ1;
-    initialize_matrix(&dZ1, Z1.rows, Z1.cols);
-    Matrix dWOutput;
-    initialize_matrix(&dWOutput, WOutput.rows, WOutput.cols);
-    Matrix dZOutput;
-    initialize_matrix(&dZOutput, ZOutput.rows, ZOutput.cols);
-
-    // Initialize db1 and dbOutput
-    float db1;
-    float dbOutput;
-
-    // Initialize WOutput_T
-    Matrix WOutput_T;
-    initialize_matrix(&WOutput_T, WOutput.cols, WOutput.rows);
-
-    // Initialize WOutput_dZOutput
-    Matrix WOutput_dZOutput;
-    initialize_matrix(&WOutput_dZOutput, WOutput_T.rows, dZOutput.cols);
-
-    // Initialize A1_T
-    Matrix A1_T;
-    initialize_matrix(&A1_T, A1.cols, A1.rows);
-    
-    // Initialize X_T_original
-    Matrix X_T_original;
-    initialize_matrix(&X_T_original, X_train_T.cols, X_train_T.rows);
-
-    // Initialize Vectors for Y and Y_hat (to calculate accuracy)
-    Vector Y;
-    initialize_vector(&Y, NUM_ROWS_TRAIN);
-    Vector Y_hat;
-    initialize_vector(&Y_hat, NUM_ROWS_TRAIN);
-
 ////////////////////////////////////////////////////////////////////////
 // Train Model
-    train(&X_train_T, &Y_train_T, &Y, &Y_hat,
+    train(&X_train_T, &Y_train_T,
 	  &W1, &b1,&WOutput, &bOutput,
-	  &Z1, &Z1_deac,
-	  &A1, &ZOutput, &AOutput,
-	  &dW1, &db1, &dWOutput, &dbOutput,
-          &dZ1, &dZOutput,
-	  &WOutput_T,
-	  &WOutput_dZOutput,
-	  &A1_T, &X_T_original,
-	  300, 0.1);
+	  100, 0.1);
 
 ////////////////////////////////////////////////////////////////////////
 // Test Model
+    // Predict Function...
+
     // // Forward Propagation
     // forward_propagation(&X_train_T,
     // 		    &W1, &b1, &WOutput, &bOutput,
@@ -761,26 +775,11 @@ int main() {
     free_matrix(&X_test_T);
     free_matrix(&Y_train_T);
     free_matrix(&Y_test_T);
+
     free_matrix(&W1);
     free_matrix(&WOutput);
-    free_matrix(&Z1);
-    free_matrix(&A1);
-    free_matrix(&ZOutput);
-    free_matrix(&AOutput);
-    free_matrix(&Z1_deac);
-    free_matrix(&dW1);
-    free_matrix(&dZ1);
-    free_matrix(&dWOutput);
-    free_matrix(&dZOutput);
-    free_matrix(&WOutput_T);
-    free_matrix(&WOutput_dZOutput);
-    free_matrix(&A1_T);
-    free_matrix(&X_T_original);
-    
     free_vector(&b1);
     free_vector(&bOutput);
-    free_vector(&Y);
-    free_vector(&Y_hat);
 
     return 0;
 }
