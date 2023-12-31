@@ -505,21 +505,35 @@ void calculate_accuracy(Vector* Y, Vector* Y_hat) {
 
 ////////////////////////////////////////////////////////////////////////
 // Training Function
-void train(Matrix* X_T, Matrix* Y_T,
+void train(Matrix* X, Matrix* Y,
 	   Matrix* W1, Vector* b1,
 	   Matrix* WOutput, Vector* bOutput,
 	   int epochs, float learning_rate) {
     printf("Training:\n");
 
+    // Data Preparation (this can go inside of the train/predict functions)
+    // Include this code, don't need to include code to transpose again
+    // since we can also use original argument
+    // Transpose and normalize X_train
+    Matrix X_T;
+    initialize_matrix(&X_T, X->cols, X->rows);
+    transpose_matrix(X, &X_T);
+
+    // Transpose Y_train
+    Matrix Y_T;
+    initialize_matrix(&Y_T, Y->cols, Y->rows);
+    transpose_matrix(Y, &Y_T);
+
     // Initialize Intermediate Matrices and Vectors
     Matrix Z1; // Dot Product of W1 and X_T
-    initialize_matrix(&Z1, W1->rows, X_T->cols);
+    initialize_matrix(&Z1, W1->rows, X_T.cols);
     Matrix A1;
-    initialize_matrix(&A1, W1->rows, X_T->cols);
+    initialize_matrix(&A1, W1->rows, X_T.cols);
     Matrix ZOutput;
-    initialize_matrix(&ZOutput, WOutput->rows, X_T->cols);
+    initialize_matrix(&ZOutput, WOutput->rows, X_T.cols);
     Matrix AOutput;
-    initialize_matrix(&AOutput, WOutput->rows, X_T->cols);
+    initialize_matrix(&AOutput, WOutput->rows, X_T.cols);
+
 
     Matrix Z1_deac; // Z1 with ReLU derivative applied, for backprop
     initialize_matrix(&Z1_deac, Z1.rows, Z1.cols);
@@ -548,29 +562,24 @@ void train(Matrix* X_T, Matrix* Y_T,
     Matrix A1_T;
     initialize_matrix(&A1_T, A1.cols, A1.rows);
 
-    // Initialize X
-    Matrix X;
-    initialize_matrix(&X, X_T->cols, X_T->rows);
-    transpose_matrix(X_T, &X);
-
     // Initialize Vectors for Y and Y_hat (to calculate accuracy)
-    Vector Y;
-    initialize_vector(&Y, X_T->cols);
+    Vector Y_true;
+    initialize_vector(&Y_true, X_T.cols);
     Vector Y_hat;
-    initialize_vector(&Y_hat, X_T->cols);
+    initialize_vector(&Y_hat, X_T.cols);
 
     // Loop over the epochs
     for (int epoch = 0; epoch < epochs; epoch++) {
 	printf("Epoch %d:\n", epoch);
 
 	// Forward Propagation
-	forward_propagation(X_T,
+	forward_propagation(&X_T,
 			W1, b1,
 			WOutput, bOutput,
 			&Z1, &A1, &ZOutput, &AOutput);
 
 	// Backward Propagation
-	backward_propagation(X_T, Y_T,
+	backward_propagation(&X_T, &Y_T,
 			     W1, b1,
 			     WOutput, bOutput,
 			     &Z1, &Z1_deac, &A1,
@@ -580,7 +589,7 @@ void train(Matrix* X_T, Matrix* Y_T,
 			     &dZ1, &dZOutput,
 		      	     &WOutput_T,
 		             &WOutput_dZOutput,
-			     &A1_T, &X);
+			     &A1_T, X);
 
 	// Update Parameters
 	update_parameters(W1, b1, WOutput,
@@ -588,12 +597,16 @@ void train(Matrix* X_T, Matrix* Y_T,
 		   dbOutput, learning_rate);
 	
 	// Get Predictions
-	argmax(Y_T, &Y);
+	argmax(&Y_T, &Y_true);
 	argmax(&AOutput, &Y_hat);
 	
 	// Calculate Accuracy
-	calculate_accuracy(&Y, &Y_hat);
+	calculate_accuracy(&Y_true, &Y_hat);
     }
+
+    // Free transposed matrices
+    free_matrix(&X_T);
+    free_matrix(&Y_T);
 
     // Free memory from intermediate matrices and vectors
     free_matrix(&Z1);
@@ -604,7 +617,6 @@ void train(Matrix* X_T, Matrix* Y_T,
     free_matrix(&WOutput_T);
     free_matrix(&WOutput_dZOutput);
     free_matrix(&A1_T);
-    free_matrix(&X);
 
     // Free memory from gradients
     free_matrix(&dW1);
@@ -613,7 +625,7 @@ void train(Matrix* X_T, Matrix* Y_T,
     free_matrix(&dZOutput);
 
     // Free memory from Y and Y_hat
-    free_vector(&Y);
+    free_vector(&Y_true);
     free_vector(&Y_hat);
 }
 
@@ -679,30 +691,6 @@ int main() {
 
 
 ////////////////////////////////////////////////////////////////////////
-// Data Preparation (this can go inside of the train/predict functions)
-    // Include this code, don't need to include code to transpose again
-    // since we can also use original argument
-    // Transpose and normalize X_train
-    Matrix X_train_T;
-    initialize_matrix(&X_train_T, X_train.cols, X_train.rows);
-    transpose_matrix(&X_train, &X_train_T);
-
-    // Transpose Y_train
-    Matrix Y_train_T;
-    initialize_matrix(&Y_train_T, Y_train.cols, Y_train.rows);
-    transpose_matrix(&Y_train, &Y_train_T);
-
-    // Transpose and normalize X_test
-    Matrix X_test_T;
-    initialize_matrix(&X_test_T, X_test.cols, X_test.rows);
-    transpose_matrix(&X_test, &X_test_T);
-
-    // Transpose Y_test
-    Matrix Y_test_T;
-    initialize_matrix(&Y_test_T, Y_test.cols, Y_test.rows);
-    transpose_matrix(&Y_test, &Y_test_T);
-
-////////////////////////////////////////////////////////////////////////
 // Initialize Weights and Biases
     // Initialize Layer 1 Weights
     Matrix W1;
@@ -726,7 +714,7 @@ int main() {
 
 ////////////////////////////////////////////////////////////////////////
 // Train Model
-    train(&X_train_T, &Y_train_T,
+    train(&X_train, &Y_train,
 	  &W1, &b1,&WOutput, &bOutput,
 	  100, 0.1);
 
@@ -739,10 +727,6 @@ int main() {
     free_matrix(&Y_train);
     free_matrix(&X_test);
     free_matrix(&Y_test);
-    free_matrix(&X_train_T);
-    free_matrix(&X_test_T);
-    free_matrix(&Y_train_T);
-    free_matrix(&Y_test_T);
 
     free_matrix(&W1);
     free_matrix(&WOutput);
