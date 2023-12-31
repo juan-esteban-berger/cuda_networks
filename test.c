@@ -375,22 +375,19 @@ void forward_propagation(Matrix* X_T,
 		Matrix* W1, Vector* b1,
 		Matrix* WOutput, Vector* bOutput,
 		Matrix* Z1, Matrix* A1, Matrix* ZOutput, Matrix* AOutput) {
-    // Multiply W1 and X_T
+
+    // First Layer:
+    // Z1 = matmul(W1, X_T) + b
+    // A1 = ReLU(Z1)
     matrix_multiply(W1, X_T, Z1);
-
-    // Add b1 to Z1
     add_vector_to_matrix(Z1, b1);
-
-    // Apply ReLU to Z1
     ReLU(Z1, A1);
 
-    // Multiply WOutput and A1
+    // Output Layer:
+    // ZOutput = matmul(WOutput, A1) + bOutput
+    // AOutput = Softmax(ZOutput)
     matrix_multiply(WOutput, A1, ZOutput);
-
-    // Add bOutput to ZOutput
     add_vector_to_matrix(ZOutput, bOutput);
-
-    // Apply Softmax to ZOutput
     softmax(ZOutput, AOutput);
 }
 
@@ -407,46 +404,39 @@ void backward_propagation(Matrix* X_T, Matrix* Y_T,
 			  Matrix* WOutput_T,
 			  Matrix* WOutput_dZOutput,
 			  Matrix* A1_T, Matrix* X) {
-    // Subtract Y_T from AOutput
+
+    // Derivative of loss with respect to ZOutput
+    // Loss: Categorical Cross-Entropy
+    // Last Layer Activation: Softmax
+    // dZOutput = AOutput - Y_T
     matrix_subtract(AOutput, Y_T, dZOutput);
 
-    // Transpose A1
+    // Derivative of loss with respect to WOutput
+    // dW2 = 1/m * matmul(dZOutput, A1_T)
     transpose_matrix(A1, A1_T);
-
-    // Multiply dZOutput and A1_T
     matrix_multiply(dZOutput, A1_T, dWOutput);
-
-    // Divide dWOutput by number of training examples
     divide_matrix_by_scalar(dWOutput, AOutput->cols);
 
-    // Sum dZOutput
+    // Derivative of loss with respect to bOutput
+    // dbOutput = 1/m * sum(dZ2)
     sum_matrix(dZOutput, dbOutput);
-
-    // Divide dbOutput by number of training examples
     *dbOutput /= AOutput->cols;
 
-    // Transpose WOutput
+    // Derivative of loss with respect to Z1 
+    // dZ1 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z1)
     transpose_matrix(WOutput, WOutput_T);
-
-    // Multiply WOutput_T and dZOutput
     matrix_multiply(WOutput_T, dZOutput, WOutput_dZOutput);
-    
-    // Pass Z1 through ReLU derivative
     ReLU_derivative(Z1, Z1_deac);
-
-    // Multiply Elementwise Z1_deac and WOutput_dZOutput
     matrix_multiply_elementwise(Z1_deac, WOutput_dZOutput, dZ1);
 
-    // Multiply dZ1 and X
+    // Derivative of loss with respect to W1
+    // dW1 = 1 / m * matmul(dZ1, X_T)
     matrix_multiply(dZ1, X, dW1);
-
-    // Divide dW1 by number of training examples
     divide_matrix_by_scalar(dW1, AOutput->cols);
 
-    // Sum dZ1
+    // Derivative of loss with respect to b1
+    // db1 = 1/m * sum(dZ1)
     sum_matrix(dZ1, db1);
-
-    // Divide db1 by number of training examples
     *db1 /= AOutput->cols;
 }
 
@@ -691,7 +681,8 @@ int main() {
 
 
 ////////////////////////////////////////////////////////////////////////
-// Initialize Weights and Biases
+// Initialize Weights and Biases (create network struct,
+	                       // after organizing code)
     // Initialize Layer 1 Weights
     Matrix W1;
     initialize_matrix(&W1, NUM_NEURONS_HIDDEN_1, NUM_NEURONS_INPUT);
@@ -715,7 +706,7 @@ int main() {
 ////////////////////////////////////////////////////////////////////////
 // Train Model
     train(&X_train, &Y_train,
-	  &W1, &b1,&WOutput, &bOutput,
+	  &W1, &b1, &WOutput, &bOutput,
 	  100, 0.1);
 
 ////////////////////////////////////////////////////////////////////////
