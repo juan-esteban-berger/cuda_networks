@@ -29,6 +29,107 @@ void free_neural_network(NeuralNetwork* nn) {
     free_matrix(&nn->WOutput);
     free_vector(&nn->bOutput);
 }
+
+////////////////////////////////////////////////////////////////////////
+// Function to save model
+void save_model(const char* filename, NeuralNetwork* nn) {
+    // Open the file
+    FILE* file = fopen(filename, "w");
+    if (!file) {
+        perror("Error opening file to save neural network");
+        return;
+    }
+
+    // Save W1 weights as a flattened row
+    for (int i = 0; i < nn->W1.rows; ++i) {
+        for (int j = 0; j < nn->W1.cols; ++j) {
+            fprintf(file, "%f", nn->W1.data[i][j]);
+            if (j < nn->W1.cols - 1) fprintf(file, ",");
+        }
+    }
+    fprintf(file, "\n");
+
+    // Save b1 biases as a flattened row
+    for (int i = 0; i < nn->b1.rows; ++i) {
+        fprintf(file, "%f", nn->b1.data[i]);
+        if (i < nn->b1.rows - 1) fprintf(file, ",");
+    }
+    fprintf(file, "\n");
+
+    // Save WOutput weights as a flattened row
+    for (int i = 0; i < nn->WOutput.rows; ++i) {
+        for (int j = 0; j < nn->WOutput.cols; ++j) {
+            fprintf(file, "%f", nn->WOutput.data[i][j]);
+            if (j < nn->WOutput.cols - 1) fprintf(file, ",");
+        }
+    }
+    fprintf(file, "\n");
+
+    // Save bOutput biases as a flattened row
+    for (int i = 0; i < nn->bOutput.rows; ++i) {
+        fprintf(file, "%f", nn->bOutput.data[i]);
+        if (i < nn->bOutput.rows - 1) fprintf(file, ",");
+    }
+    fprintf(file, "\n");
+
+    // Close the file
+    fclose(file);
+}
+
+////////////////////////////////////////////////////////////////////////
+// Function to load model
+void load_model(const char* filename, NeuralNetwork* nn) {
+    // Open the file
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        perror("Error opening file to load neural network");
+        return;
+    }
+
+    // Load W1 weights from the first flattened row
+    for (int i = 0; i < nn->W1.rows; ++i) {
+        for (int j = 0; j < nn->W1.cols; ++j) {
+            if (fscanf(file, "%f,", &nn->W1.data[i][j]) != 1) {
+                fprintf(stderr, "Error reading W1 from CSV\n");
+                fclose(file);
+                return;
+            }
+        }
+    }
+
+    // Load b1 biases from the second flattened row
+    for (int i = 0; i < nn->b1.rows; ++i) {
+        if (fscanf(file, "%f,", &nn->b1.data[i]) != 1) {
+            fprintf(stderr, "Error reading b1 from CSV\n");
+            fclose(file);
+            return;
+        }
+    }
+
+    // Load WOutput weights from the third flattened row
+    for (int i = 0; i < nn->WOutput.rows; ++i) {
+        for (int j = 0; j < nn->WOutput.cols; ++j) {
+            if (fscanf(file, "%f,", &nn->WOutput.data[i][j]) != 1) {
+                fprintf(stderr, "Error reading WOutput from CSV\n");
+                fclose(file);
+                return;
+            }
+        }
+    }
+
+    // Load bOutput biases from the fourth flattened row
+    for (int i = 0; i < nn->bOutput.rows; ++i) {
+        if (fscanf(file, "%f,", &nn->bOutput.data[i]) != 1) {
+            fprintf(stderr, "Error reading bOutput from CSV\n");
+            fclose(file);
+            return;
+        }
+    }
+
+    // Close the file
+    fclose(file);
+}
+
 ////////////////////////////////////////////////////////////////////////
 // Activation Functions
 void ReLU(Matrix* m, Matrix* a) {

@@ -14,8 +14,14 @@ typedef struct {
 
 ////////////////////////////////////////////////////////////////////////
 // Allocate and free memory
-void initialize_neural_network(NeuralNetwork* nn, int input_neurons, int hidden_neurons, int output_neurons);
+void initialize_neural_network(NeuralNetwork* nn, int input_neurons,
+		int hidden_neurons, int output_neurons);
 void free_neural_network(NeuralNetwork* nn);
+
+////////////////////////////////////////////////////////////////////////
+// Save and Load Models Function
+void save_model(const char* filename, NeuralNetwork* nn);
+void load_model(const char* filename, NeuralNetwork* nn);
 
 ////////////////////////////////////////////////////////////////////////
 // Activation functions

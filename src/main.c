@@ -72,16 +72,26 @@ int main() {
 
 ////////////////////////////////////////////////////////////////////////
 // Save Model
+printf("Saving Model:\n");
+save_model("models/nn.csv", &nn);
 
 ////////////////////////////////////////////////////////////////////////
 // Load Model
+    printf("Loading Model:\n");
+    NeuralNetwork nn_loaded;
+    initialize_neural_network(&nn_loaded,
+			      NUM_NEURONS_INPUT,
+			      NUM_NEURONS_HIDDEN_1,
+	                      NUM_NEURONS_OUTPUT);
+
+    save_model("models/nn.csv", &nn_loaded);
 
 ////////////////////////////////////////////////////////////////////////
 // Make Predictions
     Matrix Y_pred;
     initialize_matrix(&Y_pred, NUM_ROWS_TEST, NUM_NEURONS_OUTPUT);
     printf("Testing on Testing Dataset:\n");
-    predict(&nn, &X_test, &Y_test, &Y_pred);
+    predict(&nn_loaded, &X_test, &Y_test, &Y_pred);
 
 ////////////////////////////////////////////////////////////////////////
 // Compare a few predictions
@@ -91,15 +101,9 @@ int main() {
 
 ////////////////////////////////////////////////////////////////////////
 // TODO
-	// Move all linear algebra functions into linear_algebra.h
-	// Move all neural_network functions into neural_network.h
-	// Create first makefile
+	// Fix saving model and loading model functions
 	// Add one more layer (so it counts as deep learning)
 		// Modify Code so it works
-	// Function to Save Weights and Biases to csv
-	// Function to Load Model to csv
-	// Separate into multiple files (for order)
-		// and create Makefile
 	// Modify code to work with both cuda and c
 		// Make sure it works with cuda
 
@@ -111,6 +115,7 @@ int main() {
     free_matrix(&Y_test);
 
     free_neural_network(&nn);
+    free_neural_network(&nn_loaded);
 
     free_matrix(&Y_pred);
 
