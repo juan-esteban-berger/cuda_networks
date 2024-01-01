@@ -218,6 +218,27 @@ void normalize_matrix(Matrix* m, float min, float max) {
     }
 }
 
+// Function to denormalize a vector
+void denormalize_vector(Vector* v, float min, float max) {
+    // Iterate over the rows
+    for (int i = 0; i < v->rows; i++) {
+        // Denormalize vector element
+        v->data[i] = v->data[i] * (max - min) + min;
+    }
+}
+
+// Function to denormalize a matrix
+void denormalize_matrix(Matrix* m, float min, float max) {
+    // Iterate over the rows
+    for (int i = 0; i < m->rows; i++) {
+        // Iterate over the columns
+        for (int j = 0; j < m->cols; j++) {
+            // Denormalize matrix element
+            m->data[i][j] = m->data[i][j] * (max - min) + min;
+        }
+    }
+}
+
 void transpose_matrix(Matrix* original, Matrix* transpose) {
     // Transpose matrix
     for(int i = 0; i < original->rows; ++i) {
@@ -531,7 +552,6 @@ void calculate_accuracy(Vector* Y, Vector* Y_hat) {
 void train(NeuralNetwork* nn,
 	   Matrix* X, Matrix* Y,
 	   int epochs, float learning_rate) {
-    printf("Training:\n");
 
 ////////////////////////////////////////////////////////////////////////
 // Data Preparatation
@@ -666,9 +686,102 @@ void train(NeuralNetwork* nn,
 
 ////////////////////////////////////////////////////////////////////////
 // Function to make predictions
+void predict(NeuralNetwork* nn,
+	     Matrix* X, Matrix* Y, Matrix* Y_pred) {
+////////////////////////////////////////////////////////////////////////////
+// Data Preparation
+    // Transpose X to get the correct dimensions for matrix multiplication
+    Matrix X_T;
+    initialize_matrix(&X_T, X->cols, X->rows);
+    transpose_matrix(X, &X_T);
+
+    // Transpose Y_T to match AOutput
+    Matrix Y_T;
+    initialize_matrix(&Y_T, Y->cols, Y->rows);
+    transpose_matrix(Y, &Y_T);
+
+////////////////////////////////////////////////////////////////////////////
+// Initialize Vectors and Matrices needed in Forward Propagation
+    // Initialize Z1 and A1 used in Forward Propagation
+    Matrix Z1;
+    initialize_matrix(&Z1, nn->W1.rows, X_T.cols);
+    Matrix A1;
+    initialize_matrix(&A1, nn->W1.rows, X_T.cols);
+
+    // Initialize ZOutput and a temporary AOutput
+    Matrix ZOutput;
+    initialize_matrix(&ZOutput, nn->WOutput.rows, X_T.cols);
+    Matrix AOutput;
+    initialize_matrix(&AOutput, nn->WOutput.rows, X_T.cols);
+
+////////////////////////////////////////////////////////////////////////
+// Initialize Vectors needed for calculating training accuracy
+    // Initialize Vectors for Y and Y_hat
+    Vector Y_true;
+    initialize_vector(&Y_true, X_T.cols);
+    Vector Y_hat;
+    initialize_vector(&Y_hat, X_T.cols);
+
+////////////////////////////////////////////////////////////////////////////
+// Make Predictions
+    // Forward Propagation
+    forward_propagation(&X_T,
+            &(nn->W1), &(nn->b1),
+            &(nn->WOutput), &(nn->bOutput),
+            &Z1, &A1, &ZOutput, &AOutput);
+
+    // Get Predictions
+    argmax(&Y_T, &Y_true);
+    argmax(&AOutput, &Y_hat);
+    
+    // Calculate Accuracy
+    calculate_accuracy(&Y_true, &Y_hat);
+
+////////////////////////////////////////////////////////////////////////////
+// Prepare Predictions
+    // Transpose AOutput_tmp into Y_pred
+    transpose_matrix(&AOutput, Y_pred);
+
+////////////////////////////////////////////////////////////////////////////
+// Free Memory
+    free_matrix(&X_T);
+    free_matrix(&Z1);
+    free_matrix(&A1);
+    free_matrix(&ZOutput);
+    free_matrix(&AOutput);
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Functions to compare actual and predicted values
+void preview_predictions(Matrix* X, Matrix* Y_pred,
+			 int image_size_x, int image_size_y, int n) {
+    // Initialize Random Seed
+    srand(time(NULL));
+
+    // Repear for the desired number of samples
+    for (int i = 0; i < n; i++) {
+        // Choose a random row from the dataset
+        int random_row = rand() % Y_pred->rows;
+
+        // Display image
+        printf("Image at row %d:\n", random_row);
+        preview_image(X, random_row, image_size_x, image_size_y);
+
+	// Find the maximum index for each column
+        int predicted_class = 0;
+        float max_pred_value = Y_pred->data[random_row][0];
+        for (int j = 1; j < Y_pred->cols; j++) {
+            if (Y_pred->data[random_row][j] > max_pred_value) {
+                max_pred_value = Y_pred->data[random_row][j];
+                predicted_class = j;
+            }
+        }
+
+        // Display predicted class
+        printf("Predicted digit for image at row %d: %d\n\n",
+	       random_row, predicted_class);
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Main function
@@ -730,20 +843,9 @@ int main() {
 
 ////////////////////////////////////////////////////////////////////////
 // Train Model
+    printf("Training on Training Dataset:\n");
     train(&nn, &X_train, &Y_train, 100, 0.1);
-
-////////////////////////////////////////////////////////////////////////
-// TODO
-	// Function to Make Predictions
-	// Function to Compare Predictions (Print Image and Pred)
-	// Function to Save Weights and Biases to csv
-	// Function to Load Model to csv
-	// Add one more layer (so it count as deep learning)
-		// Modify Code so it works
-	// Separate into multiple files (for order)
-		// and create Makefile
-	// Modify code to work with both cuda and c
-		// Make sure it works with cuda
+    // train(&nn, &X_train, &Y_train, 1, 0.1);
 
 ////////////////////////////////////////////////////////////////////////
 // Save Model
@@ -753,9 +855,30 @@ int main() {
 
 ////////////////////////////////////////////////////////////////////////
 // Make Predictions
+    Matrix Y_pred;
+    initialize_matrix(&Y_pred, NUM_ROWS_TEST, NUM_NEURONS_OUTPUT);
+    printf("Testing on Testing Dataset:\n");
+    predict(&nn, &X_test, &Y_test, &Y_pred);
 
 ////////////////////////////////////////////////////////////////////////
-// Compare Predictions
+// Compare a few predictions
+    denormalize_matrix(&X_test, 0, 255);
+    printf("Previewing a few predictions:\n");
+    preview_predictions(&X_test, &Y_pred, 28, 28, 5);
+
+////////////////////////////////////////////////////////////////////////
+// TODO
+	// Move all linear algebra functions into linear_algebra.h
+	// Move all neural_network functions into neural_network.h
+	// Create first makefile
+	// Add one more layer (so it counts as deep learning)
+		// Modify Code so it works
+	// Function to Save Weights and Biases to csv
+	// Function to Load Model to csv
+	// Separate into multiple files (for order)
+		// and create Makefile
+	// Modify code to work with both cuda and c
+		// Make sure it works with cuda
 
 ////////////////////////////////////////////////////////////////////////
 // Free memory
@@ -765,6 +888,8 @@ int main() {
     free_matrix(&Y_test);
 
     free_neural_network(&nn);
+
+    free_matrix(&Y_pred);
 
     return 0;
 }
