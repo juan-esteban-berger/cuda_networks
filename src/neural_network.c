@@ -38,10 +38,6 @@ void free_neural_network(NeuralNetwork* nn) {
 void save_model(const char* filename, NeuralNetwork* nn) {
     // Open the file
     FILE* file = fopen(filename, "w");
-    if (!file) {
-        perror("Error opening file to save neural network");
-        return;
-    }
 
     // Save W1 weights as a flattened row
     for (int i = 0; i < nn->W1.rows; ++i) {
@@ -84,10 +80,6 @@ void save_model(const char* filename, NeuralNetwork* nn) {
 void load_model(const char* filename, NeuralNetwork* nn) {
     // Open the file
     FILE* file = fopen(filename, "r");
-    if (!file) {
-        perror("Error opening file to load neural network");
-        return;
-    }
 
     // Load W1 weights from the first flattened row
     for (int i = 0; i < nn->W1.rows; ++i) {
@@ -185,18 +177,18 @@ void forward_propagation(Matrix* X_T,
 		Matrix* WOutput, Vector* bOutput,
 		Matrix* Z1, Matrix* A1, Matrix* ZOutput, Matrix* AOutput) {
 
-    // First Layer:
-    // Z1 = matmul(W1, X_T) + b
-    // A1 = ReLU(Z1)
+    // First Layer Dot Products: Z1 = matmul(W1, X_T) + b
     matrix_multiply(W1, X_T, Z1);
     add_vector_to_matrix(Z1, b1);
+
+    // First Layer Activations: A1 = ReLU(Z1)
     ReLU(Z1, A1);
 
-    // Output Layer:
-    // ZOutput = matmul(WOutput, A1) + bOutput
-    // AOutput = Softmax(ZOutput)
+    // Output Layer Dot Products: ZOutput = matmul(WOutput, A1) + bOutput
     matrix_multiply(WOutput, A1, ZOutput);
     add_vector_to_matrix(ZOutput, bOutput);
+
+    // Output Layer Activations: AOutput = Softmax(ZOutput)
     softmax(ZOutput, AOutput);
 }
 
@@ -214,36 +206,32 @@ void backward_propagation(Matrix* X_T, Matrix* Y_T,
 			  Matrix* WOutput_dZOutput,
 			  Matrix* A1_T, Matrix* X) {
 
-    // Derivative of loss with respect to ZOutput
-    // Loss: Categorical Cross-Entropy
-    // Last Layer Activation: Softmax
+////////////////////////////////////////////////////////////////////////
+// Output Layer Gradients
     // dZOutput = AOutput - Y_T
     matrix_subtract(AOutput, Y_T, dZOutput);
 
-    // Derivative of loss with respect to WOutput
     // dW2 = 1/m * matmul(dZOutput, A1_T)
     transpose_matrix(A1, A1_T);
     matrix_multiply(dZOutput, A1_T, dWOutput);
     divide_matrix_by_scalar(dWOutput, AOutput->cols);
 
-    // Derivative of loss with respect to bOutput
     // dbOutput = 1/m * sum(dZ2)
     sum_matrix(dZOutput, dbOutput);
     *dbOutput /= AOutput->cols;
 
-    // Derivative of loss with respect to Z1 
+////////////////////////////////////////////////////////////////////////
+// First Layer Gradients
     // dZ1 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z1)
     transpose_matrix(WOutput, WOutput_T);
     matrix_multiply(WOutput_T, dZOutput, WOutput_dZOutput);
     ReLU_derivative(Z1, Z1_deac);
     matrix_multiply_elementwise(Z1_deac, WOutput_dZOutput, dZ1);
 
-    // Derivative of loss with respect to W1
     // dW1 = 1 / m * matmul(dZ1, X_T)
     matrix_multiply(dZ1, X, dW1);
     divide_matrix_by_scalar(dW1, AOutput->cols);
 
-    // Derivative of loss with respect to b1
     // db1 = 1/m * sum(dZ1)
     sum_matrix(dZ1, db1);
     *db1 /= AOutput->cols;
@@ -322,53 +310,54 @@ void train(NeuralNetwork* nn,
 
 ////////////////////////////////////////////////////////////////////////
 // Initialize Vectors and Matrices needed in Forward Propagation
-    // Initialize Z1 and A1 used in Forward Propagation
+    // First Layer
     Matrix Z1;
     initialize_matrix(&Z1, nn->W1.rows, X_T.cols);
     Matrix A1;
     initialize_matrix(&A1, nn->W1.rows, X_T.cols);
 
-    // Initialize ZOutput and AOutput used in Forward Propagation
+    // Output Layer
     Matrix ZOutput;
     initialize_matrix(&ZOutput, nn->WOutput.rows, X_T.cols);
     Matrix AOutput;
     initialize_matrix(&AOutput, nn->WOutput.rows, X_T.cols);
 
 ////////////////////////////////////////////////////////////////////////
-// Initialize Vectors and Matrices needed in Backward Propagation
-    // Initialize intermediate vars needed for dZOutput calculation
+// Vectors/Matrices Needed for Calculation of Output Layer Gradients
+    // dZOutput = AOutput - Y_T
     Matrix dZOutput;
     initialize_matrix(&dZOutput, ZOutput.rows, ZOutput.cols);
 
-    // Initialize intermediate vars needed for dWOutput calculation
+    // dW2 = 1/m * matmul(dZOutput, A1_T)
     Matrix dWOutput;
     initialize_matrix(&dWOutput, nn->WOutput.rows, nn->WOutput.cols);
     Matrix A1_T;
     initialize_matrix(&A1_T, A1.cols, A1.rows);
 
-    // Initialize intermediate vars needed for dbOutput calculation
+    // dbOutput = 1/m * sum(dZ2)
     float dbOutput;
 
-    // Initialize intermediate vars needed for dZ1 calculation
+////////////////////////////////////////////////////////////////////////
+// Vectors/Matrices Needed for Calculation of First Layer Gradients
+    // dZ1 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z1)
     Matrix dZ1;
     initialize_matrix(&dZ1, Z1.rows, Z1.cols);
-    Matrix WOutput_T; // Transpose of WOutput
+    Matrix WOutput_T;
     initialize_matrix(&WOutput_T, nn->WOutput.cols, nn->WOutput.rows);
     Matrix WOutput_dZOutput; // Product of WOutput_T and dZOutput
     initialize_matrix(&WOutput_dZOutput, WOutput_T.rows, dZOutput.cols);
     Matrix Z1_deac; // Z1 with ReLU derivative applied, for backprop
     initialize_matrix(&Z1_deac, Z1.rows, Z1.cols);
 
-    // Initialize intermediate vars needed for dW1 calculation
+    // dW1 = 1 / m * matmul(dZ1, X_T)
     Matrix dW1;
     initialize_matrix(&dW1, nn->W1.rows, nn->W1.cols);
 
-    // Initialize intermediate vars needed for db1 calculation
+    // db1 = 1/m * sum(dZ1)
     float db1;
 
 ////////////////////////////////////////////////////////////////////////
 // Initialize Vectors needed for calculating training accuracy
-    // Initialize Vectors for Y and Y_hat
     Vector Y_true;
     initialize_vector(&Y_true, X_T.cols);
     Vector Y_hat;
@@ -424,10 +413,12 @@ void train(NeuralNetwork* nn,
     free_matrix(&ZOutput);
     free_matrix(&AOutput);
 
-    // Free memory from backward propagation section
+    // Free memory from output layer gradients calculation
     free_matrix(&dZOutput);
     free_matrix(&dWOutput);
     free_matrix(&A1_T);
+
+    // Free memory from first layer gradients calculation
     free_matrix(&dZ1);
     free_matrix(&WOutput_T);
     free_matrix(&WOutput_dZOutput);
