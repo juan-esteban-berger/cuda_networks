@@ -72,8 +72,8 @@ int main() {
 
 ////////////////////////////////////////////////////////////////////////
 // Save Model
-printf("Saving Model:\n");
-save_model("models/nn.csv", &nn);
+    printf("Saving Model:\n");
+    save_model("models/nn.csv", &nn);
 
 ////////////////////////////////////////////////////////////////////////
 // Load Model
@@ -84,7 +84,7 @@ save_model("models/nn.csv", &nn);
 			      NUM_NEURONS_HIDDEN_1,
 	                      NUM_NEURONS_OUTPUT);
 
-    save_model("models/nn.csv", &nn_loaded);
+    load_model("models/nn.csv", &nn_loaded);
 
 ////////////////////////////////////////////////////////////////////////
 // Make Predictions
@@ -101,7 +101,6 @@ save_model("models/nn.csv", &nn);
 
 ////////////////////////////////////////////////////////////////////////
 // TODO
-	// Fix saving model and loading model functions
 	// Add one more layer (so it counts as deep learning)
 		// Modify Code so it works
 	// Modify code to work with both cuda and c

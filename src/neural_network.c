@@ -7,7 +7,10 @@
 
 ////////////////////////////////////////////////////////////////////////
 // Function to Initialize Neural Network
-void initialize_neural_network(NeuralNetwork* nn, int input_neurons, int hidden_neurons, int output_neurons) {
+void initialize_neural_network(NeuralNetwork* nn,
+			       int input_neurons,
+			       int hidden_neurons,
+                               int output_neurons) {
     initialize_matrix(&nn->W1, hidden_neurons, input_neurons);
     random_matrix(&nn->W1);
 
