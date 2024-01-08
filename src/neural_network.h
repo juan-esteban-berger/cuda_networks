@@ -57,7 +57,13 @@ void backward_propagation(Matrix* X_T, Matrix* Y_T,
 
 ////////////////////////////////////////////////////////////////////////
 // Parameter update function
-void update_parameters(Matrix* W1, Vector* b1, Matrix* W2, Vector* b2, Matrix* dW1, float db1, Matrix* dW2, float db2, float learning_rate);
+void update_parameters(Matrix* W1, Vector* b1,
+		Matrix* W2, Vector* b2,
+		Matrix* WOutput, Vector* bOutput,
+		Matrix* dW1, float db1,
+		Matrix* dW2, float db2,
+		Matrix* dWOutput, float dbOutput,
+		float learning_rate);
 
 ////////////////////////////////////////////////////////////////////////
 // Accuracy calculation function

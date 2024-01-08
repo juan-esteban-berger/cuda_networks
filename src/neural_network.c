@@ -216,29 +216,6 @@ void softmax(Matrix* m, Matrix* a) {
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Forward Propagation Function
-void forward_propagation_old(Matrix* X_T,
-		             Matrix* W1, Vector* b1,
-		             Matrix* WOutput, Vector* bOutput,
-		             Matrix* Z1, Matrix* A1,
-			     Matrix* ZOutput, Matrix* AOutput) {
-
-    // First Layer Dot Products: Z1 = matmul(W1, X_T) + b
-    matrix_multiply(W1, X_T, Z1);
-    add_vector_to_matrix(Z1, b1);
-
-    // First Layer Activations: A1 = ReLU(Z1)
-    ReLU(Z1, A1);
-
-    // Output Layer Dot Products: ZOutput = matmul(WOutput, A1) + bOutput
-    matrix_multiply(WOutput, A1, ZOutput);
-    add_vector_to_matrix(ZOutput, bOutput);
-
-    // Output Layer Activations: AOutput = Softmax(ZOutput)
-    softmax(ZOutput, AOutput);
-}
-
-////////////////////////////////////////////////////////////////////////
 // Updated Forward Propagation Function
 void forward_propagation(Matrix* X_T,
                          Matrix* W1, Vector* b1,
@@ -318,36 +295,46 @@ void backward_propagation(Matrix* X_T, Matrix* Y_T,
 ////////////////////////////////////////////////////////////////////////
 // Update Parameters Function
 void update_parameters(Matrix* W1, Vector* b1,
-		       Matrix* W2, Vector* b2,
-		       Matrix* dW1, float db1,
-		       Matrix* dW2, float db2,
+                       Matrix* W2, Vector* b2,
+                       Matrix* WOutput, Vector* bOutput,
+                       Matrix* dW1, float db1,
+                       Matrix* dW2, float db2,
+                       Matrix* dWOutput, float dbOutput,
                        float learning_rate) {
     // Update W1
     for (int i = 0; i < W1->rows; ++i) {
         for (int j = 0; j < W1->cols; ++j) {
-            // W1[i][j] = W1[i][j] - learning_rate * dW1[i][j]
-            W1->data[i][j] = W1->data[i][j] - learning_rate * dW1->data[i][j];
+            W1->data[i][j] -= learning_rate * dW1->data[i][j];
         }
     }
 
     // Update b1
     for (int i = 0; i < b1->rows; ++i) {
-        // b1[i] = b1[i] - learning_rate * db1
-        b1->data[i] = b1->data[i] - learning_rate * db1;
+        b1->data[i] -= learning_rate * db1;
     }
 
     // Update W2
     for (int i = 0; i < W2->rows; ++i) {
         for (int j = 0; j < W2->cols; ++j) {
-            // W2[i][j] = W2[i][j] - learning_rate * dW2[i][j]
-            W2->data[i][j] = W2->data[i][j] - learning_rate * dW2->data[i][j];
+            W2->data[i][j] -= learning_rate * dW2->data[i][j];
         }
     }
 
     // Update b2
     for (int i = 0; i < b2->rows; ++i) {
-        // b2[i] = b2[i] - learning_rate * db2
-        b2->data[i] = b2->data[i] - learning_rate * db2;
+        b2->data[i] -= learning_rate * db2;
+    }
+
+    // Update WOutput
+    for (int i = 0; i < WOutput->rows; ++i) {
+        for (int j = 0; j < WOutput->cols; ++j) {
+            WOutput->data[i][j] -= learning_rate * dWOutput->data[i][j];
+        }
+    }
+
+    // Update bOutput
+    for (int i = 0; i < bOutput->rows; ++i) {
+        bOutput->data[i] -= learning_rate * dbOutput;
     }
 }
 
@@ -412,7 +399,7 @@ void train(NeuralNetwork* nn,
     Matrix dZOutput;
     initialize_matrix(&dZOutput, ZOutput.rows, ZOutput.cols);
 
-    // dW2 = 1/m * matmul(dZOutput, A1_T)
+    // dWOutput = 1/m * matmul(dZOutput, A1_T)
     Matrix dWOutput;
     initialize_matrix(&dWOutput, nn->WOutput.rows, nn->WOutput.cols);
     Matrix A1_T;
@@ -420,6 +407,17 @@ void train(NeuralNetwork* nn,
 
     // dbOutput = 1/m * sum(dZ2)
     float dbOutput;
+
+////////////////////////////////////////////////////////////////////////
+// Vectors/Matrices Needed for Calculation of Second Layer Gradients
+    // dZ2 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z2)
+
+    //dW2 = 1/m * matmul(dZ2, A1_T)
+    Matrix dW2;
+    initialize_matrix(&dW2, nn->W2.rows, nn->W2.cols);
+
+    // db2 = 1/m * sum(dZ2)
+    float db2;
 
 ////////////////////////////////////////////////////////////////////////
 // Vectors/Matrices Needed for Calculation of First Layer Gradients
@@ -476,9 +474,13 @@ void train(NeuralNetwork* nn,
 			     &A1_T, X);
 
 	// Update Parameters
-	update_parameters(&(nn->W1), &(nn->b1), &(nn->WOutput),
-		   &(nn->bOutput), &dW1, db1, &dWOutput,
-		   dbOutput, learning_rate);
+	update_parameters(&(nn->W1), &(nn->b1),
+		   	  &(nn->W2), &(nn->b2),
+		          &(nn->WOutput), &(nn->bOutput),
+		          &dW1, db1,
+		          &dW2, db2,
+		          &dWOutput, dbOutput,
+		          learning_rate);
 
 	// Get Predictions
 	argmax(&Y_T, &Y_true);
@@ -506,6 +508,9 @@ void train(NeuralNetwork* nn,
     free_matrix(&dZOutput);
     free_matrix(&dWOutput);
     free_matrix(&A1_T);
+
+    // Free memory from second layer gradients calculation
+    free_matrix(&dW2);
 
     // Free memory from first layer gradients calculation
     free_matrix(&dZ1);
