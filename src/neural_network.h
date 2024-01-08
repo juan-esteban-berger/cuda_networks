@@ -8,14 +8,19 @@
 typedef struct {
     Matrix W1;
     Vector b1;
+    Matrix W2;
+    Vector b2;
     Matrix WOutput;
     Vector bOutput;
 } NeuralNetwork;
 
 ////////////////////////////////////////////////////////////////////////
 // Allocate and free memory
-void initialize_neural_network(NeuralNetwork* nn, int input_neurons,
-		int hidden_neurons, int output_neurons);
+void initialize_neural_network(NeuralNetwork* nn,
+		int input_neurons,
+		int h1_neurons,
+		int h2_neurons,
+		int output_neurons);
 void free_neural_network(NeuralNetwork* nn);
 
 ////////////////////////////////////////////////////////////////////////
@@ -31,8 +36,24 @@ void softmax(Matrix* m, Matrix* a);
 
 ////////////////////////////////////////////////////////////////////////
 // Propagation functions
-void forward_propagation(Matrix* X_T, Matrix* W1, Vector* b1, Matrix* WOutput, Vector* bOutput, Matrix* Z1, Matrix* A1, Matrix* ZOutput, Matrix* AOutput);
-void backward_propagation(Matrix* X_T, Matrix* Y_T, Matrix* W1, Vector* b1, Matrix* WOutput, Vector* bOutput, Matrix* Z1, Matrix* Z1_deac, Matrix* A1, Matrix* ZOutput, Matrix* AOutput, Matrix* dW1, float* db1, Matrix* dWOutput, float* dbOutput, Matrix* dZ1, Matrix* dZOutput, Matrix* WOutput_T, Matrix* WOutput_dZOutput, Matrix* A1_T, Matrix* X);
+void forward_propagation(Matrix* X_T,
+		Matrix* W1, Vector* b1,
+		Matrix* W2, Vector* b2,
+		Matrix* WOutput, Vector* bOutput,
+		Matrix* Z1, Matrix* A1,
+		Matrix* Z2, Matrix* A2,
+		Matrix* ZOutput, Matrix* AOutput);
+
+void backward_propagation(Matrix* X_T, Matrix* Y_T,
+		Matrix* W1, Vector* b1,
+		Matrix* WOutput, Vector* bOutput,
+		Matrix* Z1, Matrix* Z1_deac, Matrix* A1,
+		Matrix* ZOutput, Matrix* AOutput,
+		Matrix* dW1, float* db1,
+		Matrix* dWOutput, float* dbOutput,
+		Matrix* dZ1, Matrix* dZOutput,
+		Matrix* WOutput_T, Matrix* WOutput_dZOutput,
+		Matrix* A1_T, Matrix* X);
 
 ////////////////////////////////////////////////////////////////////////
 // Parameter update function

@@ -9,15 +9,22 @@
 // Function to Initialize Neural Network
 void initialize_neural_network(NeuralNetwork* nn,
 			       int input_neurons,
-			       int hidden_neurons,
+			       int h1_neurons,
+			       int h2_neurons,
                                int output_neurons) {
-    initialize_matrix(&nn->W1, hidden_neurons, input_neurons);
+    initialize_matrix(&nn->W1, h1_neurons, input_neurons);
     random_matrix(&nn->W1);
 
-    initialize_vector(&nn->b1, hidden_neurons);
+    initialize_vector(&nn->b1, h1_neurons);
     random_vector(&nn->b1);
 
-    initialize_matrix(&nn->WOutput, output_neurons, hidden_neurons);
+    initialize_matrix(&nn->W2, h2_neurons, h1_neurons);
+    random_matrix(&nn->W2);
+
+    initialize_vector(&nn->b2, h2_neurons);
+    random_vector(&nn->b2);
+
+    initialize_matrix(&nn->WOutput, output_neurons, h2_neurons);
     random_matrix(&nn->WOutput);
 
     initialize_vector(&nn->bOutput, output_neurons);
@@ -29,6 +36,8 @@ void initialize_neural_network(NeuralNetwork* nn,
 void free_neural_network(NeuralNetwork* nn) {
     free_matrix(&nn->W1);
     free_vector(&nn->b1);
+    free_matrix(&nn->W2);
+    free_vector(&nn->b2);
     free_matrix(&nn->WOutput);
     free_vector(&nn->bOutput);
 }
@@ -52,6 +61,22 @@ void save_model(const char* filename, NeuralNetwork* nn) {
     for (int i = 0; i < nn->b1.rows; ++i) {
         fprintf(file, "%f", nn->b1.data[i]);
         if (i < nn->b1.rows - 1) fprintf(file, ",");
+    }
+    fprintf(file, "\n");
+
+    // Save W2 weights as a flattened row
+    for (int i = 0; i < nn->W2.rows; ++i) {
+	for (int j = 0; j < nn->W2.cols; ++j) {
+	    fprintf(file, "%f", nn->W2.data[i][j]);
+	    if (j < nn->W2.cols - 1) fprintf(file, ",");
+	}
+    }
+    fprintf(file, "\n");
+
+    // Save b2 biases as a flattened row
+    for (int i = 0; i < nn->b2.rows; ++i) {
+	fprintf(file, "%f", nn->b2.data[i]);
+	if (i < nn->b2.rows - 1) fprintf(file, ",");
     }
     fprintf(file, "\n");
 
@@ -101,7 +126,27 @@ void load_model(const char* filename, NeuralNetwork* nn) {
         }
     }
 
-    // Load WOutput weights from the third flattened row
+    // Load W2 weights from the third flattened row
+    for (int i = 0; i < nn->W2.rows; ++i) {
+	for (int j = 0; j < nn->W2.cols; ++j) {
+	    if (fscanf(file, "%f,", &nn->W2.data[i][j]) != 1) {
+	 	fprintf(stderr, "Error reading W2 from CSV\n");
+		fclose(file);
+	 	return;
+	    }
+	}
+    }
+
+    // Load b2 biases from the fourth flattened row
+    for (int i = 0; i < nn->b2.rows; ++i) {
+	if (fscanf(file, "%f,", &nn->b2.data[i]) != 1) {
+	    fprintf(stderr, "Error reading b2 from CSV\n");
+	    fclose(file);
+	    return;
+	}
+    }
+
+    // Load WOutput weights from the fifth flattened row
     for (int i = 0; i < nn->WOutput.rows; ++i) {
         for (int j = 0; j < nn->WOutput.cols; ++j) {
             if (fscanf(file, "%f,", &nn->WOutput.data[i][j]) != 1) {
@@ -112,7 +157,7 @@ void load_model(const char* filename, NeuralNetwork* nn) {
         }
     }
 
-    // Load bOutput biases from the fourth flattened row
+    // Load bOutput biases from the sixth flattened row
     for (int i = 0; i < nn->bOutput.rows; ++i) {
         if (fscanf(file, "%f,", &nn->bOutput.data[i]) != 1) {
             fprintf(stderr, "Error reading bOutput from CSV\n");
@@ -172,10 +217,11 @@ void softmax(Matrix* m, Matrix* a) {
 
 ////////////////////////////////////////////////////////////////////////
 // Forward Propagation Function
-void forward_propagation(Matrix* X_T,
-		Matrix* W1, Vector* b1,
-		Matrix* WOutput, Vector* bOutput,
-		Matrix* Z1, Matrix* A1, Matrix* ZOutput, Matrix* AOutput) {
+void forward_propagation_old(Matrix* X_T,
+		             Matrix* W1, Vector* b1,
+		             Matrix* WOutput, Vector* bOutput,
+		             Matrix* Z1, Matrix* A1,
+			     Matrix* ZOutput, Matrix* AOutput) {
 
     // First Layer Dot Products: Z1 = matmul(W1, X_T) + b
     matrix_multiply(W1, X_T, Z1);
@@ -186,6 +232,38 @@ void forward_propagation(Matrix* X_T,
 
     // Output Layer Dot Products: ZOutput = matmul(WOutput, A1) + bOutput
     matrix_multiply(WOutput, A1, ZOutput);
+    add_vector_to_matrix(ZOutput, bOutput);
+
+    // Output Layer Activations: AOutput = Softmax(ZOutput)
+    softmax(ZOutput, AOutput);
+}
+
+////////////////////////////////////////////////////////////////////////
+// Updated Forward Propagation Function
+void forward_propagation(Matrix* X_T,
+                         Matrix* W1, Vector* b1,
+                         Matrix* W2, Vector* b2,
+                         Matrix* WOutput, Vector* bOutput,
+                         Matrix* Z1, Matrix* A1,
+                         Matrix* Z2, Matrix* A2,
+                         Matrix* ZOutput, Matrix* AOutput) {
+
+    // First Layer Dot Products: Z1 = matmul(W1, X_T) + b1
+    matrix_multiply(W1, X_T, Z1);
+    add_vector_to_matrix(Z1, b1);
+
+    // First Layer Activations: A1 = ReLU(Z1)
+    ReLU(Z1, A1);
+
+    // Second Layer Dot Products: Z2 = matmul(W2, A1) + b2
+    matrix_multiply(W2, A1, Z2);
+    add_vector_to_matrix(Z2, b2);
+
+    // Second Layer Activations: A2 = ReLU(Z2)
+    ReLU(Z2, A2);
+
+    // Output Layer Dot Products: ZOutput = matmul(WOutput, A2) + bOutput
+    matrix_multiply(WOutput, A2, ZOutput);
     add_vector_to_matrix(ZOutput, bOutput);
 
     // Output Layer Activations: AOutput = Softmax(ZOutput)
@@ -316,6 +394,12 @@ void train(NeuralNetwork* nn,
     Matrix A1;
     initialize_matrix(&A1, nn->W1.rows, X_T.cols);
 
+    // Second Layer
+    Matrix Z2;
+    initialize_matrix(&Z2, nn->W2.rows, X_T.cols);
+    Matrix A2;
+    initialize_matrix(&A2, nn->W2.rows, X_T.cols);
+
     // Output Layer
     Matrix ZOutput;
     initialize_matrix(&ZOutput, nn->WOutput.rows, X_T.cols);
@@ -372,8 +456,11 @@ void train(NeuralNetwork* nn,
 	// Forward Propagation
 	forward_propagation(&X_T,
 			&(nn->W1), &(nn->b1),
+		     	&(nn->W2), &(nn->b2),
 			&(nn->WOutput), &(nn->bOutput),
-			&Z1, &A1, &ZOutput, &AOutput);
+			&Z1, &A1,
+		     	&Z2, &A2,
+		        &ZOutput, &AOutput);
 
 	// Backward Propagation
 	backward_propagation(&X_T, &Y_T,
@@ -410,6 +497,8 @@ void train(NeuralNetwork* nn,
     // Free memory from forward propagation section
     free_matrix(&Z1);
     free_matrix(&A1);
+    free_matrix(&Z2);
+    free_matrix(&A2);
     free_matrix(&ZOutput);
     free_matrix(&AOutput);
 
@@ -454,6 +543,12 @@ void predict(NeuralNetwork* nn,
     Matrix A1;
     initialize_matrix(&A1, nn->W1.rows, X_T.cols);
 
+    // Initialize Z2 and A2 used in Forward Propagation
+    Matrix Z2;
+    initialize_matrix(&Z2, nn->W2.rows, X_T.cols);
+    Matrix A2;
+    initialize_matrix(&A2, nn->W2.rows, X_T.cols);
+
     // Initialize ZOutput and a temporary AOutput
     Matrix ZOutput;
     initialize_matrix(&ZOutput, nn->WOutput.rows, X_T.cols);
@@ -473,8 +568,11 @@ void predict(NeuralNetwork* nn,
     // Forward Propagation
     forward_propagation(&X_T,
             &(nn->W1), &(nn->b1),
+	    &(nn->W2), &(nn->b2),
             &(nn->WOutput), &(nn->bOutput),
-            &Z1, &A1, &ZOutput, &AOutput);
+	    &Z1, &A1,
+            &Z1, &A1,
+	    &ZOutput, &AOutput);
 
     // Get Predictions
     argmax(&Y_T, &Y_true);
@@ -493,6 +591,8 @@ void predict(NeuralNetwork* nn,
     free_matrix(&X_T);
     free_matrix(&Z1);
     free_matrix(&A1);
+    free_matrix(&Z2);
+    free_matrix(&A2);
     free_matrix(&ZOutput);
     free_matrix(&AOutput);
 }

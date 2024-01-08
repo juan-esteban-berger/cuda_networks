@@ -20,6 +20,7 @@ int main() {
     const int NUM_ROWS_TEST = 10000;
     const int NUM_NEURONS_INPUT = 784;
     const int NUM_NEURONS_HIDDEN_1 = 64;
+    const int NUM_NEURONS_HIDDEN_2 = 64;
     const int NUM_NEURONS_OUTPUT = 10;
 
 ////////////////////////////////////////////////////////////////////////
@@ -62,13 +63,14 @@ int main() {
     initialize_neural_network(&nn,
 			      NUM_NEURONS_INPUT,
 			      NUM_NEURONS_HIDDEN_1,
+			      NUM_NEURONS_HIDDEN_2,
 	                      NUM_NEURONS_OUTPUT);
 
 ////////////////////////////////////////////////////////////////////////
 // Train Model
     printf("Training on Training Dataset:\n");
-    train(&nn, &X_train, &Y_train, 100, 0.1);
-    // train(&nn, &X_train, &Y_train, 1, 0.1);
+    // train(&nn, &X_train, &Y_train, 100, 0.1);
+    train(&nn, &X_train, &Y_train, 1, 0.1);
 
 ////////////////////////////////////////////////////////////////////////
 // Save Model
@@ -82,6 +84,7 @@ int main() {
     initialize_neural_network(&nn_loaded,
 			      NUM_NEURONS_INPUT,
 			      NUM_NEURONS_HIDDEN_1,
+			      NUM_NEURONS_HIDDEN_2,
 	                      NUM_NEURONS_OUTPUT);
 
     load_model("models/nn.csv", &nn_loaded);
