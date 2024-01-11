@@ -251,37 +251,59 @@ void forward_propagation(Matrix* X_T,
 // Backward Propagation Function
 void backward_propagation(Matrix* X_T, Matrix* Y_T,
 			  Matrix* W1, Vector* b1,
+			  Matrix* W2, Vector* b2,
 			  Matrix* WOutput, Vector* bOutput,
 			  Matrix* Z1, Matrix* Z1_deac, Matrix* A1,
+			  Matrix* Z2, Matrix* Z2_deac, Matrix* A2,
 			  Matrix* ZOutput, Matrix* AOutput,
 			  Matrix* dW1, float* db1,
+			  Matrix* dW2, float* db2,
 			  Matrix* dWOutput, float* dbOutput,
-			  Matrix* dZ1, Matrix* dZOutput,
+			  Matrix* dZ1, Matrix* dZ2, Matrix* dZOutput,
 			  Matrix* WOutput_T,
 			  Matrix* WOutput_dZOutput,
-			  Matrix* A1_T, Matrix* X) {
+			  Matrix* W2_T,
+			  Matrix* W2_dZ2,
+			  Matrix* A2_T, Matrix* A1_T, Matrix* X) {
 
 ////////////////////////////////////////////////////////////////////////
 // Output Layer Gradients
     // dZOutput = AOutput - Y_T
     matrix_subtract(AOutput, Y_T, dZOutput);
 
-    // dW2 = 1/m * matmul(dZOutput, A1_T)
-    transpose_matrix(A1, A1_T);
-    matrix_multiply(dZOutput, A1_T, dWOutput);
+    // dW2 = 1/m * matmul(dZOutput, A2_T)
+    transpose_matrix(A2, A2_T);
+    matrix_multiply(dZOutput, A2_T, dWOutput);
     divide_matrix_by_scalar(dWOutput, AOutput->cols);
 
-    // dbOutput = 1/m * sum(dZ2)
+    // dbOutput = 1/m * sum(dZOutput)
     sum_matrix(dZOutput, dbOutput);
     *dbOutput /= AOutput->cols;
 
 ////////////////////////////////////////////////////////////////////////
-// First Layer Gradients
-    // dZ1 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z1)
+// Second Layer Gradients
+    // dZ2 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z2)
     transpose_matrix(WOutput, WOutput_T);
     matrix_multiply(WOutput_T, dZOutput, WOutput_dZOutput);
+    ReLU_derivative(Z2, Z2_deac);
+    matrix_multiply_elementwise(Z2_deac, WOutput_dZOutput, dZ2);
+
+    // dW2 = 1 / m * matmul(dZ2, A1_T)
+    transpose_matrix(A1, A1_T);
+    matrix_multiply(dZ2, A1_T, dW2);
+    divide_matrix_by_scalar(dW2, AOutput->cols);
+
+    // db2 = 1/m * sum(dZ2)
+    sum_matrix(dZ2, db2);
+    *db2 /= AOutput->cols;
+
+////////////////////////////////////////////////////////////////////////
+// First Layer Gradients
+    // dZ1 = matmul(W2_T, dZ2) * ReLU_deriv(Z1)
+    transpose_matrix(W2, W2_T);
+    matrix_multiply(W2_T, dZ2, W2_dZ2);
     ReLU_derivative(Z1, Z1_deac);
-    matrix_multiply_elementwise(Z1_deac, WOutput_dZOutput, dZ1);
+    matrix_multiply_elementwise(Z1_deac, W2_dZ2, dZ1);
 
     // dW1 = 1 / m * matmul(dZ1, X_T)
     matrix_multiply(dZ1, X, dW1);
@@ -402,19 +424,30 @@ void train(NeuralNetwork* nn,
     // dWOutput = 1/m * matmul(dZOutput, A1_T)
     Matrix dWOutput;
     initialize_matrix(&dWOutput, nn->WOutput.rows, nn->WOutput.cols);
-    Matrix A1_T;
-    initialize_matrix(&A1_T, A1.cols, A1.rows);
+    Matrix A2_T;
+    initialize_matrix(&A2_T, A2.cols, A2.rows);
 
-    // dbOutput = 1/m * sum(dZ2)
+    // dbOutput = 1/m * sum(dZOutput)
     float dbOutput;
 
 ////////////////////////////////////////////////////////////////////////
 // Vectors/Matrices Needed for Calculation of Second Layer Gradients
     // dZ2 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z2)
+    Matrix dZ2;
+    initialize_matrix(&dZ2, Z2.rows, Z2.cols);
+    Matrix WOutput_T;
+    initialize_matrix(&WOutput_T, nn->WOutput.cols, nn->WOutput.rows);
+    Matrix WOutput_dZOutput; // Product of WOutput_T and dZOutput
+    initialize_matrix(&WOutput_dZOutput, WOutput_T.rows, dZOutput.cols);
+    Matrix Z2_deac; // Z2 with ReLU derivative applied, for backprop
+    initialize_matrix(&Z2_deac, Z2.rows, Z2.cols);
 
-    //dW2 = 1/m * matmul(dZ2, A1_T)
+
+    //dW2 = 1/m * matmul(dZ2, A2_T)
     Matrix dW2;
     initialize_matrix(&dW2, nn->W2.rows, nn->W2.cols);
+    Matrix A1_T;
+    initialize_matrix(&A1_T, A1.cols, A1.rows);
 
     // db2 = 1/m * sum(dZ2)
     float db2;
@@ -424,10 +457,10 @@ void train(NeuralNetwork* nn,
     // dZ1 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z1)
     Matrix dZ1;
     initialize_matrix(&dZ1, Z1.rows, Z1.cols);
-    Matrix WOutput_T;
-    initialize_matrix(&WOutput_T, nn->WOutput.cols, nn->WOutput.rows);
-    Matrix WOutput_dZOutput; // Product of WOutput_T and dZOutput
-    initialize_matrix(&WOutput_dZOutput, WOutput_T.rows, dZOutput.cols);
+    Matrix W2_T;
+    initialize_matrix(&W2_T, nn->W2.cols, nn->W2.rows);
+    Matrix W2_dZ2; // Product of W2_T and dZ2
+    initialize_matrix(&W2_dZ2, W2_T.rows, dZ2.cols);
     Matrix Z1_deac; // Z1 with ReLU derivative applied, for backprop
     initialize_matrix(&Z1_deac, Z1.rows, Z1.cols);
 
@@ -463,15 +496,20 @@ void train(NeuralNetwork* nn,
 	// Backward Propagation
 	backward_propagation(&X_T, &Y_T,
 			     &(nn->W1), &(nn->b1),
+		      	     &(nn->W2), &(nn->b2),
 			     &(nn->WOutput), &(nn->bOutput),
 			     &Z1, &Z1_deac, &A1,
+		      	     &Z2, &Z2_deac, &A2,
 			     &ZOutput, &AOutput,
 			     &dW1, &db1,
+		      	     &dW2, &db2,
 			     &dWOutput, &dbOutput,
-			     &dZ1, &dZOutput,
+			     &dZ1, &dZ2, &dZOutput,
 		      	     &WOutput_T,
 		             &WOutput_dZOutput,
-			     &A1_T, X);
+		      	     &W2_T,
+		      	     &W2_dZ2,
+			     &A2_T, &A1_T, X);
 
 	// Update Parameters
 	update_parameters(&(nn->W1), &(nn->b1),
@@ -507,15 +545,20 @@ void train(NeuralNetwork* nn,
     // Free memory from output layer gradients calculation
     free_matrix(&dZOutput);
     free_matrix(&dWOutput);
-    free_matrix(&A1_T);
+    free_matrix(&A2_T);
 
     // Free memory from second layer gradients calculation
+    free_matrix(&dZ2);
+    free_matrix(&WOutput_T);
+    free_matrix(&WOutput_dZOutput);
+    free_matrix(&Z2_deac);
     free_matrix(&dW2);
+    free_matrix(&A1_T);
 
     // Free memory from first layer gradients calculation
     free_matrix(&dZ1);
-    free_matrix(&WOutput_T);
-    free_matrix(&WOutput_dZOutput);
+    free_matrix(&W2_T);
+    free_matrix(&W2_dZ2);
     free_matrix(&Z1_deac);
     free_matrix(&dW1);
 

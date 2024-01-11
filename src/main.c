@@ -19,8 +19,8 @@ int main() {
     const int NUM_ROWS_TRAIN = 1000;
     const int NUM_ROWS_TEST = 10000;
     const int NUM_NEURONS_INPUT = 784;
-    const int NUM_NEURONS_HIDDEN_1 = 64;
-    const int NUM_NEURONS_HIDDEN_2 = 64;
+    const int NUM_NEURONS_HIDDEN_1 = 200;
+    const int NUM_NEURONS_HIDDEN_2 = 200;
     const int NUM_NEURONS_OUTPUT = 10;
 
 ////////////////////////////////////////////////////////////////////////
@@ -69,8 +69,8 @@ int main() {
 ////////////////////////////////////////////////////////////////////////
 // Train Model
     printf("Training on Training Dataset:\n");
-    // train(&nn, &X_train, &Y_train, 100, 0.1);
-    train(&nn, &X_train, &Y_train, 1, 0.1);
+    train(&nn, &X_train, &Y_train, 150, 0.1);
+    // train(&nn, &X_train, &Y_train, 1, 0.1);
 
 ////////////////////////////////////////////////////////////////////////
 // Save Model
@@ -101,13 +101,6 @@ int main() {
     denormalize_matrix(&X_test, 0, 255);
     printf("Previewing a few predictions:\n");
     preview_predictions(&X_test, &Y_pred, 28, 28, 5);
-
-////////////////////////////////////////////////////////////////////////
-// TODO
-	// Add one more layer (so it counts as deep learning)
-		// Modify Code so it works
-	// Modify code to work with both cuda and c
-		// Make sure it works with cuda
 
 ////////////////////////////////////////////////////////////////////////
 // Free memory

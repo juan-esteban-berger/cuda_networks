@@ -46,14 +46,20 @@ void forward_propagation(Matrix* X_T,
 
 void backward_propagation(Matrix* X_T, Matrix* Y_T,
 		Matrix* W1, Vector* b1,
+		Matrix* W2, Vector* b2,
 		Matrix* WOutput, Vector* bOutput,
 		Matrix* Z1, Matrix* Z1_deac, Matrix* A1,
+		Matrix* Z2, Matrix* Z2_deac, Matrix* A2,
 		Matrix* ZOutput, Matrix* AOutput,
 		Matrix* dW1, float* db1,
+		Matrix* dW2, float* db2,
 		Matrix* dWOutput, float* dbOutput,
-		Matrix* dZ1, Matrix* dZOutput,
-		Matrix* WOutput_T, Matrix* WOutput_dZOutput,
-		Matrix* A1_T, Matrix* X);
+		Matrix* dZ1, Matrix* dZ2, Matrix* dZOutput,
+		Matrix* WOutput_T,
+		Matrix* WOutput_dZOutput,
+		Matrix* W2_T,
+		Matrix* W2_dZ2,
+		Matrix* A2_T, Matrix* A1_T, Matrix* X);
 
 ////////////////////////////////////////////////////////////////////////
 // Parameter update function
