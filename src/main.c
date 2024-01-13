@@ -69,8 +69,8 @@ int main() {
 ////////////////////////////////////////////////////////////////////////
 // Train Model
     printf("Training on Training Dataset:\n");
-    train(&nn, &X_train, &Y_train, 150, 0.1);
-    // train(&nn, &X_train, &Y_train, 1, 0.1);
+    // train(&nn, &X_train, &Y_train, 150, 0.1);
+    train(&nn, &X_train, &Y_train, 2, 0.1);
 
 ////////////////////////////////////////////////////////////////////////
 // Save Model

@@ -253,8 +253,8 @@ void backward_propagation(Matrix* X_T, Matrix* Y_T,
 			  Matrix* W1, Vector* b1,
 			  Matrix* W2, Vector* b2,
 			  Matrix* WOutput, Vector* bOutput,
-			  Matrix* Z1, Matrix* Z1_deac, Matrix* A1,
-			  Matrix* Z2, Matrix* Z2_deac, Matrix* A2,
+			  Matrix* Z1, Matrix* A1,
+			  Matrix* Z2, Matrix* A2,
 			  Matrix* ZOutput, Matrix* AOutput,
 			  Matrix* dW1, float* db1,
 			  Matrix* dW2, float* db2,
@@ -285,8 +285,8 @@ void backward_propagation(Matrix* X_T, Matrix* Y_T,
     // dZ2 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z2)
     transpose_matrix(WOutput, WOutput_T);
     matrix_multiply(WOutput_T, dZOutput, WOutput_dZOutput);
-    ReLU_derivative(Z2, Z2_deac);
-    matrix_multiply_elementwise(Z2_deac, WOutput_dZOutput, dZ2);
+    ReLU_derivative(Z2, dZ2);
+    matrix_multiply_elementwise(dZ2, WOutput_dZOutput, dZ2);
 
     // dW2 = 1 / m * matmul(dZ2, A1_T)
     transpose_matrix(A1, A1_T);
@@ -302,8 +302,8 @@ void backward_propagation(Matrix* X_T, Matrix* Y_T,
     // dZ1 = matmul(W2_T, dZ2) * ReLU_deriv(Z1)
     transpose_matrix(W2, W2_T);
     matrix_multiply(W2_T, dZ2, W2_dZ2);
-    ReLU_derivative(Z1, Z1_deac);
-    matrix_multiply_elementwise(Z1_deac, W2_dZ2, dZ1);
+    ReLU_derivative(Z1, dZ1);
+    matrix_multiply_elementwise(dZ1, W2_dZ2, dZ1);
 
     // dW1 = 1 / m * matmul(dZ1, X_T)
     matrix_multiply(dZ1, X, dW1);
@@ -421,7 +421,7 @@ void train(NeuralNetwork* nn,
     Matrix dZOutput;
     initialize_matrix(&dZOutput, ZOutput.rows, ZOutput.cols);
 
-    // dWOutput = 1/m * matmul(dZOutput, A1_T)
+    // dWOutput = 1/m * matmul(dZOutput, A2_T)
     Matrix dWOutput;
     initialize_matrix(&dWOutput, nn->WOutput.rows, nn->WOutput.cols);
     Matrix A2_T;
@@ -439,11 +439,8 @@ void train(NeuralNetwork* nn,
     initialize_matrix(&WOutput_T, nn->WOutput.cols, nn->WOutput.rows);
     Matrix WOutput_dZOutput; // Product of WOutput_T and dZOutput
     initialize_matrix(&WOutput_dZOutput, WOutput_T.rows, dZOutput.cols);
-    Matrix Z2_deac; // Z2 with ReLU derivative applied, for backprop
-    initialize_matrix(&Z2_deac, Z2.rows, Z2.cols);
 
-
-    //dW2 = 1/m * matmul(dZ2, A2_T)
+    //dW2 = 1/m * matmul(dZ2, A1_T)
     Matrix dW2;
     initialize_matrix(&dW2, nn->W2.rows, nn->W2.cols);
     Matrix A1_T;
@@ -461,8 +458,6 @@ void train(NeuralNetwork* nn,
     initialize_matrix(&W2_T, nn->W2.cols, nn->W2.rows);
     Matrix W2_dZ2; // Product of W2_T and dZ2
     initialize_matrix(&W2_dZ2, W2_T.rows, dZ2.cols);
-    Matrix Z1_deac; // Z1 with ReLU derivative applied, for backprop
-    initialize_matrix(&Z1_deac, Z1.rows, Z1.cols);
 
     // dW1 = 1 / m * matmul(dZ1, X_T)
     Matrix dW1;
@@ -498,8 +493,8 @@ void train(NeuralNetwork* nn,
 			     &(nn->W1), &(nn->b1),
 		      	     &(nn->W2), &(nn->b2),
 			     &(nn->WOutput), &(nn->bOutput),
-			     &Z1, &Z1_deac, &A1,
-		      	     &Z2, &Z2_deac, &A2,
+			     &Z1, &A1,
+		      	     &Z2, &A2,
 			     &ZOutput, &AOutput,
 			     &dW1, &db1,
 		      	     &dW2, &db2,
@@ -551,7 +546,6 @@ void train(NeuralNetwork* nn,
     free_matrix(&dZ2);
     free_matrix(&WOutput_T);
     free_matrix(&WOutput_dZOutput);
-    free_matrix(&Z2_deac);
     free_matrix(&dW2);
     free_matrix(&A1_T);
 
@@ -559,7 +553,6 @@ void train(NeuralNetwork* nn,
     free_matrix(&dZ1);
     free_matrix(&W2_T);
     free_matrix(&W2_dZ2);
-    free_matrix(&Z1_deac);
     free_matrix(&dW1);
 
     // Free memory from calculating accuracy section
