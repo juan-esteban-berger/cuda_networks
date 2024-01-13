@@ -5,10 +5,10 @@ BINDIR=./bin
 SRCDIR=./src
 
 # Defining the dependencies, list all .h files used by your .c source files
-DEPS = $(SRCDIR)/neural_network.h $(SRCDIR)/linear_algebra.h
+DEPS = $(SRCDIR)/cuda_neural_network.h $(SRCDIR)/cuda_linear_algebra.h
 
 # Defining the objects, list all .o files required to generate the final executable
-_OBJ = main.o neural_network.o linear_algebra.o
+_OBJ = main.o cuda_neural_network.o cuda_linear_algebra.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
 
 # Compiling the object files

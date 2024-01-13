@@ -3,9 +3,8 @@
 #include <math.h>
 #include <time.h>
 
-#include "cuda_neural_network.h"
-// #include "linear_algebra.h"
-#include "cuda_linear_algebra.h"
+#include "neural_network.h"
+#include "linear_algebra.h"
 
 ////////////////////////////////////////////////////////////////////////
 // Main function
