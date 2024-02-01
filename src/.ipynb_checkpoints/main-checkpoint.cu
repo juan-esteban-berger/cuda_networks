@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <cuda_runtime.h>
 
 #include "cuda_neural_network.h"
 // #include "linear_algebra.h"
@@ -83,10 +84,10 @@ int main() {
     printf("Loading Model:\n");
     NeuralNetwork nn_loaded;
     initialize_neural_network(&nn_loaded,
-			      NUM_NEURONS_INPUT,
-			      NUM_NEURONS_HIDDEN_1,
-			      NUM_NEURONS_HIDDEN_2,
-	                      NUM_NEURONS_OUTPUT);
+        		      NUM_NEURONS_INPUT,
+        		      NUM_NEURONS_HIDDEN_1,
+        		      NUM_NEURONS_HIDDEN_2,
+                              NUM_NEURONS_OUTPUT);
 
     load_model("models/nn.csv", &nn_loaded);
 

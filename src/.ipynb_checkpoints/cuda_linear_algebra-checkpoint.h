@@ -26,9 +26,7 @@ typedef struct {
 // Function prototypes for cuda_linear_algebra.cu
 void read_csv(const char* filename, Matrix* matrix);
 void preview_vector(Vector* v, int decimals);
-void preview_vector_GPU(Vector* v, int decimals);
 void preview_matrix(Matrix* m, int decimals);
-void preview_matrix_GPU(Matrix_GPU* m, int decimals);
 void preview_image(Matrix* m, int row_index,
 		int image_size_x, int image_size_y);
 void initialize_vector(Vector* v, int rows);
@@ -49,7 +47,6 @@ void normalize_vector(Vector* v, float min, float max);
 void normalize_matrix(Matrix* m, float min, float max);
 void denormalize_vector(Vector* v, float min, float max);
 void denormalize_matrix(Matrix* m, float min, float max);
-__global__ void scalar_division_GPU(float *v, float scalar);
 void transpose_matrix(Matrix* original, Matrix* transpose);
 __global__ void transpose_matrix_GPU(float *input, float *output, int rows, int cols); // New
 void matrix_multiply(Matrix* m1, Matrix* m2, Matrix* result);
