@@ -25,6 +25,9 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////
 // Function prototypes for cuda_linear_algebra.cu
 void read_csv(const char* filename, Matrix* matrix);
+void read_csv_limited(const char* filename, Matrix* matrix,
+		int startRow, int endRow,
+		int fileRows, int fileCols);
 void preview_vector(Vector* v, int decimals);
 void preview_vector_GPU(Vector* v, int decimals);
 void preview_matrix(Matrix* m, int decimals);
@@ -39,6 +42,11 @@ void copy_vector_to_device(Vector* h_v, Vector* d_v); // New
 void copy_matrix_to_device(Matrix* h_m, Matrix_GPU* d_m); // New
 void copy_vector_to_host(Vector* h_v, Vector* d_v); // New
 void copy_matrix_to_host(Matrix* h_m, Matrix_GPU* d_m); // New
+void copy_matrix_range_to_matrix_GPU(Matrix_GPU* d_m, Matrix_GPU* d_m_subset,
+		int startRow, int endRow);
+void copy_random_matrix_range_to_matrix_GPU(Matrix_GPU* d_x, Matrix_GPU* d_x_subset,
+		Matrix_GPU* d_y, Matrix_GPU* d_y_subset,
+		int numRows, int totalRows);
 void random_vector(Vector* v);
 void random_matrix(Matrix* m);
 void free_vector(Vector* v);

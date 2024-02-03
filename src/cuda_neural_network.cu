@@ -1148,34 +1148,40 @@ void train(NeuralNetwork* nn,
     free_vector(&Y_hat);
 }
 
+////////////////////////////////////////////////////////////////////////
+// GPU Training Function
 void train_GPU(NeuralNetwork_GPU* d_nn,
 	       Matrix_GPU* d_X, Matrix_GPU* d_Y,
 	       int epochs, float learning_rate,
 	       dim3 threadsPerBlock,
 	       dim3 numBlocks,
 	       int sharedMemSize) {
+
 ////////////////////////////////////////////////////////////////////////
-// Data Preparatation
-    // Transpose X to get correct dimensions for matrix multiplication
+// Vectors and Matrices Needed for Forward Propagation
     Matrix_GPU d_X_T;
     initialize_matrix_on_device(&d_X_T, d_X->cols, d_X->rows);
-    transpose_matrix_GPU <<< numBlocks, threadsPerBlock >>>(d_X->data,
-							    d_X_T.data,
-							    d_X->rows,
-							    d_X->cols);
-    cudaDeviceSynchronize();
 
-    // Transpose Y_T to match AOutput
+    // Transpose Matrix d_X
+    transpose_matrix_GPU <<< numBlocks, threadsPerBlock >>> (d_X->data,
+		                                                d_X_T.data,
+								d_X->rows,
+								d_X->cols);
+
+    cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
+    // Initialize Matrix d_Y_T on device
     Matrix_GPU d_Y_T;
     initialize_matrix_on_device(&d_Y_T, d_Y->cols, d_Y->rows);
-    transpose_matrix_GPU <<< numBlocks, threadsPerBlock >>>(d_Y->data,
-							    d_Y_T.data,
-							    d_Y->rows,
-							    d_Y->cols);
-    cudaDeviceSynchronize();
 
-////////////////////////////////////////////////////////////////////////
-// Initialize Vectors and Matrices needed in Forward Propagation
+    // Transpose Matrix d_Y
+    transpose_matrix_GPU <<< numBlocks, threadsPerBlock >>> (d_Y->data,
+		                                                d_Y_T.data,
+								d_Y->rows,
+								d_Y->cols);
+
+    cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
     // First Layer
     Matrix_GPU d_Z1;
     initialize_matrix_on_device(&d_Z1, d_nn->W1.rows, d_X_T.cols);
@@ -1194,152 +1200,159 @@ void train_GPU(NeuralNetwork_GPU* d_nn,
     Matrix_GPU d_AOutput;
     initialize_matrix_on_device(&d_AOutput, d_nn->WOutput.rows, d_X_T.cols);
 
-////////////////////////////////////////////////////////////////////////
-// Vectors/Matrices Needed for Calculation of Output Layer Gradients
-    // dZOutput = AOutput - Y_T
-    Matrix_GPU d_dZOutput;
-    initialize_matrix_on_device(&d_dZOutput, d_ZOutput.rows, d_ZOutput.cols);
-
-    // dWOutput = 1/m * matmul(dZOutput, A2_T)
-    Matrix_GPU d_dWOutput;
-    initialize_matrix_on_device(&d_dWOutput, d_nn->WOutput.rows, d_nn->WOutput.cols);
-    Matrix_GPU d_A2_T;
-    initialize_matrix_on_device(&d_A2_T, d_A2.cols, d_A2.rows);
-
-    // dbOutput = 1/m * sum(dZOutput)
-    float dbOutput;
-
-////////////////////////////////////////////////////////////////////////
-// Vectors/Matrices Needed for Calculation of Second Layer Gradients
-    // dZ2 = matmul(WOutput_T, dZOutput) * ReLU_deriv(Z2)
-    Matrix_GPU d_dZ2;
-    initialize_matrix_on_device(&d_dZ2, d_Z2.rows, d_Z2.cols);
-    Matrix_GPU d_WOutput_T;
-    initialize_matrix_on_device(&d_WOutput_T, d_nn->WOutput.cols, d_nn->WOutput.rows);
-    Matrix_GPU d_WOutput_dZOutput; // Product of WOutput_T and dZOutput
-    initialize_matrix_on_device(&d_WOutput_dZOutput, d_WOutput_T.rows, d_dZOutput.cols);
-
-    // dW2 = 1/m * matmul(dZ2, A1_T)
-    Matrix_GPU d_dW2;
-    initialize_matrix_on_device(&d_dW2, d_nn->W2.rows, d_nn->W2.cols);
-    Matrix_GPU d_A1_T;
-    initialize_matrix_on_device(&d_A1_T, d_A1.cols, d_A1.rows);
-
-    // db2 = 1/m * sum(dZ2)
-    float db2;
-
-////////////////////////////////////////////////////////////////////////
-// Vectors/Matrices Needed for Calculation of First Layer Gradients
-    // dZ1 = matmul(WOutput_T, dZ1) * ReLU_deriv(Z1)
-    Matrix_GPU d_dZ1;
-    initialize_matrix_on_device(&d_dZ1, d_Z1.rows, d_Z1.cols);
-    Matrix_GPU d_W2_T;
-    initialize_matrix_on_device(&d_W2_T, d_nn->W2.cols, d_nn->W2.rows);
-    Matrix_GPU d_W2_dZ2; // Product of W2_T and dZ2
-    initialize_matrix_on_device(&d_W2_dZ2, d_W2_T.rows, d_dZ2.cols);
-
-    // dW1 = 1 / m * matmul(dZ1, X_T)
-    Matrix_GPU d_dW1;
-    initialize_matrix_on_device(&d_dW1, d_nn->W1.rows, d_nn->W1.cols);
-
-    // db1 = 1/m * sum(dZ1)
-    float db1;
-
-////////////////////////////////////////////////////////////////////////
-// Initialize Vectors needed for calculating training accuracy
+    // Initialize Vectors for Y and Y_hat
     Vector d_Y_true;
     initialize_vector_on_device(&d_Y_true, d_X_T.cols);
     Vector d_Y_hat;
     initialize_vector_on_device(&d_Y_hat, d_X_T.cols);
 
 ////////////////////////////////////////////////////////////////////////
-// Train Network
-    // Loop over the epochs
-    for (int epoch = 0; epoch < epochs; epoch++) {
-	printf("Epoch %d:\n", epoch);
-
-	// Forward Propagation
-	forward_propagation_GPU(&d_X_T,
-			&(d_nn->W1), &(d_nn->b1),
-		     	&(d_nn->W2), &(d_nn->b2),
-			&(d_nn->WOutput), &(d_nn->bOutput),
-			&d_Z1, &d_A1,
-		     	&d_Z2, &d_A2,
-		        &d_ZOutput, &d_AOutput,
-			threadsPerBlock,
-			numBlocks,
-			sharedMemSize);
-
-	// Backward Propagation
-	// backward_propagation_GPU(&d_X_T, &d_Y_T,
-	// 		     &(d_nn->W1), &(d_nn->b1),
-	// 	      	     &(d_nn->W2), &(d_nn->b2),
-	// 		     &(d_nn->WOutput), &(d_nn->bOutput),
-	// 		     &d_Z1, &d_A1,
-	// 	      	     &d_Z2, &d_A2,
-	// 		     &d_ZOutput, &d_AOutput,
-	// 		     &d_dW1, &db1,
-	// 	      	     &d_dW2, &db2,
-	// 		     &d_dWOutput, &dbOutput,
-	// 		     &d_dZ1, &d_dZ2, &d_dZOutput,
-	// 	      	     &d_WOutput_T,
-	// 	             &d_WOutput_dZOutput,
-	// 	      	     &d_W2_T,
-	// 	      	     &d_W2_dZ2,
-	// 		     &d_A2_T, &d_A1_T, d_X,
-	// 		     threadsPerBlock,
-	// 		     numBlocks,
-	// 		     sharedMemSize);
-
-	// Update Parameters
-        // update_parameters_GPU <<< numBlocks, threadsPerBlock >>>(d_nn->W1.data, d_nn->b1.data,
-	// 							 d_nn->W2.data, d_nn->b2.data,
-	// 							 d_nn->WOutput.data, d_nn->bOutput.data,
-	// 							 d_dW1.data, db1,
-	// 							 d_dW2.data, db2,
-	// 							 d_dWOutput.data, dbOutput,
-	// 							 d_nn->W1.rows, d_nn->W1.cols,
-	// 							 d_nn->b1.rows,
-	// 							 d_nn->W2.rows, d_nn->W2.cols,
-	// 							 d_nn->b2.rows,
-	// 							 d_nn->WOutput.rows, d_nn->WOutput.cols,
-	// 							 d_nn->bOutput.rows,
-	// 							 learning_rate);
-	// cudaDeviceSynchronize();
-
-	// Get Predictions
-	argmax_GPU<<<numBlocks, threadsPerBlock, sharedMemSize>>>(d_Y_T.data,
-								  d_Y_true.data,
-								  d_Y_T.rows,
-								  d_Y_T.cols);
-	cudaDeviceSynchronize();
-	argmax_GPU<<<numBlocks, threadsPerBlock, sharedMemSize>>>(d_AOutput.data,
-								  d_Y_hat.data,
-								  d_AOutput.rows,
-								  d_AOutput.cols);
-	cudaDeviceSynchronize();
-
-	// Calculate Accuracy
-	float *d_accuracy;
-        cudaMalloc((void **)&d_accuracy, sizeof(float));
-	calculate_accuracy_GPU<<<numBlocks, threadsPerBlock, sharedMemSize>>>(d_Y_true.data,
-									    d_Y_hat.data,
-									    d_Y_true.rows,
-									    d_accuracy);
-
-	// Copy accuracy from device to host
-	float h_accuracy;
-	cudaMemcpy(&h_accuracy, d_accuracy, sizeof(float), cudaMemcpyDeviceToHost);
-	printf("Accuracy: %f", h_accuracy);
-    }
+// Vectors/Matrices Needed for Calculation of Output Layer Gradients
+    // dZOutput = AOutput - Y_T
+    Matrix_GPU d_dZOutput;
+    initialize_matrix_on_device(&d_dZOutput, d_ZOutput.rows, d_ZOutput.cols);
+    // dWOutput = 1/m * matmul(dZOutput, A2_T)
+    Matrix_GPU d_dWOutput;
+    initialize_matrix_on_device(&d_dWOutput, d_nn->WOutput.rows, d_nn->WOutput.cols);
+    Matrix_GPU d_A2_T;
+    initialize_matrix_on_device(&d_A2_T, d_A2.cols, d_A2.rows);
+    // dbOutput = 1/m * sum(dZOutput)
+    float* d_dbOutput;
+    cudaMalloc((void **)&d_dbOutput, sizeof(float));
+    // cudaMemset(d_dbOutput, 0, sizeof(float));
 
 ////////////////////////////////////////////////////////////////////////
-// Free Memory
-    // Free memory from data preparation section
+    // Vectors/Matrices Needed for Calculation of Second Layer Gradients
+    // dZ2 = matmul(WOutput_T, dZOutput) * ReLU_derivative(Z2)
+    Matrix_GPU d_dZ2;
+    initialize_matrix_on_device(&d_dZ2, d_Z2.rows, d_Z2.cols);
+    Matrix_GPU d_WOutput_T;
+    initialize_matrix_on_device(&d_WOutput_T, d_nn->WOutput.cols, d_nn->WOutput.rows);
+    Matrix_GPU d_WOutput_dZOutput; // Product of WOutput_T and dZOutput
+    initialize_matrix_on_device(&d_WOutput_dZOutput, d_WOutput_T.rows, d_dZOutput.cols);
+    // dW2 = 1/m * matmul(dZ2, A1_T)
+    Matrix_GPU d_dW2;
+    initialize_matrix_on_device(&d_dW2, d_nn->W2.rows, d_nn->W2.cols);
+    Matrix_GPU d_A1_T;
+    initialize_matrix_on_device(&d_A1_T, d_A1.cols, d_A1.rows);
+    // db2 = 1/m * sum(dZ2)
+    float* d_db2;
+    cudaMalloc((void **)&d_db2, sizeof(float));
+    // cudaMemset(d_db2, 0, sizeof(float));
+
+////////////////////////////////////////////////////////////////////////
+// Vectors/Matrices Needed for Calculation of First Layer Gradients
+    // dZ1 = matmul(W2_T, dZ2) * ReLU_deriv(Z1)
+    Matrix_GPU d_dZ1;
+    initialize_matrix_on_device(&d_dZ1, d_Z1.rows, d_Z1.cols);
+    Matrix_GPU d_W2_T;
+    initialize_matrix_on_device(&d_W2_T, d_nn->W2.cols, d_nn->W2.rows);
+    Matrix_GPU d_W2_dZ2; // Product of W2_T and dZ2
+    initialize_matrix_on_device(&d_W2_dZ2, d_W2_T.rows, d_dZ2.cols);
+    // dW1 = 1/m * matmul(dZ1, X_T)
+    Matrix_GPU d_dW1;
+    initialize_matrix_on_device(&d_dW1, d_nn->W1.rows, d_nn->W1.cols);
+    // db1 = 1/m * sum(dZ1)
+    float* d_db1;
+    cudaMalloc((void **)&d_db1, sizeof(float));
+    // cudaMemset(d_db1, 0, sizeof(float));
+
+////////////////////////////////////////////////////////////////////////
+// Train Network
+    for (int epoch = 0; epoch < epochs; epoch++) {
+        // printf("Epoch %d:\n", epoch);
+
+        // Forward Propagation
+        forward_propagation_GPU(&d_X_T,
+        	    	       &d_nn->W1, &d_nn->b1,
+        		       &d_nn->W2, &d_nn->b2,
+        		       &d_nn->WOutput, &d_nn->bOutput,
+        		       &d_Z1, &d_A1,
+        		       &d_Z2, &d_A2,
+        		       &d_ZOutput, &d_AOutput,
+        		       threadsPerBlock,
+        		       numBlocks,
+        		       sharedMemSize);
+
+	cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
+        // Backward Propagation
+        backward_propagation_GPU(&d_X_T, &d_Y_T,
+        			 &d_nn->W1, &d_nn->b1,
+        	      	         &d_nn->W2, &d_nn->b2,
+        		         &d_nn->WOutput, &d_nn->bOutput,
+        		         &d_Z1, &d_A1,
+        	      	         &d_Z2, &d_A2,
+        		         &d_ZOutput, &d_AOutput,
+        		         &d_dW1, &d_db1,
+        	      	         &d_dW2, &d_db2,
+        		         &d_dWOutput, &d_dbOutput,
+        		         &d_dZ1, &d_dZ2, &d_dZOutput,
+        	      	         &d_WOutput_T,
+        	                 &d_WOutput_dZOutput,
+        	      	         &d_W2_T,
+        	      	         &d_W2_dZ2,
+        		         &d_A2_T, &d_A1_T, d_X,
+        			 threadsPerBlock,
+        			 numBlocks,
+        			 sharedMemSize);
+
+        cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
+	dim3 numBlocksUp ((2 / threadsPerBlock.x) + 1, (2 / threadsPerBlock.y) + 1, 1);
+        update_parameters_GPU <<< threadsPerBlock, numBlocksUp >>> (d_nn->W1.data, d_nn->b1.data,
+        	                                                d_nn->W2.data, d_nn->b2.data,
+        							d_nn->WOutput.data, d_nn->bOutput.data,
+        							d_dW1.data, d_db1,
+        							d_dW2.data, d_db2,
+        							d_dWOutput.data, d_dbOutput,
+        							d_nn->W1.rows, d_nn->W1.cols,
+        							d_nn->b1.rows,
+        							d_nn->W2.rows, d_nn->W2.cols,
+        							d_nn->b2.rows,
+        							d_nn->WOutput.rows, d_nn->WOutput.cols,
+        							d_nn->bOutput.rows,
+        							learning_rate);
+
+	cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
+
+	// Get Predictions
+        argmax_GPU <<< numBlocks, threadsPerBlock >>> (d_Y_T.data,
+							      d_Y_true.data,
+							      d_Y_T.rows,
+							      d_Y_T.cols);
+
+        cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+        argmax_GPU <<< numBlocks, threadsPerBlock >>> (d_AOutput.data,
+							      d_Y_hat.data,
+							      d_AOutput.rows,
+							      d_AOutput.cols);
+
+        cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
+        // Initialize float d_accuracy
+        float *d_accuracy;
+        cudaMalloc((void **)&d_accuracy, sizeof(float));
+
+        // Calculate Accuracy
+        calculate_accuracy_GPU <<< numBlocks, threadsPerBlock >>> (d_Y_true.data,
+									  d_Y_hat.data,
+									  d_Y_true.rows,
+									  d_accuracy);
+        cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
+        // Copy float d_accuracy to host
+	float h_accuracy;
+	cudaMemcpy(&h_accuracy, d_accuracy, sizeof(float), cudaMemcpyDeviceToHost);
+	printf("Accuracy: %f\n", h_accuracy);
+	cudaFree(d_accuracy);
+    }
+
+    // Free Memory
     free_matrix_on_device(&d_X_T);
     free_matrix_on_device(&d_Y_T);
 
-    // Free memory from forward propagation section
     free_matrix_on_device(&d_Z1);
     free_matrix_on_device(&d_A1);
     free_matrix_on_device(&d_Z2);
@@ -1347,27 +1360,28 @@ void train_GPU(NeuralNetwork_GPU* d_nn,
     free_matrix_on_device(&d_ZOutput);
     free_matrix_on_device(&d_AOutput);
 
-    // Free memory from output layer gradients calculation
     free_matrix_on_device(&d_dZOutput);
     free_matrix_on_device(&d_dWOutput);
     free_matrix_on_device(&d_A2_T);
 
-    // Free memory from second layer gradients calculation
     free_matrix_on_device(&d_dZ2);
     free_matrix_on_device(&d_WOutput_T);
+
     free_matrix_on_device(&d_WOutput_dZOutput);
     free_matrix_on_device(&d_dW2);
     free_matrix_on_device(&d_A1_T);
 
-    // Free memory from first layer gradients calculation
     free_matrix_on_device(&d_dZ1);
     free_matrix_on_device(&d_W2_T);
     free_matrix_on_device(&d_W2_dZ2);
     free_matrix_on_device(&d_dW1);
 
-    // Free memory from calculating accuracy section
     free_vector_on_device(&d_Y_true);
     free_vector_on_device(&d_Y_hat);
+    cudaFree(d_dbOutput);
+    cudaFree(d_db2);
+    cudaFree(d_db1);
+
 }
 
 ////////////////////////////////////////////////////////////////////////

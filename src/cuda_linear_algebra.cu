@@ -26,6 +26,31 @@ void read_csv(const char* filename, Matrix* matrix) {
     fclose(file);
 }
 
+void read_csv_limited(const char* filename, Matrix* matrix_subset, int startRow, int endRow, int fileRows, int fileCols) {
+    // Open the file with the filename provided.
+    // 'r' opens the file for reading.
+    FILE* file = fopen(filename, "r");
+
+    // Iterate over the number of rows
+    for (int row = 0; row < fileRows; ++row) {
+        // Iterate over the number of columns
+        for (int col = 0; col < fileCols; ++col) {
+		if (row >= startRow && row < endRow) { 
+		    // Reads a float value from the file and stores
+		    // it in the data array at the correct position.
+		    fscanf(file, "%f,", &matrix_subset->data[row - startRow][col]);
+		} else {
+		    // Skip the value
+		    float temp;
+		    fscanf(file, "%f,", &temp);
+		}
+        }
+    }
+
+    // Close the file
+    fclose(file);
+}
+
 ////////////////////////////////////////////////////////////////////////
 // Functions for previewing data
 void preview_vector(Vector* v, int decimals) {
@@ -242,6 +267,49 @@ void copy_matrix_to_host(Matrix* h_m, Matrix_GPU* d_m) {
     for (int i = 0; i < h_m->rows; i++) {
         cudaMemcpy(h_m->data[i], d_ptr, row_size, cudaMemcpyDeviceToHost);
         d_ptr += h_m->cols; // Move to the next row in the device memory
+    }
+}
+
+////////////////////////////////////////////////////////////////////////
+// Function to copy a certain range of indices from a GPU matrix
+// to a another smaller GPU matrix
+// Always copy all columns
+void copy_matrix_range_to_matrix_GPU(Matrix_GPU* d_m, Matrix_GPU* d_m_subset,
+				     int startRow, int endRow) {
+    // Calculate the size of a single row in bytes
+    size_t row_size = d_m->cols * sizeof(float);
+
+    // Pointer to keep track of where to copy from in the device memory
+    float* d_ptr = d_m->data + startRow * d_m->cols;
+
+    // Copy each row from the device matrix to the host matrix
+    for (int i = startRow; i < endRow; i++) {
+	cudaMemcpy(d_m_subset->data + (i - startRow) * d_m->cols,
+		   d_ptr, row_size, cudaMemcpyDeviceToDevice);
+	d_ptr += d_m->cols; // Move to the next row in the device memory
+    }
+
+}
+
+void copy_random_matrix_range_to_matrix_GPU(Matrix_GPU* d_x, Matrix_GPU* d_x_subset,
+					    Matrix_GPU* d_y, Matrix_GPU* d_y_subset,
+					    int numRows, int totalRows) {
+    // Initialize Random seed
+    srand(time(0));
+
+    // Repeat for the desired number of rows
+    for (int i = 0; i < numRows; i++) {
+	// Choose a random row index
+	int randomRow = rand() % totalRows;
+
+	// Copy the random row from the device matrix to the device subset matrix
+	cudaMemcpy(d_x_subset->data + i * d_x->cols,
+		   d_x->data + randomRow * d_x->cols,
+		   d_x->cols * sizeof(float), cudaMemcpyDeviceToDevice);
+	cudaMemcpy(d_y_subset->data + i * d_y->cols,
+		   d_y->data + randomRow * d_y->cols,
+		   d_y->cols * sizeof(float), cudaMemcpyDeviceToDevice);
+
     }
 }
 

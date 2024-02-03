@@ -21,6 +21,8 @@ int main() {
 
 ////////////////////////////////////////////////////////////////////////
 // Define constants for number of rows and neurons
+    // int epochs_num = 300;
+    int epochs_num = 1;
     const int NUM_ROWS_TRAIN = 1000;
     // const int NUM_ROWS_TEST = 10000;
     const int NUM_NEURONS_INPUT = 784;
@@ -80,30 +82,6 @@ int main() {
 			      NUM_NEURONS_HIDDEN_2,
 			      NUM_NEURONS_OUTPUT);
 
-    // Preview Input Layer Weights
-    printf("Previewing Input Layer Weights:\n");
-    preview_matrix(&(nn_value.W1), 2);
-
-    // Preview Input Layer Biases
-    printf("Previewing Input Layer Biases:\n");
-    preview_vector(&(nn_value.b1), 2);
-
-    // Preview Hidden Layer 1 Weights
-    printf("Previewing Hidden Layer 1 Weights:\n");
-    preview_matrix(&(nn_value.W2), 2);
-
-    // Preview Hidden Layer 1 Biases
-    printf("Previewing Hidden Layer 1 Biases:\n");
-    preview_vector(&(nn_value.b2), 2);
-
-    // Preview Hidden Layer 2 Weights
-    printf("Previewing Hidden Layer 2 Weights:\n");
-    preview_matrix(&(nn_value.WOutput), 2);
-
-    // Preview Hidden Layer 2 Biases
-    printf("Previewing Hidden Layer 2 Biases:\n");
-    preview_vector(&(nn_value.bOutput), 2);
-
     // Create pointer to Neural Network
     NeuralNetwork *nn = &nn_value;
 
@@ -140,136 +118,6 @@ int main() {
     initialize_vector(&Y_true, X_T.cols);
     Vector Y_hat;
     initialize_vector(&Y_hat, X_T.cols);
-
-    // Forward Propagation
-    printf("Forward Propagating Neural Network:\n");
-    forward_propagation(&X_T,
-            &(nn->W1), &(nn->b1),
-	    &(nn->W2), &(nn->b2),
-            &(nn->WOutput), &(nn->bOutput),
-	    &Z1, &A1,
-            &Z1, &A1,
-	    &ZOutput, &AOutput);
-
-////////////////////////////////////////////////////////////////////////
-// Test GPU Forward Propagation Function
-    printf("\n");
-    printf("--------------------------------------------------\n");
-    printf("--------------------------------------------------\n");
-    printf("--------------------------------------------------\n");
-
-    printf("Testing GPU Forward Propagation Function:\n");
-
-    // Initialize Neural Network on device
-    printf("Initializing Neural Network on device:\n");
-    NeuralNetwork_GPU d_nn_value;
-    initialize_neural_network_on_device(&d_nn_value,
-		    		       NUM_NEURONS_INPUT,
-				       NUM_NEURONS_HIDDEN_1,
-				       NUM_NEURONS_HIDDEN_2,
-				       NUM_NEURONS_OUTPUT);
-
-    // Create pointer to Neural Network on device
-    NeuralNetwork_GPU *d_nn = &d_nn_value;
-
-    // Define number of threads per block, number of blocks, and shared memory size
-    dim3 threads_per_block_fp (16, 16, 1); // A 16 x 16 block threads
-    int N_fp = 64;
-    dim3 number_of_blocks_fp ((N_fp / threads_per_block_fp.x) + 1, (N_fp / threads_per_block_fp.y) + 1, 1);
-    int sharedMemSize_fp = sizeof(float) * 32 * 32;
-
-
-    // Copy Neural Network to device
-    printf("Copying Neural Network to device:\n");
-    copy_neural_network_to_device(&nn_value, &d_nn_value);
-
-    // Preview Input Layer Weights
-    printf("Previewing Input Layer Weights:\n");
-    preview_matrix_GPU(&(d_nn->W1), 2);
-
-    // Preview Input Layer Biases
-    printf("Previewing Input Layer Biases:\n");
-    preview_vector_GPU(&(d_nn->b1), 2);
-
-    // Preview Hidden Layer 1 Weights
-    printf("Previewing Hidden Layer 1 Weights:\n");
-    preview_matrix_GPU(&(d_nn->W2), 2);
-
-    // Preview Hidden Layer 1 Biases
-    printf("Previewing Hidden Layer 1 Biases:\n");
-    preview_vector_GPU(&(d_nn->b2), 2);
-
-    // Preview Hidden Layer 2 Weights
-    printf("Previewing Hidden Layer 2 Weights:\n");
-    preview_matrix_GPU(&(d_nn->WOutput), 2);
-
-    // Preview Hidden Layer 2 Biases
-    printf("Previewing Hidden Layer 2 Biases:\n");
-    preview_vector_GPU(&(d_nn->bOutput), 2);
-
-    // Initialize Matrix d_X_T on device
-    printf("Initializing Matrix d_X_T on device:\n");
-    Matrix_GPU d_X_T;
-    initialize_matrix_on_device(&d_X_T, X_train.cols, X_train.rows);
-
-    // Transpose Matrix d_X_train
-    printf("Transposing Matrix d_X_train on device:\n");
-    transpose_matrix_GPU <<< number_of_blocks_fp, threads_per_block_fp >>> (d_X_train.data,
-		                                                d_X_T.data,
-								d_X_train.rows,
-								d_X_train.cols);
-
-    cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
-
-    // Initialize Matrix d_Y_T on device
-    printf("Initializing Matrix d_Y_T on device:\n");
-    Matrix_GPU d_Y_T;
-    initialize_matrix_on_device(&d_Y_T, Y_train.cols, Y_train.rows);
-
-    // Transpose Matrix d_Y_train
-    printf("Transposing Matrix d_Y_train on device:\n");
-    transpose_matrix_GPU <<< number_of_blocks_fp, threads_per_block_fp >>> (d_Y_train.data,
-		                                                d_Y_T.data,
-								d_Y_train.rows,
-								d_Y_train.cols);
-
-    cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
-
-    // First Layer
-    Matrix_GPU d_Z1;
-    initialize_matrix_on_device(&d_Z1, d_nn->W1.rows, d_X_T.cols);
-    Matrix_GPU d_A1;
-    initialize_matrix_on_device(&d_A1, d_nn->W1.rows, d_X_T.cols);
-
-    // Second Layer
-    Matrix_GPU d_Z2;
-    initialize_matrix_on_device(&d_Z2, d_nn->W2.rows, d_X_T.cols);
-    Matrix_GPU d_A2;
-    initialize_matrix_on_device(&d_A2, d_nn->W2.rows, d_X_T.cols);
-
-    // Output Layer
-    Matrix_GPU d_ZOutput;
-    initialize_matrix_on_device(&d_ZOutput, d_nn->WOutput.rows, d_X_T.cols);
-    Matrix_GPU d_AOutput;
-    initialize_matrix_on_device(&d_AOutput, d_nn->WOutput.rows, d_X_T.cols);
-
-    // Initialize Vectors for Y and Y_hat
-    Vector d_Y_true;
-    initialize_vector_on_device(&d_Y_true, d_X_T.cols);
-    Vector d_Y_hat;
-    initialize_vector_on_device(&d_Y_hat, d_X_T.cols);
-
-    // Forward Propagation
-    forward_propagation_GPU(&d_X_T,
-		    	    &d_nn->W1, &d_nn->b1,
-			    &d_nn->W2, &d_nn->b2,
-			    &d_nn->WOutput, &d_nn->bOutput,
-			    &d_Z1, &d_A1,
-			    &d_Z2, &d_A2,
-			    &d_ZOutput, &d_AOutput,
-			    threads_per_block_fp,
-			    number_of_blocks_fp,
-			    sharedMemSize_fp);
 
 ////////////////////////////////////////////////////////////////////////
 // Test CPU Backpropagation Function
@@ -333,8 +181,9 @@ int main() {
     float db1;
 
     // Training Rounds
+    // int epochs = epochs_num;
     int epochs = 0;
-    float learning_rate = 0.01;
+    float learning_rate = 0.1;
 
     // Loop over the epochs
     for (int epoch = 0; epoch < epochs; epoch++) {
@@ -384,6 +233,90 @@ int main() {
     }
 
 ////////////////////////////////////////////////////////////////////////
+// Test GPU Forward Propagation Function
+    printf("\n");
+    printf("--------------------------------------------------\n");
+    printf("--------------------------------------------------\n");
+    printf("--------------------------------------------------\n");
+
+    printf("Testing GPU Forward Propagation Function:\n");
+
+    // Initialize Neural Network on device
+    printf("Initializing Neural Network on device:\n");
+    NeuralNetwork_GPU d_nn_value;
+    initialize_neural_network_on_device(&d_nn_value,
+		    		       NUM_NEURONS_INPUT,
+				       NUM_NEURONS_HIDDEN_1,
+				       NUM_NEURONS_HIDDEN_2,
+				       NUM_NEURONS_OUTPUT);
+
+    // Create pointer to Neural Network on device
+    NeuralNetwork_GPU *d_nn = &d_nn_value;
+
+    // Define number of threads per block, number of blocks, and shared memory size
+    dim3 threads_per_block_fp (16, 16, 1); // A 16 x 16 block threads
+    int N_fp = NUM_ROWS_TRAIN;
+    dim3 number_of_blocks_fp ((N_fp / threads_per_block_fp.x) + 1, (N_fp / threads_per_block_fp.y) + 1, 1);
+    int sharedMemSize_fp = sizeof(float) * 32 * 32;
+
+
+    // Copy Neural Network to device
+    printf("Copying Neural Network to device:\n");
+    copy_neural_network_to_device(&nn_value, &d_nn_value);
+
+    // Initialize Matrix d_X_T on device
+    printf("Initializing Matrix d_X_T on device:\n");
+    Matrix_GPU d_X_T;
+    initialize_matrix_on_device(&d_X_T, X_train.cols, X_train.rows);
+
+    // Transpose Matrix d_X_train
+    printf("Transposing Matrix d_X_train on device:\n");
+    transpose_matrix_GPU <<< number_of_blocks_fp, threads_per_block_fp >>> (d_X_train.data,
+		                                                d_X_T.data,
+								d_X_train.rows,
+								d_X_train.cols);
+
+    cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
+    // Initialize Matrix d_Y_T on device
+    printf("Initializing Matrix d_Y_T on device:\n");
+    Matrix_GPU d_Y_T;
+    initialize_matrix_on_device(&d_Y_T, Y_train.cols, Y_train.rows);
+
+    // Transpose Matrix d_Y_train
+    printf("Transposing Matrix d_Y_train on device:\n");
+    transpose_matrix_GPU <<< number_of_blocks_fp, threads_per_block_fp >>> (d_Y_train.data,
+		                                                d_Y_T.data,
+								d_Y_train.rows,
+								d_Y_train.cols);
+
+    cudaDeviceSynchronize(); // Wait for the GPU to finish before proceeding
+
+    // First Layer
+    Matrix_GPU d_Z1;
+    initialize_matrix_on_device(&d_Z1, d_nn->W1.rows, d_X_T.cols);
+    Matrix_GPU d_A1;
+    initialize_matrix_on_device(&d_A1, d_nn->W1.rows, d_X_T.cols);
+
+    // Second Layer
+    Matrix_GPU d_Z2;
+    initialize_matrix_on_device(&d_Z2, d_nn->W2.rows, d_X_T.cols);
+    Matrix_GPU d_A2;
+    initialize_matrix_on_device(&d_A2, d_nn->W2.rows, d_X_T.cols);
+
+    // Output Layer
+    Matrix_GPU d_ZOutput;
+    initialize_matrix_on_device(&d_ZOutput, d_nn->WOutput.rows, d_X_T.cols);
+    Matrix_GPU d_AOutput;
+    initialize_matrix_on_device(&d_AOutput, d_nn->WOutput.rows, d_X_T.cols);
+
+    // Initialize Vectors for Y and Y_hat
+    Vector d_Y_true;
+    initialize_vector_on_device(&d_Y_true, d_X_T.cols);
+    Vector d_Y_hat;
+    initialize_vector_on_device(&d_Y_hat, d_X_T.cols);
+
+////////////////////////////////////////////////////////////////////////
 // Testing GPU Backpropagation Function
     printf("\n");
     printf("--------------------------------------------------\n");
@@ -395,7 +328,7 @@ int main() {
     // Copy Normalized X_train to device
     printf("Copying Normalized X_train to device:\n");
     copy_matrix_to_device(&X_train, &d_X_train);
-    preview_matrix_GPU(&d_X_train, 2);
+    // preview_matrix_GPU(&d_X_train, 2);
 
     // Vectors/Matrices Needed for Calculation of Output Layer Gradients
     // dZOutput = AOutput - Y_T
@@ -453,7 +386,7 @@ int main() {
 
 //////////////////////////////////////////////////////////////////
     // Training Rounds
-    int d_epochs = 150;
+    int d_epochs = epochs_num;
     float d_learning_rate = 0.01;
     for (int epoch = 0; epoch < d_epochs; epoch++) {
         printf("Epoch %d:\n", epoch);
@@ -546,6 +479,47 @@ int main() {
     }
 
 ////////////////////////////////////////////////////////////////////////
+// Test CPU Train Function
+    printf("\n");
+    printf("--------------------------------------------------\n");
+    printf("--------------------------------------------------\n");
+    printf("--------------------------------------------------\n");
+
+    printf("Testing CPU Train Function:\n");
+
+    // Train Neural Network
+    train(&nn_value, &X_train, &Y_train, 1, 0.1);
+
+    // Make Predictions
+    Matrix Y_pred;
+    initialize_matrix(&Y_pred, Y_train.rows, Y_train.cols);
+    printf("Making Predictions:\n");
+    predict(&nn_value, &X_train, &Y_train, &Y_pred);
+
+    // Compare a few predictions
+    denormalize_matrix(&X_train, 0, 255);
+    printf("Comparing Predictions:\n");
+    preview_predictions(&X_train, &Y_pred, 28, 28, 5);
+
+////////////////////////////////////////////////////////////////////////
+// Test GPU Train Function
+    printf("\n");
+    printf("--------------------------------------------------\n");
+    printf("--------------------------------------------------\n");
+    printf("--------------------------------------------------\n");
+
+    printf("Testing GPU Train Function:\n");
+
+    // Train Neural Network on device
+    dim3 threadsPerBlock (16, 16, 1); // A 16 x 16 block threads
+    dim3 numBlocks ((NUM_ROWS_TRAIN / threads_per_block_fp.x) + 1, (NUM_ROWS_TRAIN / threads_per_block_fp.y) + 1, 1);
+    int sharedMemSize = sizeof(float) * 32 * 32;
+    train_GPU(&d_nn_value, &d_X_train, &d_Y_train, 500, 0.1,
+		    threadsPerBlock,
+		    numBlocks,
+		    sharedMemSize);
+
+////////////////////////////////////////////////////////////////////////
 // Free Memory Initiliazed in the Loading Data Section
     // Free X_train
     printf("Freeing X_train on host:\n");
@@ -578,6 +552,21 @@ int main() {
     free_vector(&Y_hat);
  
 ////////////////////////////////////////////////////////////////////////
+// Free Memory Initiliazed in the CPU Backward Propagation Section
+    free_matrix(&dZOutput);
+    free_matrix(&dWOutput);
+    free_matrix(&A2_T);
+    free_matrix(&dZ2);
+    free_matrix(&WOutput_T);
+    free_matrix(&WOutput_dZOutput);
+    free_matrix(&dW2);
+    free_matrix(&A1_T);
+    free_matrix(&dZ1);
+    free_matrix(&W2_T);
+    free_matrix(&W2_dZ2);
+    free_matrix(&dW1);
+
+////////////////////////////////////////////////////////////////////////
 // Free Memory Initiliazed in the GPU Forward Propagation Section
     free_neural_network_on_device(&d_nn_value);
     free_matrix_on_device(&d_X_T);
@@ -592,34 +581,19 @@ int main() {
     free_vector_on_device(&d_Y_hat);
 
 ////////////////////////////////////////////////////////////////////////
-// Free Memory Initiliazed in the CPU Backward Propagation Section
-    // free_matrix(&dZOutput);
-    // free_matrix(&dWOutput);
-    // free_matrix(&A2_T);
-    // free_matrix(&dZ2);
-    // free_matrix(&WOutput_T);
-    // free_matrix(&WOutput_dZOutput);
-    // free_matrix(&dW2);
-    // free_matrix(&A1_T);
-    // free_matrix(&dZ1);
-    // free_matrix(&W2_T);
-    // free_matrix(&W2_dZ2);
-    // free_matrix(&dW1);
-
-////////////////////////////////////////////////////////////////////////
 // Free Memory Initiliazed in the GPU Backward Propagation Section
-    // free_matrix_on_device(&d_dZOutput);
-    // free_matrix_on_device(&d_dWOutput);
-    // free_matrix_on_device(&d_A2_T);
-    // free_matrix_on_device(&d_dZ2);
-    // free_matrix_on_device(&d_WOutput_T);
-    // free_matrix_on_device(&d_WOutput_dZOutput);
-    // free_matrix_on_device(&d_dW2);
-    // free_matrix_on_device(&d_A1_T);
-    // free_matrix_on_device(&d_dZ1);
-    // free_matrix_on_device(&d_W2_T);
-    // free_matrix_on_device(&d_W2_dZ2);
-    // free_matrix_on_device(&d_dW1);
+    free_matrix_on_device(&d_dZOutput);
+    free_matrix_on_device(&d_dWOutput);
+    free_matrix_on_device(&d_A2_T);
+    free_matrix_on_device(&d_dZ2);
+    free_matrix_on_device(&d_WOutput_T);
+    free_matrix_on_device(&d_WOutput_dZOutput);
+    free_matrix_on_device(&d_dW2);
+    free_matrix_on_device(&d_A1_T);
+    free_matrix_on_device(&d_dZ1);
+    free_matrix_on_device(&d_W2_T);
+    free_matrix_on_device(&d_W2_dZ2);
+    free_matrix_on_device(&d_dW1);
 
     return 0;
 }
