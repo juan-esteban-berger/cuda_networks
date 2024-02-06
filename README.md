@@ -1,8 +1,6 @@
 # Deep Learning from Scratch in C Accelerated by CUDA
 This repository includes the code for implementing a Deep Neural Network from scratch in C accelerated by CUDA. The problem being solved is the training a Neural Network to classifiy handwritten digits from the MNIST dataset. A detailed explanation of the underlying linear algebra and calculus behing forward and backward propagation is provided below.
 
-The dataset used for this project can be found here: https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
-
 ## Usage
 
 Please modify the Makefile in order to have the correct flags for your hardware.
@@ -666,3 +664,10 @@ a_{21} \cdot b_{21} & a_{22} \cdot b_{22}
 - Ritvikmath's Backpropagation Video: https://www.youtube.com/watch?v=kbGu60QBx2o&t=301s
 - Samson Zhang's Neural Network's from Scratch Tutorial: https://www.youtube.com/watch?v=w8yWXqWQYmU
 - SmartAlpha AI's Softmax and Cross Entropy Gradients Tutorial: https://www.youtube.com/watch?v=5-rVLSc2XdE
+
+## Dataset
+The dataset used for this project can be found here:
+
+https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
+
+Note: This program expects no headers rows and one-hot encoded outputs.
