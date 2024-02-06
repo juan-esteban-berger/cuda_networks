@@ -1,8 +1,0 @@
-# Compiled Object files
-obj/*.o
-
-# Compiled Binaries
-bin/*
-
-# CSV Data files
-data/*.csv
