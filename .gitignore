@@ -3,10 +3,3 @@ obj/*.o
 
 # Compiled Binaries
 bin/*
-
-# CSV Data files
-data/*.csv
-
-# Python bytecodes
-*.pyc
-__pycache__/

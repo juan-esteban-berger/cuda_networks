@@ -4,62 +4,50 @@ OBJDIR=./obj
 BINDIR=./bin
 SRCDIR=./src
 
-# CUDA architecture flag (you may need to change this to match your GPU)
-CUDA_ARCH=-arch=sm_75
+# CUDA architecture flag
+CUDA_ARCH=-arch=sm_80
 
-# Defining the dependencies, list all .h files used by your .cu source files
-DEPS = $(SRCDIR)/cuda_neural_network.h $(SRCDIR)/cuda_linear_algebra.h
+# Dependencies
+DEPS = $(SRCDIR)/neural_network.h $(SRCDIR)/linear_algebra.h
 
-# Defining the objects, list all .o files required to generate the final executable
-_OBJ = main.o cuda_neural_network.o cuda_linear_algebra.o
-OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
+# Objects for train, preview and predict
+TRAIN_OBJ = $(OBJDIR)/train.o $(OBJDIR)/neural_network.o $(OBJDIR)/linear_algebra.o
+PREVIEW_OBJ = $(OBJDIR)/preview.o $(OBJDIR)/linear_algebra.o
+PREDICT_OBJ = $(OBJDIR)/predict.o $(OBJDIR)/neural_network.o $(OBJDIR)/linear_algebra.o
 
-# Defining the test objects, list all .o files required to generate the test executable
-_TEST_OBJ = tests.o cuda_neural_network.o cuda_linear_algebra.o
-TEST_OBJ = $(patsubst %,$(OBJDIR)/%,$(_TEST_OBJ))
-
-# Defining the backprop objects
-_BACKPROP_OBJ = test_backprop.o cuda_neural_network.o cuda_linear_algebra.o
-BACKPROP_OBJ = $(patsubst %,$(OBJDIR)/%,$(_BACKPROP_OBJ))
-
-# Compiling the object files
+# Compile object files for train, preview and predict
 $(OBJDIR)/%.o: $(SRCDIR)/%.cu $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS) $(CUDA_ARCH)
 
-# Linking all object files into the final executable
-$(BINDIR)/main: $(OBJ)
+# Linking all object files into final executables
+$(BINDIR)/train: $(TRAIN_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(CUDA_ARCH) -lm
 
-# Linking all test object files into the test executable
-$(BINDIR)/tests: $(TEST_OBJ)
+$(BINDIR)/preview: $(PREVIEW_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(CUDA_ARCH) -lm
 
-# Linking backprop object file into the backprop executable
-$(BINDIR)/test_backprop: $(BACKPROP_OBJ)
+$(BINDIR)/predict: $(PREDICT_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(CUDA_ARCH) -lm
 
-# This target will compile both the main project and the test project
-all: $(BINDIR)/main $(BINDIR)/tests $(BINDIR)/test_backprop
+# Target to compile all
+all: $(BINDIR)/train $(BINDIR)/preview $(BINDIR)/predict
 
-# This target will compile the test project
-test: $(BINDIR)/tests
-
-# This will clean up the object files and the executables
+# Target to clean all object files and executables
 .PHONY: clean
 clean:
-	rm -f $(OBJDIR)/*.o $(BINDIR)/main $(BINDIR)/tests $(BINDIR)/test_backprop
+	rm -f $(OBJDIR)/*.o $(BINDIR)/train $(BINDIR)/preview $(BINDIR)/predict
 
-# This will run the main executable
-.PHONY: run
-run:
-	$(BINDIR)/main
+# Target to run train
+.PHONY: train
+train:
+	$(BINDIR)/train 
 
-# This will run the test executable
-.PHONY: run_tests
-run_tests:
-	$(BINDIR)/tests
+# Target to run preview
+.PHONY: preview 
+preview:
+	$(BINDIR)/preview
 
-# This will run the backprop executable
-.PHONY: run_backprop
-run_backprop:
-	$(BINDIR)/test_backprop
+# Target to run predict
+.PHONY: predict 
+predict:
+	$(BINDIR)/predict

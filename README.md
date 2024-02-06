@@ -1,7 +1,66 @@
 # Deep Learning from Scratch in C Accelerated by CUDA
-This repository includes the code for implementing a Deep Neural Network from scratch in C accelerated by CUDA.The problem being solved is the training a Neural Network to classifiy handwritten digits from the MNIST dataset. A detailed explanation of the underlying linear algebra and calculus behing forward and backward propagation is provided below.
+This repository includes the code for implementing a Deep Neural Network from scratch in C accelerated by CUDA. The problem being solved is the training a Neural Network to classifiy handwritten digits from the MNIST dataset. A detailed explanation of the underlying linear algebra and calculus behing forward and backward propagation is provided below.
 
 The dataset used for this project can be found here: https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
+
+## Usage
+
+Please modify the Makefile in order to have the correct flags for your hardware.
+
+### Train Model
+
+```sh
+make train
+```
+
+![Make Train](gifs/make_train.gif)
+
+### Make Predictions
+
+```sh
+make predict
+```
+
+![Make Predit](gifs/make_predict.gif)
+
+### Preview Data
+
+```sh
+make preview
+```
+
+![Make Preview](gifs/make_preview.gif)
+
+## File Structure
+
+```
+.
+├── bin
+├── data
+│   ├── X_test.csv
+│   ├── X_train.csv
+│   ├── Y_test.csv
+│   └── Y_train.csv
+├── gifs
+│   ├── make_predict.gif
+│   ├── make_preview.gif
+│   └── make_train.gif
+├── Makefile
+├── models
+│   └── nn.csv
+├── obj
+├── README.md
+└── src
+    ├── linear_algebra.cu
+    ├── linear_algebra.h
+    ├── neural_network.cu
+    ├── neural_network.h
+    ├── predict.cu
+    ├── preview.cu
+    └── train.cu
+```
+
+
 
 ## Forward Propagation
 
