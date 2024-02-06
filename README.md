@@ -5,6 +5,12 @@ This repository includes the code for implementing a Deep Neural Network from sc
 
 Please modify the Makefile in order to have the correct flags for your hardware.
 
+## Unzip Data
+
+```sh
+unzip data.zip 
+```
+
 ### Train Model
 
 ```sh
