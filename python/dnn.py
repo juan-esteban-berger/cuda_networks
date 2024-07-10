@@ -20,18 +20,33 @@ Y_train = Y_train.T
 Y_test = Y_test.T
 
 ######################################################################
-# Activation Functions
-def ReLu(Z):
-    return np.maximum(Z, 0)
+# Activation Function Classes
+class ReLu:
+    def __init__(self):
+        pass
 
-def softmax(Z):
-    A = np.exp(Z) / sum(np.exp(Z))
-    return A
+    def function(self, Z):
+        return np.maximum(Z, 0)
+
+    def derivative(self, Z):
+        return Z > 0
+
+class softmax:
+    def __init__(self):
+        pass
+
+    def function(self, Z):
+        return np.exp(Z) /np.sum(np.exp(Z), axis=0)
+
+    def derivative(self, Z):
+        S = self.function(Z)
+        return S * (1 - S)
 
 ######################################################################
-# Derivatives of Activation Functions
-def ReLU_deriv(Z):
-    return Z > 0
+# Loss Functions
+### Need to add categorical cross entropy... (do not skip steps)
+    ### Categorical Cross Entropy eventually leads to A - Y...
+    ### Do it from scratch...
 
 ######################################################################
 # Layer Class
@@ -59,11 +74,15 @@ class NeuralNetwork:
         self.layers.append(layer)
 
     def forward(self, X):
+        A = X
         for layer in self.layers:
-            pass
+            layer.Z = layer.W.dot(A) + layer.b
+            layer.A = layer.activation.function(layer.Z)
+            A = layer.A
 
-    def backward(self):
-        pass
+    def backward(self, X, Y):
+        for i in reversed(range(0, len(self.layers))):
+            print(f"Iteration {i}")
 
     def update_params(self):
         pass
@@ -76,7 +95,7 @@ class NeuralNetwork:
                 Y_batch = Y_train[:, i:i+batch_size]
 
                 self.forward(X_batch)
-                self.backward()
+                self.backward(X_batch, Y_batch)
                 self.update_params()
 
     def predict(self):
@@ -87,9 +106,9 @@ class NeuralNetwork:
 nn = NeuralNetwork()
 
 # Add Layers
-nn.add_layer(Layer(784, 10, ReLu))
-nn.add_layer(Layer(10, 10, ReLu))
-nn.add_layer(Layer(10, 10, softmax))
+nn.add_layer(Layer(784, 10, ReLu()))
+nn.add_layer(Layer(10, 10, ReLu()))
+nn.add_layer(Layer(10, 10, softmax()))
 
 # Train Neural Network
 nn.train(X_train,
