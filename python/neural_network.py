@@ -1,6 +1,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 
+import time
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -97,8 +98,12 @@ class NeuralNetwork():
                     learning_rate,
                     loss,
                     history_path):
+        epoch_list = []
         accuracy_list = []
         loss_list = []
+        duration_list = []
+
+        start_time = time.time()
 
         pbar = tqdm(range(epochs), position=0, leave=True)
         for epoch in pbar:
@@ -106,16 +111,25 @@ class NeuralNetwork():
             self.backward(X_train, Y_train, loss)
             self.update_params(learning_rate)
 
+            end_time = time.time()
+            duration = end_time - start_time
+
             acc = self.get_accuracy(Y_train)
             loss_val = loss.function(Y_train, self.layers[-1].A)
             description = ("Epoch: %d, Accuracy: %f, Loss: %.0f" %
                            (epoch, acc, loss_val))
             pbar.set_description(description)
 
+            epoch_list.append(epoch)
             accuracy_list.append(acc)
             loss_list.append(loss_val)
+            duration_list.append(duration)
 
-        df = pd.DataFrame(list(zip(accuracy_list, loss_list)))
+        df = pd.DataFrame(list(zip(epoch_list,
+                                   accuracy_list,
+                                   loss_list,
+                                   duration_list)))
+        df = df.round(4)
         df.to_csv(history_path, index=False, header=False)
 
     def predict(self, X):
