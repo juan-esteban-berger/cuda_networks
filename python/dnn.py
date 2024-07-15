@@ -5,7 +5,6 @@ import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from matplotlib import pyplot as plt
 
 ####################################################################
 # Load Data
@@ -33,6 +32,18 @@ Y_test = Y_test.T
 # Normalize X values
 X_test = X_test / 255.
 X_train = X_train / 255.
+
+####################################################################
+# Function to Display Image
+def display_image(X, index):
+    image = X[:, index].reshape(28, 28)
+    for row in image:
+        for pixel in row:
+            if pixel == 0:
+                print("  ", end="")
+            else:
+                print("##", end="")
+        print()
 
 ####################################################################
 # Activation Function Classes
@@ -110,15 +121,14 @@ class NeuralNetwork():
 
             layer.db = 1 / m * np.sum(layer.dZ, axis=1, keepdims=True)
 
-
     def update_params(self, learning_rate):
         for layer in self.layers:
             layer.W -= learning_rate * layer.dW
             layer.b -= learning_rate * layer.db
 
-    def get_accuracy(self, Y_train):
+    def get_accuracy(self, Y):
         predictions = np.argmax(self.layers[-1].A, 0)
-        Y_decoded = np.argmax(Y_train, 0)
+        Y_decoded = np.argmax(Y, 0)
         return np.sum(predictions == Y_decoded) / Y_decoded.size
 
     def train(self, X_train, Y_train, epochs, learning_rate, loss):
@@ -134,37 +144,21 @@ class NeuralNetwork():
                            (epoch, acc, loss_val))
             pbar.set_description(description)
 
-    def predict(self):
+    def predict(self, X):
+        self.forward(X)
+        return np.argmax(self.layers[-1].A, axis=0)
+
+    def save_config(self, filepath):
         pass
 
-    def save_config(self):
+    def save_weights(self, filepath):
         pass
 
-    def save_weights(self):
+    def load_config(self, filepath):
         pass
 
-    def load_config(self):
+    def load_weights(self, filepath):
         pass
-
-    def load_weights(self):
-        pass
-
-####################################################################
-# Function to Display Image
-def display_image(X, index):
-    image = X[:, index].reshape(28, 28)
-    for row in image:
-        for pixel in row:
-            if pixel == 0:
-                print("  ", end="")
-            else:
-                print("##", end="")
-        print()
-
-####################################################################
-# Display Image
-random_index = np.random.randint(0, X_test.shape[1])
-display_image(X_test, random_index)
 
 ####################################################################
 nn = NeuralNetwork()
@@ -173,8 +167,39 @@ nn.add_layer(Layer(784, 200, Sigmoid()))
 nn.add_layer(Layer(200, 200, Sigmoid()))
 nn.add_layer(Layer(200, 10, Softmax()))
 
+print("Training...")
 nn.train(X_train,
          Y_train,
-         epochs=1000,
+         # epochs=1000,
+         epochs=10,
          learning_rate=0.1,
          loss=CatCrossEntropy())
+
+print("Saving Model...")
+nn.save_config("filepath")
+nn.save_weights("filepath")
+
+####################################################################
+nn_loaded = NeuralNetwork()
+
+print("Loading Model...")
+nn_loaded.load_config("filepath")
+nn_loaded.load_weights("filepath")
+
+print("Testing...")
+pred = nn_loaded.predict(X_test)
+acc = nn_loaded.get_accuracy(Y_test)
+print(f"Accuracy: {acc}")
+
+####################################################################
+print("Displaying 5 Random Images...")
+for i in range(5):
+    random_index = np.random.randint(0, X_test.shape[1])
+
+    pred_val = pred[random_index]
+
+    Y_decoded = np.argmax(Y_test, 0)
+    y_val = Y_decoded[random_index]
+
+    print(f"Predicted: {pred_val}, True: {y_val}")
+    display_image(X_test, random_index)
