@@ -150,6 +150,23 @@ class NeuralNetwork():
         pass
 
 ####################################################################
+# Function to Display Image
+def display_image(X, index):
+    image = X[:, index].reshape(28, 28)
+    for row in image:
+        for pixel in row:
+            if pixel == 0:
+                print("  ", end="")
+            else:
+                print("##", end="")
+        print()
+
+####################################################################
+# Display Image
+random_index = np.random.randint(0, X_test.shape[1])
+display_image(X_test, random_index)
+
+####################################################################
 nn = NeuralNetwork()
 
 nn.add_layer(Layer(784, 200, Sigmoid()))
