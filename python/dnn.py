@@ -8,10 +8,12 @@ from tqdm import tqdm
 
 ####################################################################
 # Load Data
+print("Loading Features...")
 X_train = pd.read_csv('data/X_train.csv', header=None).to_numpy()
 X_test = pd.read_csv('data/X_test.csv', header=None).to_numpy()
 print(f"X_train: {X_train.shape}, X_test: {X_test.shape}")
 
+print("Loading Targets...")
 Y_train = pd.read_csv('data/Y_train.csv', header=None).to_numpy()
 Y_test = pd.read_csv('data/Y_test.csv', header=None).to_numpy()
 print(f"Y_train: {Y_train.shape}, Y_test: {Y_test.shape}")
@@ -149,16 +151,52 @@ class NeuralNetwork():
         return np.argmax(self.layers[-1].A, axis=0)
 
     def save_config(self, filepath):
-        pass
+        config = []
+        for layer in self.layers:
+            input_num = layer.W.shape[1]
+            output_num = layer.W.shape[0]
+            activation = layer.activation.__class__.__name__
+            config.append(','.join([str(input_num),
+                                    str(output_num),
+                                    activation]))
+        config_str = "\n".join(config)
+
+        with open(filepath, 'w') as f:
+            f.write(config_str)
+
 
     def save_weights(self, filepath):
-        pass
+        with open(filepath, 'w') as f:
+            for layer in self.layers:
+                np.savetxt(f, [layer.W.flatten()], delimiter=',', fmt='%.8f')
+                np.savetxt(f, [layer.b.flatten()], delimiter=',', fmt='%.8f')
 
     def load_config(self, filepath):
-        pass
+        with open(filepath, 'r') as f:
+            lines = f.readlines()
+
+        self.layers = []
+        for line in lines:
+            input_num, output_num, activation = line.strip().split(',')
+            input_num = int(input_num)
+            output_num = int(output_num)
+            if activation == 'Sigmoid':
+                activation = Sigmoid()
+            elif activation == 'Softmax':
+                activation = Softmax()
+            self.add_layer(Layer(input_num, output_num, activation))
 
     def load_weights(self, filepath):
-        pass
+        with open(filepath, 'r') as f:
+            lines = f.readlines()
+            i = 0
+            for layer in self.layers:
+                layer.W = np.fromstring(lines[i].strip(),
+                                        sep=',').reshape(layer.W.shape)
+                i += 1
+                layer.b = np.fromstring(lines[i].strip(),
+                                        sep=',').reshape(layer.b.shape)
+                i += 1
 
 ####################################################################
 nn = NeuralNetwork()
@@ -171,20 +209,20 @@ print("Training...")
 nn.train(X_train,
          Y_train,
          # epochs=1000,
-         epochs=10,
+         epochs=70,
          learning_rate=0.1,
          loss=CatCrossEntropy())
 
 print("Saving Model...")
-nn.save_config("filepath")
-nn.save_weights("filepath")
+nn.save_config("models/python_config.csv")
+nn.save_weights("models/python_weights.csv")
 
 ####################################################################
 nn_loaded = NeuralNetwork()
 
 print("Loading Model...")
-nn_loaded.load_config("filepath")
-nn_loaded.load_weights("filepath")
+nn_loaded.load_config("models/python_config.csv")
+nn_loaded.load_weights("models/python_weights.csv")
 
 print("Testing...")
 pred = nn_loaded.predict(X_test)
