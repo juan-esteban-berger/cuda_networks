@@ -6,47 +6,6 @@ import pandas as pd
 from tqdm import tqdm
 
 ####################################################################
-# Load Data
-print("Loading Features...")
-X_train = pd.read_csv('data/X_train.csv', header=None).to_numpy()
-X_test = pd.read_csv('data/X_test.csv', header=None).to_numpy()
-print(f"X_train: {X_train.shape}, X_test: {X_test.shape}")
-
-print("Loading Targets...")
-Y_train = pd.read_csv('data/Y_train.csv', header=None).to_numpy()
-Y_test = pd.read_csv('data/Y_test.csv', header=None).to_numpy()
-print(f"Y_train: {Y_train.shape}, Y_test: {Y_test.shape}")
-
-####################################################################
-# Get Number of Training Examples
-m = X_train.shape[0]
-
-####################################################################
-# Transpose Data
-X_train = X_train.T
-X_test = X_test.T
-
-Y_train = Y_train.T
-Y_test = Y_test.T
-
-####################################################################
-# Normalize X values
-X_test = X_test / 255.
-X_train = X_train / 255.
-
-####################################################################
-# Function to Display Image
-def display_image(X, index):
-    image = X[:, index].reshape(28, 28)
-    for row in image:
-        for pixel in row:
-            if pixel == 0:
-                print("  ", end="")
-            else:
-                print("##", end="")
-        print()
-
-####################################################################
 # Activation Function Classes
 class Sigmoid():
     def function(self, Z):
@@ -132,7 +91,15 @@ class NeuralNetwork():
         Y_decoded = np.argmax(Y, 0)
         return np.sum(predictions == Y_decoded) / Y_decoded.size
 
-    def train(self, X_train, Y_train, epochs, learning_rate, loss):
+    def train(self, X_train,
+                    Y_train,
+                    epochs,
+                    learning_rate,
+                    loss,
+                    history_path):
+        accuracy_list = []
+        loss_list = []
+
         pbar = tqdm(range(epochs), position=0, leave=True)
         for epoch in pbar:
             self.forward(X_train)
@@ -144,6 +111,12 @@ class NeuralNetwork():
             description = ("Epoch: %d, Accuracy: %f, Loss: %.0f" %
                            (epoch, acc, loss_val))
             pbar.set_description(description)
+
+            accuracy_list.append(acc)
+            loss_list.append(loss_val)
+
+        df = pd.DataFrame(list(zip(accuracy_list, loss_list)))
+        df.to_csv(history_path, index=False, header=False)
 
     def predict(self, X):
         self.forward(X)
@@ -196,46 +169,3 @@ class NeuralNetwork():
                 layer.b = np.fromstring(lines[i].strip(),
                                         sep=',').reshape(layer.b.shape)
                 i += 1
-
-####################################################################
-nn = NeuralNetwork()
-
-nn.add_layer(Layer(784, 200, Sigmoid()))
-nn.add_layer(Layer(200, 200, Sigmoid()))
-nn.add_layer(Layer(200, 10, Softmax()))
-
-print("Training...")
-nn.train(X_train,
-         Y_train,
-         epochs=1000,
-         learning_rate=0.1,
-         loss=CatCrossEntropy())
-
-print("Saving Model...")
-nn.save_config("models/python_config.csv")
-nn.save_weights("models/python_weights.csv")
-
-####################################################################
-nn_loaded = NeuralNetwork()
-
-print("Loading Model...")
-nn_loaded.load_config("models/python_config.csv")
-nn_loaded.load_weights("models/python_weights.csv")
-
-print("Testing...")
-pred = nn_loaded.predict(X_test)
-acc = nn_loaded.get_accuracy(Y_test)
-print(f"Accuracy: {acc}")
-
-####################################################################
-print("Displaying 5 Random Images...")
-for i in range(5):
-    random_index = np.random.randint(0, X_test.shape[1])
-
-    pred_val = pred[random_index]
-
-    Y_decoded = np.argmax(Y_test, 0)
-    y_val = Y_decoded[random_index]
-
-    print(f"Predicted: {pred_val}, True: {y_val}")
-    display_image(X_test, random_index)
