@@ -61,3 +61,4 @@ for i in range(5):
 
     print(f"Predicted: {pred_val}, True: {y_val}")
     display_image(X_test, random_index)
+    input("Press any key to see the next image...")
