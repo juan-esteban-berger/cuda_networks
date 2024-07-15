@@ -1,7 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -208,8 +207,7 @@ nn.add_layer(Layer(200, 10, Softmax()))
 print("Training...")
 nn.train(X_train,
          Y_train,
-         # epochs=1000,
-         epochs=70,
+         epochs=1000,
          learning_rate=0.1,
          loss=CatCrossEntropy())
 
