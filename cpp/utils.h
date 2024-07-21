@@ -13,6 +13,7 @@ private:
 public:
     Series(int length);
     void setValues(double* values);
+    void randomize();
     void print(int decimals);
     ~Series();
 };
@@ -27,6 +28,7 @@ private:
 public:
     DataFrame(int numRows, int numCols);
     void setValues(double** values);
+    void randomize();
     void read_csv(const std::string &filename);
     void read_csv_limited(const std::string &filename,
                           int startRow, int endRow);

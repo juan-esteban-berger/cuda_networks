@@ -25,12 +25,22 @@ void Series::setValues(double* values) {
     }
 }
 
+void Series::randomize() {
+    // Seed the random number generator
+    srand((unsigned)time(0));
+    // Iterate over the elements
+    for (int i = 0; i < this->length; i++) {
+        // Generate a random number between -0.5 and 0.5
+        this->values[i] = ((double)rand() / RAND_MAX) - 0.5;
+    }
+}
+
 void Series::print(int decimals) {
     // Print the length of the series
     std::cout << "Series with " << this->length << " elements:\n";
 
     // Print single column header
-    std::cout << "\t0:\t\n";
+    std::cout << "\t 0:\t\n";
 
     // Iterate over the elements
     for (int i = 0; i < this->length; i++) {
@@ -48,11 +58,14 @@ void Series::print(int decimals) {
           // Set fixed output format
           << std::fixed 
           // Set precision for decimals
-          << std::setprecision(decimals) 
-          // Output the value
-          << this->values[i] 
-          // New line
-          << "\n";
+          << std::setprecision(decimals);
+          if (this->values[i] >= 0) {
+            // Add a space for positive numbers
+            std::cout << " " << this->values[i] << "\n";
+        } else {
+            // Negatives without space
+            std::cout << this->values[i] << "\n";
+        }
     }        
     // New line
     std::cout << "\n";                                   
@@ -90,6 +103,19 @@ void DataFrame::setValues(double** values) {
     for (int i = 0; i < this->numCols; i++) {
         for (int j = 0; j < this->numRows; j++) {
             this->values[i][j] = values[i][j];
+        }
+    }
+}
+
+void DataFrame::randomize() {
+    // Seed the random number generator
+    srand((unsigned)time(0));
+    // Iterate over the columns
+    for (int i = 0; i < this->numCols; i++) {
+        // Iterate over the rows
+        for (int j = 0; j < this->numRows; j++) {
+            // Generate a random number between -0.5 and 0.5
+            this->values[i][j] = ((double)rand() / RAND_MAX) - 0.5;
         }
     }
 }
@@ -173,7 +199,7 @@ void DataFrame::print(int decimals) {
             j = numCols - 5;
         }
         // Print column index
-        std::cout << j << ":\t";
+        std::cout << " " << j << ":\t";
     }
     // End line for column headers
     std::cout << std::endl;
@@ -209,10 +235,11 @@ void DataFrame::print(int decimals) {
             std::cout << std::fixed;
             // Set precision for decimals
             std::cout << std::setprecision(decimals);
-            // Output the matrix value
-            std::cout << values[j][i];
-            // Add tab for column separation
-            std::cout << "\t";
+            if (this->values[j][i] >= 0) {
+                std::cout << " " << this->values[j][i] << "\t";
+            } else {
+                std::cout << this->values[j][i] << "\t";
+            }
         }
         // End line for the current row
         std::cout << std::endl;
