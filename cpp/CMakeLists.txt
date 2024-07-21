@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(DataFrameTests)
+project(CPP_Networks_Tests)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
@@ -12,7 +12,7 @@ include_directories(${PROJECT_SOURCE_DIR}/lib/googletest/googletest/include)
 add_subdirectory(lib/googletest)
 
 # Define the source files and test files
-set(SOURCE_FILES utils.cpp)  # Assuming utils.cpp contains the implementation for DataFrame
+set(SOURCE_FILES utils.cpp)
 
 # Add executable for the tests
 add_executable(unitTests unit_tests.cpp ${SOURCE_FILES})
