@@ -13,6 +13,8 @@ private:
 public:
     Series(int length);
     void setValues(double* values);
+    double* getValues();
+    int getLength();
     void randomize();
     void print(int decimals);
     void normalize(double min, double max);
@@ -30,6 +32,9 @@ private:
 public:
     DataFrame(int numRows, int numCols);
     void setValues(double** values);
+    double** getValues();
+    int getNumRows();
+    int getNumCols();
     void randomize();
     void read_csv(const std::string &filename);
     void read_csv_limited(const std::string &filename,

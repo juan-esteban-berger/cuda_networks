@@ -1,13 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
-project(cuda_networks)
+project(DataFrameTests)
 
-# C++ Standard
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
 
-# Include Google Test
-add_subdirectory(lib/googletest)
-include_directories(lib/googletest/googletest/include)
+# Include directories for your project
+include_directories(${PROJECT_SOURCE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/lib/googletest/googletest/include)
 
-# Assuming your tests are in the 'tests' folder inside 'cpp'
-add_executable(runTests cpp/tests/test_series.cpp cpp/utils.cpp)
-target_link_libraries(runTests gtest gtest_main pthread)
+# Google Test
+add_subdirectory(lib/googletest)
+
+# Define the source files and test files
+set(SOURCE_FILES utils.cpp)  # Assuming utils.cpp contains the implementation for DataFrame
+
+# Add executable for the tests
+add_executable(unitTests unit_tests.cpp ${SOURCE_FILES})
+target_link_libraries(unitTests gtest gtest_main)
+
+# If your project uses pthread, link it as well
+find_package(Threads REQUIRED)
+target_link_libraries(unitTests Threads::Threads)

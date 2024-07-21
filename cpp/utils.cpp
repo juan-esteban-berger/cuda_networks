@@ -25,6 +25,14 @@ void Series::setValues(double* values) {
     }
 }
 
+double* Series::getValues() {
+    return this->values;
+}
+
+int Series::getLength() {
+    return this->length;
+}
+
 void Series::randomize() {
     // Seed the random number generator
     srand((unsigned)time(0));
@@ -123,6 +131,18 @@ void DataFrame::setValues(double** values) {
             this->values[i][j] = values[i][j];
         }
     }
+}
+
+double** DataFrame::getValues() {
+    return this->values;
+}
+
+int DataFrame::getNumRows() {
+    return this->numRows;
+}
+
+int DataFrame::getNumCols() {
+    return this->numCols;
 }
 
 void DataFrame::randomize() {
