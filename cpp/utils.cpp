@@ -71,6 +71,24 @@ void Series::print(int decimals) {
     std::cout << "\n";                                   
 }
 
+void Series::normalize(double min, double max) {
+    // Loop over the elements
+    for (int i = 0; i < this->length; i++) {
+        // Normalize the values
+        double scaled = this->values[i] - min;
+        this->values[i] = scaled / (max - min);
+    }
+}
+
+void Series::denormalize(double min, double max) {
+    // Loop over the elements
+    for (int i = 0; i < this->length; i++) {
+        // Denormalize the values
+        double scaled = this->values[i] * (max - min);
+        this->values[i] = scaled + min;
+    }
+}
+
 Series::~Series() {
     // Deallocate the memory
     free(this->values);
@@ -260,6 +278,30 @@ DataFrame DataFrame::transpose() {
         }
     }
     return result;
+}
+
+void DataFrame::normalize(double min, double max) {
+    // Loop through columns
+    for (int i = 0; i < this->numCols; i++) {
+        // Loop through rows
+        for (int j = 0; j < this->numRows; j++) {
+            // Normalize the values
+            double scaled = this->values[i][j] - min;
+            this->values[i][j] = scaled / (max - min);
+        }
+    }
+}
+
+void DataFrame::denormalize(double min, double max) {
+    // Loop through columns
+    for (int i = 0; i < this->numCols; i++) {
+        // Loop through rows
+        for (int j = 0; j < this->numRows; j++) {
+            // Denormalize the values
+            double scaled = this->values[i][j] * (max - min);
+            this->values[i][j] = scaled + min;
+        }
+    }
 }
 
 DataFrame::~DataFrame() {

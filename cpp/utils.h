@@ -15,6 +15,8 @@ public:
     void setValues(double* values);
     void randomize();
     void print(int decimals);
+    void normalize(double min, double max);
+    void denormalize(double min, double max);
     ~Series();
 };
 
@@ -34,6 +36,8 @@ public:
                           int startRow, int endRow);
     void print(int decimals);
     DataFrame transpose();
+    void normalize(double min, double max);
+    void denormalize(double min, double max);
     ~DataFrame();
 };
 

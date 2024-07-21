@@ -1,2 +1,16 @@
+# Data directories
 data/
+
+# Python cache
 **/__pycache__/
+
+# C++ build output
+cpp/build/
+cpp/lib/
+
+# Binary files and executables
+*.exe
+*.dll
+*.so
+*.o
+*.out
