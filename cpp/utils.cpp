@@ -86,6 +86,14 @@ DataFrame::DataFrame(int numRows, int numCols) {
         }
 }
 
+void DataFrame::setValues(double** values) {
+    for (int i = 0; i < this->numCols; i++) {
+        for (int j = 0; j < this->numRows; j++) {
+            this->values[i][j] = values[i][j];
+        }
+    }
+}
+
 void DataFrame::read_csv(const std::string &filename) {
     // Open the file
     std::ifstream file(filename);
@@ -211,6 +219,20 @@ void DataFrame::print(int decimals) {
     }
     // Add a new line
     std::cout << std::endl;
+}
+
+DataFrame DataFrame::transpose() {
+    // Initialize result DataFrame
+    DataFrame result(numCols, numRows);
+    // Loop through rows
+    for (int i = 0; i < numRows; i++) {
+        // Loop through columns
+        for (int j = 0; j < numCols; j++) {
+            // Transpose the values
+            result.values[i][j] = this->values[j][i];
+        }
+    }
+    return result;
 }
 
 DataFrame::~DataFrame() {

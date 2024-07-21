@@ -14,9 +14,28 @@ int main() {
 
     // df.read_csv("data/X_train.csv");
 
-    DataFrame df(1000, 784);
+    // DataFrame df(1000, 784);
 
-    df.read_csv_limited("data/X_train.csv", 0, 1000);
+    // df.read_csv_limited("data/X_train.csv", 0, 1000);
+    
+    // Dimensions of the DataFrame
+    int numRows = 100;
+    int numCols = 30;
+
+    // Create a DataFrame instance
+    DataFrame df(numRows, numCols);
+
+    // Create sample data to set in the DataFrame using malloc
+    double** data = (double**) malloc(numCols * sizeof(double*));
+    for (int i = 0; i < numCols; i++) {
+        data[i] = (double*) malloc(numRows * sizeof(double));
+        for (int j = 0; j < numRows; j++) {
+            data[i][j] = i + 0.1 * j;
+        }
+    }
+
+    // Set the values in the DataFrame
+    df.setValues(data);
 
     df.print(2);
 
