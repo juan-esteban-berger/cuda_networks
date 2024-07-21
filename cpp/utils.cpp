@@ -113,6 +113,41 @@ void DataFrame::read_csv(const std::string &filename) {
     file.close();
 }
 
+void DataFrame::read_csv_limited(const std::string& filename,
+                                 int startRow,
+                                 int endRow) {
+    // Open the file
+    std::ifstream file(filename);
+    // String for the line
+    std::string line;
+    // String for the cell
+    std::string cell;
+    // Row Counter
+    int row = 0;
+
+    // Loop over the rows
+    while (std::getline(file, line)) {
+        // Check if row is within range
+        if (row >= startRow && row < endRow) {
+            // Create a stringstream from the line
+            std::stringstream lineStream(line);
+            // Column Counter
+            int col = 0;
+            // Loop over the columns
+            while (std::getline(lineStream, cell, ',')) {
+                // Convert the cell to double
+                values[col][row - startRow] = std::stod(cell);
+                // Increment the column counter
+                col++;
+            }
+        }
+        row++;
+        // Stop reading
+        if (row >= endRow) break;
+    }
+    file.close();
+}
+
 void DataFrame::print(int decimals) {
     // Introduce the DataFrame details
     std::cout << "DataFrame with ";

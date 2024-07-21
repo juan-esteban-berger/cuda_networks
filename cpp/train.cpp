@@ -10,9 +10,13 @@ int main() {
 
     s.print(2);
 
-    DataFrame df(60000, 784);
+    // DataFrame df(60000, 784);
 
-    df.read_csv("data/X_train.csv");
+    // df.read_csv("data/X_train.csv");
+
+    DataFrame df(1000, 784);
+
+    df.read_csv_limited("data/X_train.csv", 0, 1000);
 
     df.print(2);
 

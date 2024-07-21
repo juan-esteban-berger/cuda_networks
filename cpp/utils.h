@@ -27,6 +27,8 @@ private:
 public:
     DataFrame(int numRows, int numCols);
     void read_csv(const std::string &filename);
+    void read_csv_limited(const std::string &filename,
+                          int startRow, int endRow);
     void print(int decimals);
     ~DataFrame();
 };
