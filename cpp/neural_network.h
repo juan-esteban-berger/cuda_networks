@@ -13,9 +13,10 @@ public:
     void derivative(DataFrame& Z);
 };
 
-// class Softmax {
-// 
-// }
+class Softmax {
+public:
+    void function(DataFrame& Z);
+}
 
 ////////////////////////////////////////////////////////////////////
 // Loss Function Classes

@@ -92,7 +92,7 @@ TEST(UnitTest, DataFrameTransposeTest) {
     double** initValues = (double**) malloc(numCols * sizeof(double*));
     // Iterate over columns
     for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each row
+        // Allocate memory for each column
         initValues[i] = (double*) malloc(numRows * sizeof(double));
         // Iterate over rows
         for (int j = 0; j < numRows; ++j) {
@@ -139,7 +139,7 @@ TEST(UnitTest, DataFrameNormalizeTest) {
     double** initValues = (double**) malloc(numCols * sizeof(double*));
     // Iterate over columns
     for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each row
+        // Allocate memory for each column
         initValues[i] = (double*) malloc(numRows * sizeof(double));
         // Iterate over rows
         for (int j = 0; j < numRows; ++j) {
@@ -160,12 +160,12 @@ TEST(UnitTest, DataFrameNormalizeTest) {
     double** expectedNormalized = (double**) malloc(numCols * sizeof(double*));
     // Iterate over columns
     for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each row
+        // Allocate memory for each column
         expectedNormalized[i] = (double*) malloc(numRows * sizeof(double));
     }
     // Iterate over columns
     for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each row
+        // Allocate memory for each column
         expectedNormalized[i] = (double*) malloc(numRows * sizeof(double));
         // Iterate over rows
         for (int j = 0; j < numRows; ++j) {
@@ -205,7 +205,7 @@ TEST(UnitTest, DataFrameDenormalizeTest) {
     double** normalizedValues = (double**) malloc(numCols * sizeof(double*));
     // Iterate over columns
     for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each row
+        // Allocate memory for each column
         normalizedValues[i] = (double*) malloc(numRows * sizeof(double));
         // Iterate over rows
         for (int j = 0; j < numRows; ++j) {
@@ -226,7 +226,7 @@ TEST(UnitTest, DataFrameDenormalizeTest) {
     double** expectedDenormalized = (double**) malloc(numCols * sizeof(double*));
     // Iterate over columns
     for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each row
+        // Allocate memory for each column
         expectedDenormalized[i] = (double*) malloc(numRows * sizeof(double));
         // Iterate over rows
         for (int j = 0; j < numRows; ++j) {
@@ -265,7 +265,7 @@ TEST(UnitTest, SigmoidFunctionTest) {
     // Initialize 2D arrays
     double** inputData = (double**) malloc(numCols * sizeof(double*));
     double** expectedData = (double**) malloc(numCols * sizeof(double*));
-    // Allocate memory for each row
+    // Allocate memory for each column
     for (int i = 0; i < numCols; ++i) {
         inputData[i] = (double*) malloc(numRows * sizeof(double));
         expectedData[i] = (double*) malloc(numRows * sizeof(double));
@@ -319,7 +319,7 @@ TEST(UnitTest, SigmoidDerivativeTest) {
     // Initialize 2D arrays
     double** inputData = (double**) malloc(numCols * sizeof(double*));
     double** expectedData = (double**) malloc(numCols * sizeof(double*));
-    // Allocate memory for each row
+    // Allocate memory for each column
     for (int i = 0; i < numCols; ++i) {
         inputData[i] = (double*) malloc(numRows * sizeof(double));
         expectedData[i] = (double*) malloc(numRows * sizeof(double));
@@ -364,6 +364,74 @@ TEST(UnitTest, SigmoidDerivativeTest) {
     free(inputData);
     free(expectedData);
 }
+
+// TEST(UnitTest, SoftmaxFunctionTest) {
+//     int numRows = 2;
+//     int numCols = 3;
+//     
+//     // Initialize DataFrames
+//     DataFrame inputDf(numRows, numCols), expectedDf(numRows, numCols);
+// 
+//     // Initialize 2D arrays
+//     double** inputData = (double**) malloc(numCols * sizeof(double*));
+//     double** expectedData = (double**) malloc(numCols * sizeof(double*));
+//     
+//     // Allocate memory and assign values for input and expected output
+//     for (int i = 0; i < numCols; ++i) {
+//         inputData[i] = (double*) malloc(numRows * sizeof(double));
+//         expectedData[i] = (double*) malloc(numRows * sizeof(double));
+// 
+//         double maxVal = -std::numeric_limits<double>::infinity();
+//         double sumExp = 0;
+// 
+//         for (int j = 0; j < numRows; ++j) {
+//             // Sequential data for testing
+//             inputData[i][j] = i * numRows + j - 5;
+// 
+//             // Calculate max for stability in softmax
+//             if (inputData[i][j] > maxVal) {
+//                 maxVal = inputData[i][j];
+//             }
+//         }
+// 
+//         for (int j = 0; j < numRows; ++j) {
+//             // Calculate exp(values - maxVal)
+//             expectedData[i][j] = exp(inputData[i][j] - maxVal);
+//             sumExp += expectedData[i][j];
+//         }
+// 
+//         for (int j = 0; j < numRows; ++j) {
+//             // Normalize to get probabilities
+//             expectedData[i][j] /= sumExp + 0.0000001; // Add a small constant for numerical stability
+//         }
+//     }
+// 
+//     // Set values to DataFrame
+//     inputDf.setValues(inputData);
+//     expectedDf.setValues(expectedData);
+// 
+//     // Apply Softmax function
+//     Softmax softmax;
+//     softmax.function(inputDf);
+// 
+//     // Check values
+//     double** actualValues = inputDf.getValues();
+//     double** expectedValues = expectedDf.getValues();
+// 
+//     for (int i = 0; i < numCols; ++i) {
+//         for (int j = 0; j < numRows; ++j) {
+//             ASSERT_NEAR(actualValues[i][j], expectedValues[i][j], 1e-5);
+//         }
+//     }
+// 
+//     // Free memory
+//     for (int i = 0; i < numCols; ++i) {
+//         free(inputData[i]);
+//         free(expectedData[i]);
+//     }
+//     free(inputData);
+//     free(expectedData);
+// }
 
 ////////////////////////////////////////////////////////////////////
 // Loss Function Tests

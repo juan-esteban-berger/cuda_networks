@@ -10,7 +10,7 @@ from tqdm import tqdm
 # Activation Function Classes
 class Sigmoid():
     def function(self, Z):
-        print(Z.shape)
+        # print(Z.shape)
         return 1 / (1 + np.exp(-Z))
 
     def derivative(self, Z):
@@ -18,8 +18,12 @@ class Sigmoid():
 
 class Softmax():
     def function(self, Z):
+        print(Z.shape)
         e_Z = np.exp(Z - np.max(Z))
-        return e_Z / (e_Z.sum(axis=0) + 1e-8)
+        print(pd.DataFrame(e_Z))
+        result = e_Z / (e_Z.sum(axis=0) + 1e-8)
+        print(pd.DataFrame(result))
+        return result
 
 ####################################################################
 # Loss Function Classes
