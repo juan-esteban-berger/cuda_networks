@@ -129,51 +129,43 @@ void Softmax::function(DataFrame& Z) {
     free(tempValues);
 }
 
-// void Softmax::function(DataFrame& Z) {
-//     int numRows = Z.getNumRows();
-//     int numCols = Z.getNumCols();
-// 
-//     // Allocate temporary array
-//     double** tempValues = (double**) malloc(numCols * sizeof(double*));
-//     // Loop through each column
-//     for (int i = 0; i < numCols; ++i) {
-//         // Allocate memory for each column
-//         tempValues[i] = (double*) malloc(numRows * sizeof(double));
-//     }
-// 
-//     // Load data into tempValues
-//     tempValues = Z.getValues();
-// 
-//     // Loop throuch each column (DataFrame is transposed)
-//     for (int i = 0; i < numCols; ++i) {
-//         // Find the maximum value in the column
-//         double maxVal = 0;
-//         // Loop through each row
-//         for (int j = 0; j < numRows; ++j) {
-//             // Keep the maximum value
-//             maxVal = std::max(maxVal, tempValues[i][j]);
-//         }
-//         // Apply exp(val - maxVal) to each element in the column
-//         for (int j = 0; j < numRows; ++j) {
-//             tempValues[i][j] = exp(tempValues[i][j] - maxVal);
-//         }
-//         // Calculate the sum of the column
-//         double sumVal = 0;
-//         for (int j = 0; j < numRows; ++j) {
-//             sumVal += tempValues[i][j];
-//         }
-//         // Divide each element by the sum
-//         for (int j = 0; j < numRows; ++j) {
-//             tempValues[i][j] /= sumVal + 0.0000001;
-//         }
-//     }
-// 
-//     // Set the values back to Z
-//     Z.setValues(tempValues);
-// 
-//     // Free temporary array
-//     for (int i = 0; i < numCols; ++i) {
-//         free(tempValues[i]);
-//     }
-//     free(tempValues);
-// }
+////////////////////////////////////////////////////////////////////
+// Loss Function Classes
+double CatCrossEntropy::function(DataFrame& Y, DataFrame& Y_hat) {
+    int numRows = Y.getNumRows();
+    int numCols = Y.getNumCols();
+
+    // Allocate 2D arrays to store the temp values
+    double** tempY = (double**) malloc(numCols * sizeof(double*));
+    double** tempYHat = (double**) malloc(numCols * sizeof(double*));
+
+    // Load over columns
+    for (int i = 0; i < numCols; ++i) {
+        // Allocate memory for each Column
+        tempY[i] = (double*) malloc(numRows * sizeof(double));
+        tempYHat[i] = (double*) malloc(numRows * sizeof(double));
+        // Load data into temp arrays
+        for (int j = 0; j < numRows; ++j) {
+            tempY[i][j] = Y.getValues()[i][j];
+            tempYHat[i][j] = Y_hat.getValues()[i][j];
+        }
+    }
+
+    // Calculate the cross-entropy loss
+    double crossEntropy = 0.0;
+    for (int i = 0; i < numCols; ++i) {
+        for (int j = 0; j < numRows; ++j) {
+            crossEntropy -= tempY[i][j] * log(tempYHat[i][j] + 1e-8);
+        }
+    }
+
+    // Free the allocated memory for temp arrays
+    for (int i = 0; i < numCols; ++i) {
+        free(tempY[i]);
+        free(tempYHat[i]);
+    }
+    free(tempY);
+    free(tempYHat);
+
+    return crossEntropy;
+}

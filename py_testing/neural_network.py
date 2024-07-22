@@ -18,17 +18,19 @@ class Sigmoid():
 
 class Softmax():
     def function(self, Z):
-        print(Z.shape)
+        # print(Z.shape)
         e_Z = np.exp(Z - np.max(Z))
-        print(pd.DataFrame(e_Z))
+        # print(pd.DataFrame(e_Z))
         result = e_Z / (e_Z.sum(axis=0) + 1e-8)
-        print(pd.DataFrame(result))
+        # print(pd.DataFrame(result))
         return result
 
 ####################################################################
 # Loss Function Classes
 class CatCrossEntropy():
     def function(self, Y, Y_hat):
+        print(Y.shape)
+        print(Y_hat.shape)
         return -np.sum(Y * np.log(Y_hat + 1e-8))
 
 ####################################################################
