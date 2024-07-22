@@ -145,6 +145,10 @@ int DataFrame::getNumCols() {
     return this->numCols;
 }
 
+void DataFrame::shape() {
+    std::cout << "Shape: (" << numRows << ", " << numCols << ")" << std::endl;
+}
+
 void DataFrame::randomize() {
     // Seed the random number generator
     srand((unsigned)time(0));

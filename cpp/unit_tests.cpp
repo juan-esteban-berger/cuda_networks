@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
+#include <cmath>
+
 #include "utils.h"
+#include "neural_network.h"
 
 ////////////////////////////////////////////////////////////////////
 // Series Tests
@@ -249,6 +252,28 @@ TEST(UnitTest, DataFrameDenormalizeTest) {
     free(normalizedValues);
     free(expectedDenormalized);
 }
+
+////////////////////////////////////////////////////////////////////
+// Activation Function Tests
+TEST(UnitTest, SigmoidFunctionTest) {
+    Sigmoid sigmoid;
+    ASSERT_NEAR(sigmoid.function(0), 1.0 / (1.0 + exp(-0)), 1e-5);
+    ASSERT_NEAR(sigmoid.function(1), 1.0 / (1.0 + exp(-1)), 1e-5);
+    ASSERT_NEAR(sigmoid.function(-1), 1.0 / (1.0 + exp(1)), 1e-5);
+}
+
+TEST(UnitTest, SigmoidDerivativeTest) {
+    Sigmoid sigmoid;
+    double sigAt0 = sigmoid.function(0);
+    ASSERT_NEAR(sigmoid.derivative(0), sigAt0 * (1 - sigAt0), 1e-5);
+    double sigAt1 = sigmoid.function(1);
+    ASSERT_NEAR(sigmoid.derivative(1), sigAt1 * (1 - sigAt1), 1e-5);
+    double sigAtMinus1 = sigmoid.function(-1);
+    ASSERT_NEAR(sigmoid.derivative(-1), sigAtMinus1 * (1 - sigAtMinus1), 1e-5);
+}
+
+////////////////////////////////////////////////////////////////////
+// Loss Function Tests
 
 ////////////////////////////////////////////////////////////////////
 // Main Function

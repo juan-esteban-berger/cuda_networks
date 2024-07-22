@@ -12,7 +12,7 @@ include_directories(${PROJECT_SOURCE_DIR}/lib/googletest/googletest/include)
 add_subdirectory(lib/googletest)
 
 # Define the source files and test files
-set(SOURCE_FILES utils.cpp)
+set(SOURCE_FILES utils.cpp neural_network.cpp)  # Add neural_network.cpp here
 
 # Add executable for the tests
 add_executable(unitTests unit_tests.cpp ${SOURCE_FILES})

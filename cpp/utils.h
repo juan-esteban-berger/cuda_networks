@@ -35,6 +35,7 @@ public:
     double** getValues();
     int getNumRows();
     int getNumCols();
+    void shape();
     void randomize();
     void read_csv(const std::string &filename);
     void read_csv_limited(const std::string &filename,
