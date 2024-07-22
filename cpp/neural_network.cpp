@@ -135,32 +135,30 @@ double CatCrossEntropy::function(DataFrame& Y, DataFrame& Y_hat) {
     int numRows = Y.getNumRows();
     int numCols = Y.getNumCols();
 
-    // Allocate 2D arrays to store the temp values
-    double** tempY = (double**) malloc(numCols * sizeof(double*));
-    double** tempYHat = (double**) malloc(numCols * sizeof(double*));
+    // Allocate temporary copies for computation
+    double** tempY = (double**) malloc(numRows * sizeof(double*));
+    double** tempYHat = (double**) malloc(numRows * sizeof(double*));
 
-    // Load over columns
-    for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each Column
-        tempY[i] = (double*) malloc(numRows * sizeof(double));
-        tempYHat[i] = (double*) malloc(numRows * sizeof(double));
-        // Load data into temp arrays
-        for (int j = 0; j < numRows; ++j) {
-            tempY[i][j] = Y.getValues()[i][j];
-            tempYHat[i][j] = Y_hat.getValues()[i][j];
+    // Loop through the rows
+    for (int i = 0; i < numRows; ++i) {
+        tempY[i] = (double*) malloc(numCols * sizeof(double));
+        tempYHat[i] = (double*) malloc(numCols * sizeof(double));
+        for (int j = 0; j < numCols; ++j) {
+            tempY[i][j] = Y.getValues()[j][i];
+            tempYHat[i][j] = Y_hat.getValues()[j][i];
         }
     }
 
-    // Calculate the cross-entropy loss
+    // Calculate the loss
     double crossEntropy = 0.0;
-    for (int i = 0; i < numCols; ++i) {
-        for (int j = 0; j < numRows; ++j) {
+    for (int i = 0; i < numRows; ++i) {
+        for (int j = 0; j < numCols; ++j) {
             crossEntropy -= tempY[i][j] * log(tempYHat[i][j] + 1e-8);
         }
     }
 
-    // Free the allocated memory for temp arrays
-    for (int i = 0; i < numCols; ++i) {
+    // Free the temporary arrays
+    for (int i = 0; i < numRows; ++i) {
         free(tempY[i]);
         free(tempYHat[i]);
     }

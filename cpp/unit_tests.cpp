@@ -489,58 +489,74 @@ TEST(ActFunctionTest, SoftmaxFunctionTest) {
 
 ////////////////////////////////////////////////////////////////////
 // Loss Function Tests
-// TEST(LossFunctionTest, CatCrossEntropyTest) {
-//     // Dimensions of the test data
-//     int numRows = 10;  // Number of features (categories)
-//     int numCols = 3;   // Number of examples
-// 
-//     // Initialize DataFrames
-//     DataFrame Y(numRows, numCols), Y_hat(numRows, numCols);
-// 
-//     // Allocate memory for 2D arrays
-//     double** yData = (double**) malloc(numCols * sizeof(double*));
-//     double** yHatData = (double**) malloc(numCols * sizeof(double*));
-// 
-//     // Fill with example data
-//     for (int i = 0; i < numCols; ++i) {
-//         yData[i] = (double*) malloc(numRows * sizeof(double));
-//         yHatData[i] = (double*) malloc(numRows * sizeof(double));
-//         for (int j = 0; j < numRows; ++j) {
-//             yData[i][j] = (i == j) ? 1.0 : 0.0; // One-hot encoded true classes
-//             yHatData[i][j] = 0.1 + 0.05 * j;  // Dummy prediction probabilities
-//         }
-//     }
-// 
-//     // Set values
-//     Y.setValues(yData);
-//     Y_hat.setValues(yHatData);
-// 
-//     // Print DataFrames
-//     std::cout << "Y: " << std::endl;
-//     Y.print(2);
-//     std::cout << "Y_hat: " << std::endl;
-//     Y_hat.print(2);
-// 
-//     // Initialize the loss function object
-//     CatCrossEntropy ceLoss;
-//     // Compute the cross-entropy loss
-//     double loss = ceLoss.function(Y, Y_hat);
-// 
-//     // Expected loss value calculated externally (for example using a small script or manual calculation)
-//     double expectedLoss = -log(0.1 + 0.05 * 0) - log(0.1 + 0.05 * 1) - log(0.1 + 0.05 * 2);
-//     expectedLoss /= numCols; // Average over all examples if necessary
-// 
-//     // Check if the calculated loss is close to the expected loss
-//     ASSERT_NEAR(loss, expectedLoss, 1e-5);
-// 
-//     // Free memory
-//     for (int i = 0; i < numCols; ++i) {
-//         free(yData[i]);
-//         free(yHatData[i]);
-//     }
-//     free(yData);
-//     free(yHatData);
-// }
+TEST(LossFunctionTest, CategoricalCrossEntropyTest) {
+    int numRows = 10;
+    int numCols = 3;
+
+    // Initialize DataFrames
+    DataFrame Y(numRows, numCols), Y_hat(numRows, numCols);
+
+    // Allocate memory for 2D arrays
+    double** YData = (double**) malloc(numCols * sizeof(double*));
+    double** Y_hatData = (double**) malloc(numCols * sizeof(double*));
+
+    // Allocate memory for each column
+    for (int i = 0; i < numCols; ++i) {
+        YData[i] = (double*) malloc(numRows * sizeof(double));
+        Y_hatData[i] = (double*) malloc(numRows * sizeof(double));
+    }
+
+    // Fill in with sequential data
+    for (int j = 0; j < numRows; ++j) {
+        for (int i = 0; i < numCols; ++i) {
+            // Values between 0 and 1
+            YData[i][j] = (i * numRows + j) / 30.0;
+            Y_hatData[i][j] = YData[i][j] * 0.75;
+        }
+    }
+
+    // Calculate the loss
+    double crossEntropy = 0;
+    // Loop over rows
+    for (int i = 0; i < numRows; ++i) {
+        // Loop over columns
+        for (int j = 0; j < numCols; ++j) {
+            crossEntropy -= YData[j][i] * log(Y_hatData[j][i] + 1e-8);
+        }
+    }
+
+    // Set values to DataFrames
+    Y.setValues(YData);
+    Y_hat.setValues(Y_hatData);
+
+    // Print DataFrames
+    std::cout << "Y: " << std::endl;
+    Y.print(2);
+
+    std::cout << "Y_hat: " << std::endl;
+    Y_hat.print(2);
+
+    // Print loss
+    std::cout << "Loss: " << crossEntropy << std::endl;
+
+    // Calculate the loss
+    CatCrossEntropy lossFunc;
+    double testCrossEntropy = lossFunc.function(Y, Y_hat);
+
+    // Print test loss
+    std::cout << "Test Loss: " << testCrossEntropy << std::endl;
+
+    // Check values
+    ASSERT_NEAR(crossEntropy, testCrossEntropy, 1e-5);
+
+    // Free memory
+    for (int i = 0; i < numCols; ++i) {
+        free(YData[i]);
+        free(Y_hatData[i]);
+    }
+    free(YData);
+    free(Y_hatData);
+}
 
 ////////////////////////////////////////////////////////////////////
 // Main Function
