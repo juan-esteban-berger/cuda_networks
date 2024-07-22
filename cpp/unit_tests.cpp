@@ -6,7 +6,7 @@
 
 ////////////////////////////////////////////////////////////////////
 // Series Tests
-TEST(UnitTest, SeriesNormalizeTest) {
+TEST(SeriesTest, SeriesNormalizeTest) {
     // Initialize Series
     Series series(5);
     // Allocate memory for raw values
@@ -21,8 +21,14 @@ TEST(UnitTest, SeriesNormalizeTest) {
     // Set min and max values
     double min = 0, max = 5;
 
+    // Print before normalization
+    std::cout << "Before Normalization: " << std::endl;
+    series.print(2);
     // Normalize the Series
     series.normalize(min, max);
+    // Print after normalization
+    std::cout << "After Normalization: " << std::endl;
+    series.print(2);
 
     // Expected normalized values
     double* expectedNormalized = (double*) malloc(5 * sizeof(double));
@@ -42,7 +48,7 @@ TEST(UnitTest, SeriesNormalizeTest) {
     free(expectedNormalized);
 }
 
-TEST(UnitTest, SeriesDenormalizeTest) {
+TEST(SeriesTest, SeriesDenormalizeTest) {
     // Initialize Series
     Series series(5);
     // Allocate memory for normalized values
@@ -57,8 +63,14 @@ TEST(UnitTest, SeriesDenormalizeTest) {
     // Set min and max values for denormalization
     double min = 0, max = 5;
 
+    // Print before denormalization
+    std::cout << "Before Denormalization: " << std::endl;
+    series.print(2);
     // Denormalize the Series
     series.denormalize(min, max);
+    // Print after denormalization
+    std::cout << "After Denormalization: " << std::endl;
+    series.print(2);
 
     // Expected denormalized values
     double* expectedDenormalized = (double*) malloc(5 * sizeof(double));
@@ -80,7 +92,7 @@ TEST(UnitTest, SeriesDenormalizeTest) {
 
 ////////////////////////////////////////////////////////////////////
 // DataFrame Tests
-TEST(UnitTest, DataFrameTransposeTest) {
+TEST(DataFrameTest, DataFrameTransposeTest) {
     // Number of rows and columns
     int numRows = 2;
     int numCols = 3;
@@ -103,8 +115,14 @@ TEST(UnitTest, DataFrameTransposeTest) {
     // Set values
     df.setValues(initValues);
 
+    // Print before transposing
+    std::cout << "Before Transposing: " << std::endl;
+    df.print(2);
     // Transpose the DataFrame
     DataFrame transposed = df.transpose();
+    // Print after transposing
+    std::cout << "After Transposing: " << std::endl;
+    transposed.print(2);
 
     // Check dimensions
     ASSERT_EQ(transposed.getNumRows(), numCols);
@@ -127,7 +145,7 @@ TEST(UnitTest, DataFrameTransposeTest) {
     free(initValues);
 }
 
-TEST(UnitTest, DataFrameNormalizeTest) {
+TEST(DataFrameTest, DataFrameNormalizeTest) {
     // Number of rows and columns
     int numRows = 2;
     int numCols = 3;
@@ -153,8 +171,14 @@ TEST(UnitTest, DataFrameNormalizeTest) {
     // Set min and max values for normalization
     double min = 0, max = 5;
 
+    // Print before normalization
+    std::cout << "Before Normalization: " << std::endl;
+    df.print(2);
     // Normalize the DataFrame
     df.normalize(min, max);
+    // Print after normalization
+    std::cout << "After Normalization: " << std::endl;
+    df.print(2);
 
     // Allocate memory for expected normalized values
     double** expectedNormalized = (double**) malloc(numCols * sizeof(double*));
@@ -194,7 +218,7 @@ TEST(UnitTest, DataFrameNormalizeTest) {
     free(expectedNormalized);
 }
 
-TEST(UnitTest, DataFrameDenormalizeTest) {
+TEST(DataFrameTest, DataFrameDenormalizeTest) {
     // Number of rows and columns
     int numRows = 2;
     int numCols = 3;
@@ -203,35 +227,40 @@ TEST(UnitTest, DataFrameDenormalizeTest) {
 
     // Allocate memory for normalized values
     double** normalizedValues = (double**) malloc(numCols * sizeof(double*));
-    // Iterate over columns
+    // Initialize the normalized values
     for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each column
         normalizedValues[i] = (double*) malloc(numRows * sizeof(double));
-        // Iterate over rows
         for (int j = 0; j < numRows; ++j) {
-            // Fill with normalized data
-            normalizedValues[i][j] = j / 5.0;
+            // Fill with normalized sequential data
+            normalizedValues[i][j] = (i * numRows + j) / 5.0;
         }
     }
+
     // Set normalized values
     df.setValues(normalizedValues);
 
-    // Set min and max values for denormalization
+    // Set min and max values
     double min = 0, max = 5;
 
+    // Print before denormalization
+    std::cout << "Before Denormalization: " << std::endl;
+    df.print(2);
     // Denormalize the DataFrame
     df.denormalize(min, max);
+    // Print after denormalization
+    std::cout << "After Denormalization: " << std::endl;
+    df.print(2);
 
-    // Allocate memory for expected denormalized values
+    // Allocate memory for 2D array
     double** expectedDenormalized = (double**) malloc(numCols * sizeof(double*));
-    // Iterate over columns
+    // Loop over columns
     for (int i = 0; i < numCols; ++i) {
         // Allocate memory for each column
         expectedDenormalized[i] = (double*) malloc(numRows * sizeof(double));
-        // Iterate over rows
+        // Loop over rows
         for (int j = 0; j < numRows; ++j) {
-            // Fill with original data
-            expectedDenormalized[i][j] = (j / 5.0) * 5;
+            // Fill with sequential data
+            expectedDenormalized[i][j] = i * numRows + j;
         }
     }
 
@@ -255,8 +284,8 @@ TEST(UnitTest, DataFrameDenormalizeTest) {
 
 ////////////////////////////////////////////////////////////////////
 // Activation Function Tests
-TEST(UnitTest, SigmoidFunctionTest) {
-    int numRows = 2;
+TEST(ActFunctionTest, SigmoidFunctionTest) {
+    int numRows = 4;
     int numCols = 3;
     
     // Initialize DataFrames
@@ -275,7 +304,7 @@ TEST(UnitTest, SigmoidFunctionTest) {
         // Loop over columns
         for (int i = 0; i < numCols; ++i) {
             // Sequential Data
-            inputData[i][j] = i * numRows + j - 5;
+            inputData[i][j] = i * numRows + j + 0.0000001;
             // Expected Data
             expectedData[i][j] = 1.0 / (1.0 + exp(-inputData[i][j]));
         }
@@ -285,9 +314,15 @@ TEST(UnitTest, SigmoidFunctionTest) {
     inputDf.setValues(inputData);
     expectedDf.setValues(expectedData);
 
+    // Print before applying Sigmoid function
+    std::cout << "Before Sigmoid Function: " << std::endl;
+    inputDf.print(2);
     // Apply Sigmoid function
     Sigmoid sigmoid;
     sigmoid.function(inputDf);
+    // Print after applying Sigmoid function
+    std::cout << "After Sigmoid Function: " << std::endl;
+    inputDf.print(2);
 
     // Check values
     double** actualValues = inputDf.getValues();
@@ -309,8 +344,8 @@ TEST(UnitTest, SigmoidFunctionTest) {
     free(expectedData);
 }
 
-TEST(UnitTest, SigmoidDerivativeTest) {
-    int numRows = 2;
+TEST(ActFunctionTest, SigmoidDerivativeTest) {
+    int numRows = 4;
     int numCols = 3;
     
     // Initialize DataFrames
@@ -329,7 +364,7 @@ TEST(UnitTest, SigmoidDerivativeTest) {
         // Loop over columns
         for (int i = 0; i < numCols; ++i) {
             // Sequential Data
-            inputData[i][j] = i * numRows + j - 5;
+            inputData[i][j] = i * numRows + j + 0.0000001;
             // Calculate sigmoid value
             double sigmoidValue = 1.0 / (1.0 + exp(-inputData[i][j]));
             // Expected Data for derivative
@@ -341,9 +376,15 @@ TEST(UnitTest, SigmoidDerivativeTest) {
     inputDf.setValues(inputData);
     expectedDf.setValues(expectedData);
 
+    // Print before applying Sigmoid derivative
+    std::cout << "Before Sigmoid Derivative: " << std::endl;
+    inputDf.print(2);
     // Apply Sigmoid derivative
     Sigmoid sigmoid;
     sigmoid.derivative(inputDf);
+    // Print after applying Sigmoid derivative
+    std::cout << "After Sigmoid Derivative: " << std::endl;
+    inputDf.print(2);
 
     // Check values
     double** actualValues = inputDf.getValues();
@@ -365,73 +406,86 @@ TEST(UnitTest, SigmoidDerivativeTest) {
     free(expectedData);
 }
 
-// TEST(UnitTest, SoftmaxFunctionTest) {
-//     int numRows = 2;
-//     int numCols = 3;
-//     
-//     // Initialize DataFrames
-//     DataFrame inputDf(numRows, numCols), expectedDf(numRows, numCols);
-// 
-//     // Initialize 2D arrays
-//     double** inputData = (double**) malloc(numCols * sizeof(double*));
-//     double** expectedData = (double**) malloc(numCols * sizeof(double*));
-//     
-//     // Allocate memory and assign values for input and expected output
-//     for (int i = 0; i < numCols; ++i) {
-//         inputData[i] = (double*) malloc(numRows * sizeof(double));
-//         expectedData[i] = (double*) malloc(numRows * sizeof(double));
-// 
-//         double maxVal = -std::numeric_limits<double>::infinity();
-//         double sumExp = 0;
-// 
-//         for (int j = 0; j < numRows; ++j) {
-//             // Sequential data for testing
-//             inputData[i][j] = i * numRows + j - 5;
-// 
-//             // Calculate max for stability in softmax
-//             if (inputData[i][j] > maxVal) {
-//                 maxVal = inputData[i][j];
-//             }
-//         }
-// 
-//         for (int j = 0; j < numRows; ++j) {
-//             // Calculate exp(values - maxVal)
-//             expectedData[i][j] = exp(inputData[i][j] - maxVal);
-//             sumExp += expectedData[i][j];
-//         }
-// 
-//         for (int j = 0; j < numRows; ++j) {
-//             // Normalize to get probabilities
-//             expectedData[i][j] /= sumExp + 0.0000001; // Add a small constant for numerical stability
-//         }
-//     }
-// 
-//     // Set values to DataFrame
-//     inputDf.setValues(inputData);
-//     expectedDf.setValues(expectedData);
-// 
-//     // Apply Softmax function
-//     Softmax softmax;
-//     softmax.function(inputDf);
-// 
-//     // Check values
-//     double** actualValues = inputDf.getValues();
-//     double** expectedValues = expectedDf.getValues();
-// 
-//     for (int i = 0; i < numCols; ++i) {
-//         for (int j = 0; j < numRows; ++j) {
-//             ASSERT_NEAR(actualValues[i][j], expectedValues[i][j], 1e-5);
-//         }
-//     }
-// 
-//     // Free memory
-//     for (int i = 0; i < numCols; ++i) {
-//         free(inputData[i]);
-//         free(expectedData[i]);
-//     }
-//     free(inputData);
-//     free(expectedData);
-// }
+TEST(ActFunctionTest, SoftmaxFunctionTest) {
+    int numRows = 10;
+    int numCols = 3;
+    
+    // Initialize DataFrames
+    DataFrame inputDf(numRows, numCols), expectedDf(numRows, numCols);
+
+    // Allocate memory for 2D arrays
+    double** inputData = (double**) malloc(numCols * sizeof(double*));
+    double** expectedData = (double**) malloc(numCols * sizeof(double*));
+    
+    // Allocate memory for each column
+    for (int i = 0; i < numCols; ++i) {
+        inputData[i] = (double*) malloc(numRows * sizeof(double));
+        expectedData[i] = (double*) malloc(numRows * sizeof(double));
+    }
+
+    // Fill in with sequential data
+    for (int j = 0; j < numRows; ++j) {
+        for (int i = 0; i < numCols; ++i) {
+            inputData[i][j] = i * numRows + j - 5;
+            expectedData[i][j] = i * numRows + j - 5;
+        }
+    }
+
+    // Apply Softmax function to expected data
+    for (int i = 0; i < numCols; ++i) {
+        // Find the maximum value in the column
+        double maxVal = 0;
+        // Loop through each row
+        for (int j = 0; j < numRows; ++j) {
+            maxVal = std::max(maxVal, expectedData[i][j]);
+        }
+        // Apply exp(val - maxVal) to each element in the column
+        for (int j = 0; j < numRows; ++j) {
+            expectedData[i][j] = exp(expectedData[i][j] - maxVal);
+        }
+        // Calculate the sum of the column
+        double sumVal = 0;
+        for (int j = 0; j < numRows; ++j) {
+            sumVal += expectedData[i][j];
+        }
+        // Divide each element by the sum
+        for (int j = 0; j < numRows; ++j) {
+            expectedData[i][j] /= sumVal + 0.0000001;
+        }
+    }
+
+    // Set values to DataFrame
+    inputDf.setValues(inputData);
+    expectedDf.setValues(expectedData);
+
+    // Print before applying Softmax function
+    std::cout << "Before Softmax Function: " << std::endl;
+    inputDf.print(2);
+    // Apply Softmax function
+    Softmax softmax;
+    softmax.function(inputDf);
+    // Print after applying Softmax function
+    std::cout << "After Softmax Function: " << std::endl;
+    inputDf.print(2);
+
+    // Check values
+    double** actualValues = inputDf.getValues();
+    double** expectedValues = expectedDf.getValues();
+
+    for (int i = 0; i < numCols; ++i) {
+        for (int j = 0; j < numRows; ++j) {
+            ASSERT_NEAR(actualValues[i][j], expectedValues[i][j], 1e-5);
+        }
+    }
+
+    // Free memory
+    for (int i = 0; i < numCols; ++i) {
+        free(inputData[i]);
+        free(expectedData[i]);
+    }
+    free(inputData);
+    free(expectedData);
+}
 
 ////////////////////////////////////////////////////////////////////
 // Loss Function Tests

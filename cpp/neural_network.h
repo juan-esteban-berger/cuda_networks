@@ -16,7 +16,7 @@ public:
 class Softmax {
 public:
     void function(DataFrame& Z);
-}
+};
 
 ////////////////////////////////////////////////////////////////////
 // Loss Function Classes
