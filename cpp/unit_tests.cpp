@@ -256,20 +256,113 @@ TEST(UnitTest, DataFrameDenormalizeTest) {
 ////////////////////////////////////////////////////////////////////
 // Activation Function Tests
 TEST(UnitTest, SigmoidFunctionTest) {
+    int numRows = 2;
+    int numCols = 3;
+    
+    // Initialize DataFrames
+    DataFrame inputDf(numRows, numCols), expectedDf(numRows, numCols);
+
+    // Initialize 2D arrays
+    double** inputData = (double**) malloc(numCols * sizeof(double*));
+    double** expectedData = (double**) malloc(numCols * sizeof(double*));
+    // Allocate memory for each row
+    for (int i = 0; i < numCols; ++i) {
+        inputData[i] = (double*) malloc(numRows * sizeof(double));
+        expectedData[i] = (double*) malloc(numRows * sizeof(double));
+    }
+    // Loop over rows
+    for (int j = 0; j < numRows; ++j) {
+        // Loop over columns
+        for (int i = 0; i < numCols; ++i) {
+            // Sequential Data
+            inputData[i][j] = i * numRows + j - 5;
+            // Expected Data
+            expectedData[i][j] = 1.0 / (1.0 + exp(-inputData[i][j]));
+        }
+    }
+
+    // Set values
+    inputDf.setValues(inputData);
+    expectedDf.setValues(expectedData);
+
+    // Apply Sigmoid function
     Sigmoid sigmoid;
-    ASSERT_NEAR(sigmoid.function(0), 1.0 / (1.0 + exp(-0)), 1e-5);
-    ASSERT_NEAR(sigmoid.function(1), 1.0 / (1.0 + exp(-1)), 1e-5);
-    ASSERT_NEAR(sigmoid.function(-1), 1.0 / (1.0 + exp(1)), 1e-5);
+    sigmoid.function(inputDf);
+
+    // Check values
+    double** actualValues = inputDf.getValues();
+    double** expectedValues = expectedDf.getValues();
+
+    // Check values
+    for (int i = 0; i < numCols; ++i) {
+        for (int j = 0; j < numRows; ++j) {
+            ASSERT_NEAR(actualValues[i][j], expectedValues[i][j], 1e-5);
+        }
+    }
+
+    // Free memory
+    for (int i = 0; i < numCols; ++i) {
+        free(inputData[i]);
+        free(expectedData[i]);
+    }
+    free(inputData);
+    free(expectedData);
 }
 
 TEST(UnitTest, SigmoidDerivativeTest) {
+    int numRows = 2;
+    int numCols = 3;
+    
+    // Initialize DataFrames
+    DataFrame inputDf(numRows, numCols), expectedDf(numRows, numCols);
+
+    // Initialize 2D arrays
+    double** inputData = (double**) malloc(numCols * sizeof(double*));
+    double** expectedData = (double**) malloc(numCols * sizeof(double*));
+    // Allocate memory for each row
+    for (int i = 0; i < numCols; ++i) {
+        inputData[i] = (double*) malloc(numRows * sizeof(double));
+        expectedData[i] = (double*) malloc(numRows * sizeof(double));
+    }
+    // Loop over rows
+    for (int j = 0; j < numRows; ++j) {
+        // Loop over columns
+        for (int i = 0; i < numCols; ++i) {
+            // Sequential Data
+            inputData[i][j] = i * numRows + j - 5;
+            // Calculate sigmoid value
+            double sigmoidValue = 1.0 / (1.0 + exp(-inputData[i][j]));
+            // Expected Data for derivative
+            expectedData[i][j] = sigmoidValue * (1 - sigmoidValue);
+        }
+    }
+
+    // Set values
+    inputDf.setValues(inputData);
+    expectedDf.setValues(expectedData);
+
+    // Apply Sigmoid derivative
     Sigmoid sigmoid;
-    double sigAt0 = sigmoid.function(0);
-    ASSERT_NEAR(sigmoid.derivative(0), sigAt0 * (1 - sigAt0), 1e-5);
-    double sigAt1 = sigmoid.function(1);
-    ASSERT_NEAR(sigmoid.derivative(1), sigAt1 * (1 - sigAt1), 1e-5);
-    double sigAtMinus1 = sigmoid.function(-1);
-    ASSERT_NEAR(sigmoid.derivative(-1), sigAtMinus1 * (1 - sigAtMinus1), 1e-5);
+    sigmoid.derivative(inputDf);
+
+    // Check values
+    double** actualValues = inputDf.getValues();
+    double** expectedValues = expectedDf.getValues();
+
+    // Check values
+    for (int i = 0; i < numCols; ++i) {
+        for (int j = 0; j < numRows; ++j) {
+            ASSERT_NEAR(actualValues[i][j], expectedValues[i][j], 1e-5);
+        }
+    }
+
+    // Free memory
+    for (int i = 0; i < numCols; ++i) {
+        free(inputData[i]);
+        free(expectedData[i]);
+    }
+    free(inputData);
+    free(expectedData);
 }
 
 ////////////////////////////////////////////////////////////////////
