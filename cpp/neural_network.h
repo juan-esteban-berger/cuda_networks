@@ -27,6 +27,22 @@ public:
 
 ////////////////////////////////////////////////////////////////////
 // Layer Class
+class Layer {
+public:
+    DataFrame W;
+    Series b;
+
+    DataFrame Z;
+    DataFrame A;
+
+    DataFrame dZ;
+    DataFrame dW;
+    Series db;
+
+    std::string activation;
+
+    Layer(int input_num, int output_num, std::string activation_func);
+};
 
 ////////////////////////////////////////////////////////////////////
 // Neural Network Class

@@ -167,3 +167,29 @@ double CatCrossEntropy::function(DataFrame& Y, DataFrame& Y_hat) {
 
     return crossEntropy;
 }
+
+////////////////////////////////////////////////////////////////////
+// Layer Class
+Layer::Layer(
+    int input_num, 
+    int output_num, 
+    std::string activation_func
+) : W(output_num, input_num),
+    b(output_num),
+    dW(output_num, input_num),
+    db(output_num),
+    Z(output_num, input_num),
+    A(output_num, input_num),
+    dZ(output_num, input_num)
+{
+    // Set activation function
+    this->activation = activation_func;
+
+    // Randomize weights and biases
+    this->W.randomize();
+    this->b.randomize();
+}
+
+////////////////////////////////////////////////////////////////////
+// Neural Network Class
+

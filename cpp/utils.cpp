@@ -104,10 +104,6 @@ Series::~Series() {
 
 ////////////////////////////////////////////////////////////////////
 // DataFrame Class
-
-// Big Changes: DataFrame and Series classes are separate
-// DataFrame is now going to use a 2D Array of doubles
-
 DataFrame::DataFrame(int numRows, int numCols) {
         this->numRows = numRows;
         this->numCols = numCols;
