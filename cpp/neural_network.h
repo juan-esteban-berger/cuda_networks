@@ -46,5 +46,15 @@ public:
 
 ////////////////////////////////////////////////////////////////////
 // Neural Network Class
+class NeuralNetwork {
+private:
+    Layer** layers;  // Pointer to an array of Layer pointers
+    int numLayers;
+
+public:
+    NeuralNetwork(int numLayers);  // Constructor that specifies the number of layers
+    void add_layer(Layer* layer, int index);  // Method to add layers
+    ~NeuralNetwork();  // Destructor to clean up
+};
 
 #endif

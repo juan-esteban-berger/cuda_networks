@@ -192,4 +192,22 @@ Layer::Layer(
 
 ////////////////////////////////////////////////////////////////////
 // Neural Network Class
+NeuralNetwork::NeuralNetwork(int numLayers) : numLayers(numLayers) {
+    layers = new Layer*[numLayers];  // Allocate memory for the layer pointers
+    for (int i = 0; i < numLayers; ++i) {
+        layers[i] = nullptr;  // Initialize pointers to nullptr
+    }
+}
 
+// Method to add layers to the neural network
+void NeuralNetwork::add_layer(Layer* layer, int index) {
+    layers[index] = layer;
+}
+
+// Destructor
+NeuralNetwork::~NeuralNetwork() {
+    for (int i = 0; i < numLayers; ++i) {
+        delete layers[i];  // Delete each layer
+    }
+    delete[] layers;  // Delete the array of pointers
+}
