@@ -1,2 +1,2 @@
-g++ cpp/train.cpp cpp/utils.cpp -o cpp/train
+g++ cpp/train.cpp cpp/linear_algebra.cpp -o cpp/train
 ./cpp/train

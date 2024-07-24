@@ -1,568 +1,422 @@
-#include <gtest/gtest.h>
+#include <iostream>
 #include <cmath>
+#include <gtest/gtest.h>
 
-#include "utils.h"
+#include "linear_algebra.h"
 #include "neural_network.h"
 
-////////////////////////////////////////////////////////////////////
-// Series Tests
-TEST(SeriesTest, SeriesNormalizeTest) {
-    // Initialize Series
-    Series series(5);
+//////////////////////////////////////////////////////////////////
+// Transpose Tests
+TEST(TransposeTest, MatrixTransposeTest) {
+    // Initialize Matrix
+    Matrix matrix(2, 3);
+    
+    // Fill in values
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            matrix.setValue(i, j, i * 3 + j);
+        }
+    }
+
+    std::cout << "Original Matrix:" << std::endl;
+    preview_matrix(&matrix, 2);
+
+    // Transpose the Matrix
+    Matrix* transposed = transpose_matrix(&matrix);
+
+    std::cout << "Transposed Matrix:" << std::endl;
+    preview_matrix(transposed, 2);
+
+    // Check dimensions
+    ASSERT_EQ(transposed->rows, matrix.cols);
+    ASSERT_EQ(transposed->cols, matrix.rows);
+
+    // Check values
+    for (int i = 0; i < matrix.rows; i++) {
+        for (int j = 0; j < matrix.cols; j++) {
+            ASSERT_EQ(matrix.getValues(i, j), transposed->getValues(j, i));
+        }
+    }
+
+    // Clean up
+    delete transposed;
+}
+
+//////////////////////////////////////////////////////////////////
+// Normalization Tests
+TEST(NormalizeTest, VectorNormalizeTest) {
+    // Initialize Vector
+    Vector vector(5);
     // Allocate memory for raw values
-    double* rawValues = (double*) malloc(5 * sizeof(double));
+    double* rawValues = new double[5];
     // Fill in values
     for (int i = 0; i < 5; i++) {
-        rawValues[i] = i + 1;
+        rawValues[i] = i;
+        vector.setValue(i, rawValues[i]);
     }
-    // Set values
-    series.setValues(rawValues);
 
     // Set min and max values
     double min = 0, max = 5;
 
     // Print before normalization
     std::cout << "Before Normalization: " << std::endl;
-    series.print(2);
-    // Normalize the Series
-    series.normalize(min, max);
+    preview_vector(&vector, 2);
+
+    // Normalize the Vector
+    normalize_vector(&vector, min, max);
+
     // Print after normalization
     std::cout << "After Normalization: " << std::endl;
-    series.print(2);
+    preview_vector(&vector, 2);
 
     // Expected normalized values
-    double* expectedNormalized = (double*) malloc(5 * sizeof(double));
+    double* expectedNormalized = new double[5];
     // Fill with normalized data
     for (int i = 0; i < 5; i++) {
-        expectedNormalized[i] = (i + 1) / 5.0;
+        expectedNormalized[i] = (i) / 5.0;
     }
     
     // Iterate over values
-    for (int i = 0; i < series.getLength(); i++) {
+    for (int i = 0; i < 5; i++) {
         // Check values
-        ASSERT_NEAR(series.getValues()[i], expectedNormalized[i], 1e-5);
+        ASSERT_NEAR(vector.getValues(i), expectedNormalized[i], 1e-5);
     }
 
     // Deallocate memory
-    free(rawValues);
-    free(expectedNormalized);
+    delete[] rawValues;
+    delete[] expectedNormalized;
 }
 
-TEST(SeriesTest, SeriesDenormalizeTest) {
-    // Initialize Series
-    Series series(5);
+TEST(NormalizeTest, VectorDenormalizeTest) {
+    // Initialize Vector
+    Vector vector(5);
     // Allocate memory for normalized values
-    double* normalizedValues = (double*) malloc(5 * sizeof(double));
+    double* normalizedValues = new double[5];
     // Fill in normalized values
     for (int i = 0; i < 5; i++) {
-        normalizedValues[i] = (i + 1) / 5.0;
+        normalizedValues[i] = (i) / 5.0;
+        vector.setValue(i, normalizedValues[i]);
     }
-    // Set normalized values
-    series.setValues(normalizedValues);
 
     // Set min and max values for denormalization
     double min = 0, max = 5;
 
     // Print before denormalization
     std::cout << "Before Denormalization: " << std::endl;
-    series.print(2);
-    // Denormalize the Series
-    series.denormalize(min, max);
+    preview_vector(&vector, 2);
+
+    // Denormalize the Vector
+    denormalize_vector(&vector, min, max);
+
     // Print after denormalization
     std::cout << "After Denormalization: " << std::endl;
-    series.print(2);
+    preview_vector(&vector, 2);
 
     // Expected denormalized values
-    double* expectedDenormalized = (double*) malloc(5 * sizeof(double));
+    double* expectedDenormalized = new double[5];
     // Fill with original data
     for (int i = 0; i < 5; i++) {
-        expectedDenormalized[i] = i + 1;
+        expectedDenormalized[i] = i;
     }
 
     // Iterate over values to check correctness
-    for (int i = 0; i < series.getLength(); i++) {
+    for (int i = 0; i < 5; i++) {
         // Check values
-        ASSERT_NEAR(series.getValues()[i], expectedDenormalized[i], 1e-5);
+        ASSERT_NEAR(vector.getValues(i), expectedDenormalized[i], 1e-5);
     }
 
     // Deallocate memory
-    free(normalizedValues);
-    free(expectedDenormalized);
+    delete[] normalizedValues;
+    delete[] expectedDenormalized;
 }
 
-////////////////////////////////////////////////////////////////////
-// DataFrame Tests
-TEST(DataFrameTest, DataFrameTransposeTest) {
-    // Number of rows and columns
-    int numRows = 2;
-    int numCols = 3;
-
-    // Initialize DataFrame
-    DataFrame df(numRows, numCols);
-
-    // Allocate memory for 2D array
-    double** initValues = (double**) malloc(numCols * sizeof(double*));
-    // Iterate over columns
-    for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each column
-        initValues[i] = (double*) malloc(numRows * sizeof(double));
-        // Iterate over rows
-        for (int j = 0; j < numRows; ++j) {
-            // Fill with sequential data
-            initValues[i][j] = i * numRows + j + 1;
+TEST(NormalizeTest, MatrixNormalizeTest) {
+    // Initialize Matrix
+    Matrix matrix(2, 3);
+    // Allocate memory for raw values
+    double** rawValues = new double*[2];
+    for (int i = 0; i < 2; i++) {
+        rawValues[i] = new double[3];
+    }
+    // Fill in values
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            rawValues[i][j] = i * 3 + j;
+            matrix.setValue(i, j, rawValues[i][j]);
         }
     }
-    // Set values
-    df.setValues(initValues);
-
-    // Print before transposing
-    std::cout << "Before Transposing: " << std::endl;
-    df.print(2);
-    // Transpose the DataFrame
-    DataFrame transposed = df.transpose();
-    // Print after transposing
-    std::cout << "After Transposing: " << std::endl;
-    transposed.print(2);
-
-    // Check dimensions
-    ASSERT_EQ(transposed.getNumRows(), numCols);
-    ASSERT_EQ(transposed.getNumCols(), numRows);
-
-    // Iterate over rows
-    for (int i = 0; i < numRows; ++i) {
-        // Iterate over columns
-        for (int j = 0; j < numCols; ++j) {
-            // Check values
-            ASSERT_EQ(transposed.getValues()[i][j], initValues[j][i]);
-        }
-    }
-
-    // Deallocate memory for each row
-    for (int i = 0; i < numCols; ++i) {
-        free(initValues[i]);
-    }
-    // Deallocate memory for 2D array
-    free(initValues);
-}
-
-TEST(DataFrameTest, DataFrameNormalizeTest) {
-    // Number of rows and columns
-    int numRows = 2;
-    int numCols = 3;
-
-    // Initialize DataFrame
-    DataFrame df(numRows, numCols);
-
-    // Allocate memory for 2D array
-    double** initValues = (double**) malloc(numCols * sizeof(double*));
-    // Iterate over columns
-    for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each column
-        initValues[i] = (double*) malloc(numRows * sizeof(double));
-        // Iterate over rows
-        for (int j = 0; j < numRows; ++j) {
-            // Fill with sequential data
-            initValues[i][j] = i * numRows + j;
-        }
-    }
-    // Set values
-    df.setValues(initValues);
-
-    // Set min and max values for normalization
-    double min = 0, max = 5;
-
-    // Print before normalization
-    std::cout << "Before Normalization: " << std::endl;
-    df.print(2);
-    // Normalize the DataFrame
-    df.normalize(min, max);
-    // Print after normalization
-    std::cout << "After Normalization: " << std::endl;
-    df.print(2);
-
-    // Allocate memory for expected normalized values
-    double** expectedNormalized = (double**) malloc(numCols * sizeof(double*));
-    // Iterate over columns
-    for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each column
-        expectedNormalized[i] = (double*) malloc(numRows * sizeof(double));
-    }
-    // Iterate over columns
-    for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each column
-        expectedNormalized[i] = (double*) malloc(numRows * sizeof(double));
-        // Iterate over rows
-        for (int j = 0; j < numRows; ++j) {
-            // Fill with normalized data
-            expectedNormalized[i][j] = (i * numRows + j) / 5.0;
-        }
-    }
-
-    // Iterate over rows and columns to check correctness
-    for (int i = 0; i < numCols; ++i) {
-        // Iterate over columns
-        for (int j = 0; j < numRows; ++j) {
-            // Check values
-            ASSERT_NEAR(df.getValues()[i][j], expectedNormalized[i][j], 1e-5);
-        }
-    }
-
-    // Deallocate memory
-    for (int i = 0; i < numCols; ++i) {
-        free(initValues[i]);
-        free(expectedNormalized[i]);
-    }
-    // Deallocate memory
-    free(initValues);
-    // Deallocate memory
-    free(expectedNormalized);
-}
-
-TEST(DataFrameTest, DataFrameDenormalizeTest) {
-    // Number of rows and columns
-    int numRows = 2;
-    int numCols = 3;
-    // Initialize DataFrame
-    DataFrame df(numRows, numCols);
-
-    // Allocate memory for normalized values
-    double** normalizedValues = (double**) malloc(numCols * sizeof(double*));
-    // Initialize the normalized values
-    for (int i = 0; i < numCols; ++i) {
-        normalizedValues[i] = (double*) malloc(numRows * sizeof(double));
-        for (int j = 0; j < numRows; ++j) {
-            // Fill with normalized sequential data
-            normalizedValues[i][j] = (i * numRows + j) / 5.0;
-        }
-    }
-
-    // Set normalized values
-    df.setValues(normalizedValues);
 
     // Set min and max values
     double min = 0, max = 5;
 
-    // Print before denormalization
-    std::cout << "Before Denormalization: " << std::endl;
-    df.print(2);
-    // Denormalize the DataFrame
-    df.denormalize(min, max);
-    // Print after denormalization
-    std::cout << "After Denormalization: " << std::endl;
-    df.print(2);
+    // Print before normalization
+    std::cout << "Before Normalization: " << std::endl;
+    preview_matrix(&matrix, 2);
 
-    // Allocate memory for 2D array
-    double** expectedDenormalized = (double**) malloc(numCols * sizeof(double*));
-    // Loop over columns
-    for (int i = 0; i < numCols; ++i) {
-        // Allocate memory for each column
-        expectedDenormalized[i] = (double*) malloc(numRows * sizeof(double));
-        // Loop over rows
-        for (int j = 0; j < numRows; ++j) {
-            // Fill with sequential data
-            expectedDenormalized[i][j] = i * numRows + j;
+    // Normalize the Matrix
+    normalize_matrix(&matrix, min, max);
+
+    // Print after normalization
+    std::cout << "After Normalization: " << std::endl;
+    preview_matrix(&matrix, 2);
+
+    // Expected normalized values
+    double** expectedNormalized = new double*[2];
+    for (int i = 0; i < 2; i++) {
+        expectedNormalized[i] = new double[3];
+        for (int j = 0; j < 3; j++) {
+            expectedNormalized[i][j] = (i * 3 + j) / 5.0;
         }
     }
-
-    // Iterate over columns
-    for (int i = 0; i < numCols; ++i) {
-        // Iterate over rows
-        for (int j = 0; j < numRows; ++j) {
+    
+    // Iterate over values
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
             // Check values
-            ASSERT_NEAR(df.getValues()[i][j], expectedDenormalized[i][j], 1e-5);
+            ASSERT_NEAR(matrix.getValues(i, j), expectedNormalized[i][j], 1e-5);
         }
     }
 
     // Deallocate memory
-    for (int i = 0; i < numCols; ++i) {
-        free(normalizedValues[i]);
-        free(expectedDenormalized[i]);
+    for (int i = 0; i < 2; i++) {
+        delete[] rawValues[i];
+        delete[] expectedNormalized[i];
     }
-    free(normalizedValues);
-    free(expectedDenormalized);
+    delete[] rawValues;
+    delete[] expectedNormalized;
 }
 
-////////////////////////////////////////////////////////////////////
+TEST(NormalizeTest, MatrixDenormalizeTest) {
+    // Initialize Matrix
+    Matrix matrix(2, 3);
+    // Allocate memory for normalized values
+    double** normalizedValues = new double*[2];
+    for (int i = 0; i < 2; i++) {
+        normalizedValues[i] = new double[3];
+    }
+    // Fill in normalized values
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            normalizedValues[i][j] = (i * 3 + j) / 5.0;
+            matrix.setValue(i, j, normalizedValues[i][j]);
+        }
+    }
+
+    // Set min and max values for denormalization
+    double min = 0, max = 5;
+
+    // Print before denormalization
+    std::cout << "Before Denormalization: " << std::endl;
+    preview_matrix(&matrix, 2);
+
+    // Denormalize the Matrix
+    denormalize_matrix(&matrix, min, max);
+
+    // Print after denormalization
+    std::cout << "After Denormalization: " << std::endl;
+    preview_matrix(&matrix, 2);
+
+    // Expected denormalized values
+    double** expectedDenormalized = new double*[2];
+    for (int i = 0; i < 2; i++) {
+        expectedDenormalized[i] = new double[3];
+        for (int j = 0; j < 3; j++) {
+            expectedDenormalized[i][j] = i * 3 + j;
+        }
+    }
+
+    // Iterate over values to check correctness
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            // Check values
+            ASSERT_NEAR(matrix.getValues(i, j), expectedDenormalized[i][j], 1e-5);
+        }
+    }
+
+    // Deallocate memory
+    for (int i = 0; i < 2; i++) {
+        delete[] normalizedValues[i];
+        delete[] expectedDenormalized[i];
+    }
+    delete[] normalizedValues;
+    delete[] expectedDenormalized;
+}
+
+//////////////////////////////////////////////////////////////////
 // Activation Function Tests
-TEST(ActFunctionTest, SigmoidFunctionTest) {
-    int numRows = 4;
-    int numCols = 3;
-    
-    // Initialize DataFrames
-    DataFrame inputDf(numRows, numCols), expectedDf(numRows, numCols);
+double sigmoid(double z) {
+    return 1.0 / (1.0 + exp(-z));
+}
 
-    // Initialize 2D arrays
-    double** inputData = (double**) malloc(numCols * sizeof(double*));
-    double** expectedData = (double**) malloc(numCols * sizeof(double*));
-    // Allocate memory for each column
-    for (int i = 0; i < numCols; ++i) {
-        inputData[i] = (double*) malloc(numRows * sizeof(double));
-        expectedData[i] = (double*) malloc(numRows * sizeof(double));
-    }
-    // Loop over rows
-    for (int j = 0; j < numRows; ++j) {
-        // Loop over columns
-        for (int i = 0; i < numCols; ++i) {
-            // Sequential Data
-            inputData[i][j] = i * numRows + j + 0.0000001;
-            // Expected Data
-            expectedData[i][j] = 1.0 / (1.0 + exp(-inputData[i][j]));
+TEST(ActFuncTest, FunctionTest) {
+    // Initialize Matrix with sequential data
+    Matrix matrix(2, 2);
+    double** rawValues = new double*[2];
+    for (int i = 0; i < 2; i++) {
+        rawValues[i] = new double[2];
+        for (int j = 0; j < 2; j++) {
+            rawValues[i][j] = i * 2 + j;
+            matrix.setValue(i, j, rawValues[i][j]);
         }
     }
 
-    // Set values
-    inputDf.setValues(inputData);
-    expectedDf.setValues(expectedData);
+    // Expected results using sigmoid
+    Matrix expected(2, 2);
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            expected.setValue(i, j, sigmoid(rawValues[i][j]));
+        }
+    }
 
-    // Print before applying Sigmoid function
+    // Preview before applying Sigmoid function
     std::cout << "Before Sigmoid Function: " << std::endl;
-    inputDf.print(2);
+    preview_matrix(&matrix, 2);
     // Apply Sigmoid function
-    Sigmoid sigmoid;
-    sigmoid.function(inputDf);
-    // Print after applying Sigmoid function
+    Sigmoid sig;
+    sig.function(matrix);
+    // Preview after applying Sigmoid function
     std::cout << "After Sigmoid Function: " << std::endl;
-    inputDf.print(2);
+    preview_matrix(&matrix, 2);
 
-    // Check values
-    double** actualValues = inputDf.getValues();
-    double** expectedValues = expectedDf.getValues();
-
-    // Check values
-    for (int i = 0; i < numCols; ++i) {
-        for (int j = 0; j < numRows; ++j) {
-            ASSERT_NEAR(actualValues[i][j], expectedValues[i][j], 1e-5);
+    // Check each element
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            ASSERT_NEAR(matrix.getValues(i, j), expected.getValues(i, j), 1e-5);
         }
     }
 
-    // Free memory
-    for (int i = 0; i < numCols; ++i) {
-        free(inputData[i]);
-        free(expectedData[i]);
+    // Deallocate memory
+    for (int i = 0; i < 2; i++) {
+        delete[] rawValues[i];
     }
-    free(inputData);
-    free(expectedData);
+    delete[] rawValues;
 }
 
-TEST(ActFunctionTest, SigmoidDerivativeTest) {
-    int numRows = 4;
-    int numCols = 3;
-    
-    // Initialize DataFrames
-    DataFrame inputDf(numRows, numCols), expectedDf(numRows, numCols);
+double sigmoid_derivative(double z) {
+    double s = sigmoid(z);
+    return s * (1.0 - s);
+}
 
-    // Initialize 2D arrays
-    double** inputData = (double**) malloc(numCols * sizeof(double*));
-    double** expectedData = (double**) malloc(numCols * sizeof(double*));
-    // Allocate memory for each column
-    for (int i = 0; i < numCols; ++i) {
-        inputData[i] = (double*) malloc(numRows * sizeof(double));
-        expectedData[i] = (double*) malloc(numRows * sizeof(double));
-    }
-    // Loop over rows
-    for (int j = 0; j < numRows; ++j) {
-        // Loop over columns
-        for (int i = 0; i < numCols; ++i) {
-            // Sequential Data
-            inputData[i][j] = i * numRows + j + 0.0000001;
-            // Calculate sigmoid value
-            double sigmoidValue = 1.0 / (1.0 + exp(-inputData[i][j]));
-            // Expected Data for derivative
-            expectedData[i][j] = sigmoidValue * (1 - sigmoidValue);
+TEST(ActFuncTest, DerivativeTest) {
+    // Initialize Matrix with sequential data
+    Matrix matrix(2, 2);
+    double** rawValues = new double*[2];
+    for (int i = 0; i < 2; i++) {
+        rawValues[i] = new double[2];
+        for (int j = 0; j < 2; j++) {
+            rawValues[i][j] = i * 2 + j;
+            matrix.setValue(i, j, rawValues[i][j]);
         }
     }
 
-    // Set values
-    inputDf.setValues(inputData);
-    expectedDf.setValues(expectedData);
+    // Expected results using sigmoid_derivative
+    Matrix expected(2, 2);
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            expected.setValue(i, j, sigmoid_derivative(rawValues[i][j]));
+        }
+    }
 
-    // Print before applying Sigmoid derivative
+    // Preview before applying Sigmoid derivative
     std::cout << "Before Sigmoid Derivative: " << std::endl;
-    inputDf.print(2);
+    preview_matrix(&matrix, 2);
     // Apply Sigmoid derivative
-    Sigmoid sigmoid;
-    sigmoid.derivative(inputDf);
-    // Print after applying Sigmoid derivative
+    Sigmoid sig;
+    sig.derivative(matrix);
+    // Preview after applying Sigmoid derivative
     std::cout << "After Sigmoid Derivative: " << std::endl;
-    inputDf.print(2);
+    preview_matrix(&matrix, 2);
 
-    // Check values
-    double** actualValues = inputDf.getValues();
-    double** expectedValues = expectedDf.getValues();
-
-    // Check values
-    for (int i = 0; i < numCols; ++i) {
-        for (int j = 0; j < numRows; ++j) {
-            ASSERT_NEAR(actualValues[i][j], expectedValues[i][j], 1e-5);
+    // Check each element
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            ASSERT_NEAR(matrix.getValues(i, j), expected.getValues(i, j), 1e-5);
         }
     }
 
-    // Free memory
-    for (int i = 0; i < numCols; ++i) {
-        free(inputData[i]);
-        free(expectedData[i]);
+    // Deallocate memory
+    for (int i = 0; i < 2; i++) {
+        delete[] rawValues[i];
     }
-    free(inputData);
-    free(expectedData);
+    delete[] rawValues;
 }
 
-TEST(ActFunctionTest, SoftmaxFunctionTest) {
-    int numRows = 10;
-    int numCols = 3;
-    
-    // Initialize DataFrames
-    DataFrame inputDf(numRows, numCols), expectedDf(numRows, numCols);
-
-    // Allocate memory for 2D arrays
-    double** inputData = (double**) malloc(numCols * sizeof(double*));
-    double** expectedData = (double**) malloc(numCols * sizeof(double*));
-    
-    // Allocate memory for each column
-    for (int i = 0; i < numCols; ++i) {
-        inputData[i] = (double*) malloc(numRows * sizeof(double));
-        expectedData[i] = (double*) malloc(numRows * sizeof(double));
-    }
-
-    // Fill in with sequential data
-    for (int j = 0; j < numRows; ++j) {
-        for (int i = 0; i < numCols; ++i) {
-            inputData[i][j] = i * numRows + j - 5;
-            expectedData[i][j] = i * numRows + j - 5;
-        }
-    }
-
-    // Apply Softmax function to expected data
-    for (int i = 0; i < numCols; ++i) {
-        // Find the maximum value in the column
-        double maxVal = 0;
-        // Loop through each row
-        for (int j = 0; j < numRows; ++j) {
-            maxVal = std::max(maxVal, expectedData[i][j]);
-        }
-        // Apply exp(val - maxVal) to each element in the column
-        for (int j = 0; j < numRows; ++j) {
-            expectedData[i][j] = exp(expectedData[i][j] - maxVal);
-        }
-        // Calculate the sum of the column
-        double sumVal = 0;
-        for (int j = 0; j < numRows; ++j) {
-            sumVal += expectedData[i][j];
-        }
-        // Divide each element by the sum
-        for (int j = 0; j < numRows; ++j) {
-            expectedData[i][j] /= sumVal + 0.0000001;
-        }
-    }
-
-    // Set values to DataFrame
-    inputDf.setValues(inputData);
-    expectedDf.setValues(expectedData);
-
-    // Print before applying Softmax function
-    std::cout << "Before Softmax Function: " << std::endl;
-    inputDf.print(2);
-    // Apply Softmax function
-    Softmax softmax;
-    softmax.function(inputDf);
-    // Print after applying Softmax function
-    std::cout << "After Softmax Function: " << std::endl;
-    inputDf.print(2);
-
-    // Check values
-    double** actualValues = inputDf.getValues();
-    double** expectedValues = expectedDf.getValues();
-
-    for (int i = 0; i < numCols; ++i) {
-        for (int j = 0; j < numRows; ++j) {
-            ASSERT_NEAR(actualValues[i][j], expectedValues[i][j], 1e-5);
-        }
-    }
-
-    // Free memory
-    for (int i = 0; i < numCols; ++i) {
-        free(inputData[i]);
-        free(expectedData[i]);
-    }
-    free(inputData);
-    free(expectedData);
-}
-
-////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
 // Loss Function Tests
-TEST(LossFunctionTest, CategoricalCrossEntropyTest) {
-    int numRows = 10;
-    int numCols = 3;
-
-    // Initialize DataFrames
-    DataFrame Y(numRows, numCols), Y_hat(numRows, numCols);
-
-    // Allocate memory for 2D arrays
-    double** YData = (double**) malloc(numCols * sizeof(double*));
-    double** Y_hatData = (double**) malloc(numCols * sizeof(double*));
-
-    // Allocate memory for each column
-    for (int i = 0; i < numCols; ++i) {
-        YData[i] = (double*) malloc(numRows * sizeof(double));
-        Y_hatData[i] = (double*) malloc(numRows * sizeof(double));
-    }
-
-    // Fill in with sequential data
-    for (int j = 0; j < numRows; ++j) {
-        for (int i = 0; i < numCols; ++i) {
-            // Values between 0 and 1
-            YData[i][j] = (i * numRows + j) / 30.0;
-            Y_hatData[i][j] = YData[i][j] * 0.75;
+double cat_cross_entropy(double** Y,
+                         double** Y_hat,
+                         int rows, int cols) {
+    double loss = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            loss -= Y[i][j] * log(Y_hat[i][j] + 1e-8);
         }
     }
-
-    // Calculate the loss
-    double crossEntropy = 0;
-    // Loop over rows
-    for (int i = 0; i < numRows; ++i) {
-        // Loop over columns
-        for (int j = 0; j < numCols; ++j) {
-            crossEntropy -= YData[j][i] * log(Y_hatData[j][i] + 1e-8);
-        }
-    }
-
-    // Set values to DataFrames
-    Y.setValues(YData);
-    Y_hat.setValues(Y_hatData);
-
-    // Print DataFrames
-    std::cout << "Y: " << std::endl;
-    Y.print(2);
-
-    std::cout << "Y_hat: " << std::endl;
-    Y_hat.print(2);
-
-    // Print loss
-    std::cout << "Loss: " << crossEntropy << std::endl;
-
-    // Calculate the loss
-    CatCrossEntropy lossFunc;
-    double testCrossEntropy = lossFunc.function(Y, Y_hat);
-
-    // Print test loss
-    std::cout << "Test Loss: " << testCrossEntropy << std::endl;
-
-    // Check values
-    ASSERT_NEAR(crossEntropy, testCrossEntropy, 1e-5);
-
-    // Free memory
-    for (int i = 0; i < numCols; ++i) {
-        free(YData[i]);
-        free(Y_hatData[i]);
-    }
-    free(YData);
-    free(Y_hatData);
+    return loss;
 }
 
-////////////////////////////////////////////////////////////////////
-// Main Function
-int main(int argc, char **argv) {
-    // Initialize Google Test
-    ::testing::InitGoogleTest(&argc, argv);
-    // Run all tests
-    return RUN_ALL_TESTS();
+TEST(LossFuncTest, CatCrossEntropyTest) {
+    int rows = 3, cols = 4;
+
+    // Initialize matrices
+    Matrix Y(rows, cols), Y_hat(rows, cols);
+    
+    // Allocate 2D arrays for raw values
+    double** rawValuesY = new double*[rows];
+    double** rawValuesYHat = new double*[rows];
+    for (int i = 0; i < rows; i++) {
+        rawValuesY[i] = new double[cols];
+        rawValuesYHat[i] = new double[cols];
+    }
+
+    // Simulate Data
+    for (int i = 0; i < rows; i++) {
+        double sum = 0;
+        for (int j = 0; j < cols; j++) {
+            // One-hot encoding for Y
+            if (j % rows == i) {
+                rawValuesY[i][j] = 1.0;
+            } else {
+                rawValuesY[i][j] = 0.0;
+            }
+            
+            // Arbitrary positive values for Y_hat
+            rawValuesYHat[i][j] = 1.0 + j;
+            sum += rawValuesYHat[i][j];
+        }
+        // Normalize Y_hat
+        for (int j = 0; j < cols; j++) {
+            rawValuesYHat[i][j] /= sum;
+            Y.setValue(i, j, rawValuesY[i][j]);
+            Y_hat.setValue(i, j, rawValuesYHat[i][j]);
+        }
+    }
+
+    // Preview matrices
+    std::cout << "Matrix Y (True Labels):" << std::endl;
+    preview_matrix(&Y, 3);
+    std::cout << "Matrix Y_hat (Predictions):" << std::endl;
+    preview_matrix(&Y_hat, 3);
+
+    // Calculate loss
+    CatCrossEntropy ce;
+    double loss = ce.function(Y, Y_hat);
+    double expected_loss = cat_cross_entropy(rawValuesY,
+                                             rawValuesYHat,
+                                             rows, cols);
+
+    // Print the calculated and expected losses
+    std::cout << "Calculated Loss from Class: " << loss << std::endl;
+    std::cout << "Expected Loss from Helper Function: " << expected_loss << std::endl;
+    
+    // Check correctness
+    ASSERT_NEAR(loss, expected_loss, 1e-5);
+    
+    // Deallocate memory
+    for (int i = 0; i < rows; i++) {
+        delete[] rawValuesY[i];
+        delete[] rawValuesYHat[i];
+    }
+    delete[] rawValuesY;
+    delete[] rawValuesYHat;
 }

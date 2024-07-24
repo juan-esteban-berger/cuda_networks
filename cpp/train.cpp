@@ -1,31 +1,40 @@
+#include "linear_algebra.h"
 #include <iostream>
 
-#include "utils.h"
-
 int main() {
-////////////////////////////////////////////////////////////////////
-    // Load Data
-    std::cout << "Loading Data..." << std::endl;
+    int X_train_rows = 100;
+    int X_train_cols = 10;
+    int Y_train_rows = 100;
+    int Y_train_cols = 1;
 
-    DataFrame X_train_original(60000, 784);
-    X_train_original.read_csv_limited("data/X_train.csv", 0, 1000);
+    // Create matrices for X_train and Y_train
+    Matrix X_train(X_train_rows, X_train_cols);
+    Matrix Y_train(Y_train_rows, Y_train_cols);
 
-    DataFrame Y_train_original(60000, 10);
-    Y_train_original.read_csv_limited("data/Y_train.csv", 0, 1000);
+    // Read data from CSV files
+    read_csv("data/X_train.csv", &X_train);
+    read_csv("data/Y_train.csv", &Y_train);
 
-    std::cout << "X_Train: ";
-    X_train_original.shape();
-    std::cout << "Y_Train: ";
-    Y_train_original.shape();
+    // Use the preview_matrix function to display X_train and Y_train
+    std::cout << "Preview of X_train:" << std::endl;
+    preview_matrix(&X_train, 2); // Preview with 2 decimal places
 
-////////////////////////////////////////////////////////////////////
-    // Tranpose Data
-    DataFrame X_train = X_train_original.transpose();
-    DataFrame Y_train = Y_train_original.transpose();
+    std::cout << "Preview of Y_train:" << std::endl;
+    preview_matrix(&Y_train, 2); // Preview with 2 decimal places
 
-////////////////////////////////////////////////////////////////////
-    // Normalize X Values
-    X_train.normalize(0, 255);
+    // Additional random vector and matrix
+    Vector additional_vector(10); // Example size
+    Matrix additional_matrix(10, 10); // Example size
+
+    // Initialize with random values
+    random_vector(&additional_vector);
+    random_matrix(&additional_matrix);
+
+    // Preview the additional vector and matrix
+    std::cout << "Preview of Additional Vector:" << std::endl;
+    preview_vector(&additional_vector, 2);
+    std::cout << "Preview of Additional Matrix:" << std::endl;
+    preview_matrix(&additional_matrix, 2);
 
     return 0;
 }
