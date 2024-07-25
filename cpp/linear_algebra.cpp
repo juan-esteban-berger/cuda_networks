@@ -53,6 +53,63 @@ double Matrix::getValues(int row, int col) {
 }
 
 //////////////////////////////////////////////////////////////////
+// Matrix and Vector Operations
+// Element-wise multiplication
+Matrix operator*(Matrix& m1, Matrix& m2) {
+    // Create matrix with m1.rows and m1.cols
+    Matrix result(m1.rows, m1.cols);
+    // Iterate over each row of the matrices
+    for (int i = 0; i < m1.rows; ++i) {
+        // Iterate over each column of the matrices
+        for (int j = 0; j < m1.cols; ++j) {
+            // Multiply corresponding elements and store in the result matrix
+            result.setValue(i, j, m1.getValues(i, j) * m2.getValues(i, j));
+        }
+    }
+    // Return the resulting matrix
+    return result;
+}
+
+// Matrix multiplication
+Matrix matmul(Matrix& m1, Matrix& m2) {
+    // Initialize Matrix with m1.rows and m2.cols
+    Matrix result(m1.rows, m2.cols);
+    // Iterate over each row of the first matrix
+    for (int i = 0; i < m1.rows; ++i) {
+        // Iterate over each column of the second matrix
+        for (int j = 0; j < m2.cols; ++j) {
+            // Initialize sum for the dot product
+            double sum = 0;
+            // Perform dot product of row from m1 and column from m2
+            for (int k = 0; k < m1.cols; ++k) {
+                // Add product of corresponding elements to sum
+                sum += m1.getValues(i, k) * m2.getValues(k, j);
+            }
+            // Store the result of the dot product in the result matrix
+            result.setValue(i, j, sum);
+        }
+    }
+    // Return the resulting matrix
+    return result;
+}
+
+// Matrix-vector addition (unchanged from previous example)
+Matrix operator+(Matrix& m, Vector& v) {
+    // Initialize matrix
+    Matrix result(m.rows, m.cols);
+    // Iterate over each row of the matrix
+    for (int i = 0; i < m.rows; ++i) {
+        // Iterate over each column of the matrix
+        for (int j = 0; j < m.cols; ++j) {
+            // Add the corresponding vector element to each matrix element
+            result.setValue(i, j, m.getValues(i, j) + v.getValues(i));
+        }
+    }
+    // Return the resulting matrix
+    return result;
+}
+
+//////////////////////////////////////////////////////////////////
 // Read from CSV
 void read_csv(const char* filename, Matrix* matrix) {
     // Open the file with the filename provided.

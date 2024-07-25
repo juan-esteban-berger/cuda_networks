@@ -6,6 +6,118 @@
 #include "neural_network.h"
 
 //////////////////////////////////////////////////////////////////
+// Matrix and Vector Operations Tests
+// Test for element-wise multiplication (*)
+TEST(OperatorTest, ElementWiseMultiplicationTest) {
+    // Initialize matrices
+    Matrix m1(2, 2);
+    Matrix m2(2, 2);
+    
+    // Fill matrices with values
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            m1.setValue(i, j, i * 2 + j + 1);  // m1 will be [1 2; 3 4]
+            m2.setValue(i, j, (i * 2 + j + 1) * 2);  // m2 will be [2 4; 6 8]
+        }
+    }
+
+    // Preview matrices before multiplication
+    std::cout << "Matrix m1 before multiplication:" << std::endl;
+    preview_matrix(&m1, 2);
+    std::cout << "Matrix m2 before multiplication:" << std::endl;
+    preview_matrix(&m2, 2);
+
+    // Perform element-wise multiplication
+    Matrix result = m1 * m2;
+
+    // Preview result after multiplication
+    std::cout << "Result of m1 * m2:" << std::endl;
+    preview_matrix(&result, 2);
+
+    // Check results
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            ASSERT_EQ(result.getValues(i, j),
+                      m1.getValues(i, j) * m2.getValues(i, j));
+        }
+    }
+}
+
+// Test for matrix multiplication
+TEST(OperatorTest, MatrixMultiplicationTest) {
+    // Initialize matrices
+    Matrix m1(2, 3);
+    Matrix m2(3, 2);
+    
+    // Fill matrices with values
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            m1.setValue(i, j, i * 3 + j + 1);  // m1 will be [1 2 3; 4 5 6]
+        }
+    }
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 2; j++) {
+            m2.setValue(i, j, i * 2 + j + 1);  // m2 will be [1 2; 3 4; 5 6]
+        }
+    }
+
+    // Preview matrices before multiplication
+    std::cout << "Matrix m1 before multiplication:" << std::endl;
+    preview_matrix(&m1, 2);
+    std::cout << "Matrix m2 before multiplication:" << std::endl;
+    preview_matrix(&m2, 2);
+
+    // Perform matrix multiplication
+    Matrix result = matmul(m1, m2);
+
+    // Preview result after multiplication
+    std::cout << "Result of matmul(m1, m2):" << std::endl;
+    preview_matrix(&result, 2);
+
+    // Expected result: [22 28; 49 64]
+    ASSERT_EQ(result.getValues(0, 0), 22);
+    ASSERT_EQ(result.getValues(0, 1), 28);
+    ASSERT_EQ(result.getValues(1, 0), 49);
+    ASSERT_EQ(result.getValues(1, 1), 64);
+}
+
+// Test for matrix-vector addition (+)
+TEST(OperatorTest, MatrixVectorAdditionTest) {
+    // Initialize matrix and vector
+    Matrix m(2, 3);
+    Vector v(2);
+    
+    // Fill matrix and vector with values
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            m.setValue(i, j, i * 3 + j + 1);  // m will be [1 2 3; 4 5 6]
+        }
+        v.setValue(i, i + 1);  // v will be [1; 2]
+    }
+
+    // Preview matrix and vector before addition
+    std::cout << "Matrix m before addition:" << std::endl;
+    preview_matrix(&m, 2);
+    std::cout << "Vector v before addition:" << std::endl;
+    preview_vector(&v, 2);
+
+    // Perform matrix-vector addition
+    Matrix result = m + v;
+
+    // Preview result after addition
+    std::cout << "Result of m + v:" << std::endl;
+    preview_matrix(&result, 2);
+
+    // Check results
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            ASSERT_EQ(result.getValues(i, j),
+                      m.getValues(i, j) + v.getValues(i));
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////
 // Transpose Tests
 TEST(TransposeTest, MatrixTransposeTest) {
     // Initialize Matrix
@@ -336,6 +448,84 @@ TEST(ActFuncTest, DerivativeTest) {
 
     // Deallocate memory
     for (int i = 0; i < 2; i++) {
+        delete[] rawValues[i];
+    }
+    delete[] rawValues;
+}
+
+TEST(ActFuncTest, SoftmaxFunctionTest) {
+    // Initialize Matrix for raw
+    Matrix matrix(3, 2);
+    // Allocate 2D array for raw values
+    double** rawValues = new double*[3];
+    // Loop over rows
+    for (int i = 0; i < 3; i++) {
+        // Allocate memory for each row
+        rawValues[i] = new double[2];
+        // Loop over columns
+        for (int j = 0; j < 2; j++) {
+            // Fill with sequential data
+            rawValues[i][j] = i * 2 + j;
+            matrix.setValue(i, j, rawValues[i][j]);
+        }
+    }
+
+    // Initialize Matrix for expected
+    Matrix expected(3, 2);
+    // Loop over columns
+    for (int j = 0; j < 2; j++) {
+        // Set max value to first element
+        double max_val = rawValues[0][j];
+        // Loop over rows
+        for (int i = 1; i < 3; i++) {
+            // Find max value
+            double temp_val = rawValues[i][j];
+            if (temp_val > max_val) {
+                max_val = temp_val;
+            }
+        }
+        
+        // Compute exp(Z - max)
+        for (int i = 0; i < 3; i++) {
+            double exp_val = std::exp(rawValues[i][j] - max_val);
+            expected.setValue(i, j, exp_val);
+        }
+
+        // Compute sum(exp(Z - max))
+        double sum = 0.0;
+        for (int i = 0; i < 3; i++) {
+            sum += expected.getValues(i, j);
+        }
+
+        // Divide by sum
+        for (int i = 0; i < 3; i++) {
+            expected.setValue(i, j,
+                              expected.getValues(i, j) / (sum + 1e-8));
+        }
+    }
+
+    // Preview before applying Softmax function
+    std::cout << "Before Softmax Function: " << std::endl;
+    preview_matrix(&matrix, 4);
+    
+    // Apply Softmax function
+    Softmax softmax;
+    softmax.function(matrix);
+    
+    // Preview after applying Softmax function
+    std::cout << "After Softmax Function: " << std::endl;
+    preview_matrix(&matrix, 4);
+
+    // Check each element
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 2; j++) {
+            ASSERT_NEAR(matrix.getValues(i, j),
+                        expected.getValues(i, j), 1e-5);
+        }
+    }
+
+    // Deallocate memory
+    for (int i = 0; i < 3; i++) {
         delete[] rawValues[i];
     }
     delete[] rawValues;

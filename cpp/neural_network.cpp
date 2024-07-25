@@ -26,6 +26,37 @@ void Sigmoid::derivative(Matrix& Z) {
     }
 }
 
+void Softmax::function(Matrix& Z) {
+    // Loop through each column
+    for (int j = 0; j < Z.cols; j++) {
+        // Find max value in the column
+        double max_val = Z.getValues(0, j);
+        for (int i = 1; i < Z.rows; i++) {
+            double temp_val = Z.getValues(i, j);
+            if (temp_val > max_val) {
+                max_val = temp_val;
+            }
+        }
+
+        // Compute exp(Z - max)
+        double sum = 0.0;
+        for (int i = 0; i < Z.rows; i++) {
+            double exp_val = std::exp(Z.getValues(i, j) - max_val);
+            Z.setValue(i, j, exp_val);
+        }
+
+        // Compute sum(exp(Z - max))
+        for (int i = 0; i < Z.rows; i++) {
+            sum += Z.getValues(i, j);
+        }
+
+        // Divide by sum
+        for (int i = 0; i < Z.rows; i++) {
+            Z.setValue(i, j, Z.getValues(i, j) / (sum + 1e-8));
+        }
+    }
+}
+
 //////////////////////////////////////////////////////////////////
 // Loss Function Classes
 double CatCrossEntropy::function(Matrix& Y, Matrix& Y_hat) {
@@ -80,4 +111,38 @@ NeuralNetwork::~NeuralNetwork() {
 
 void NeuralNetwork::add_layer(Layer* layer) {
     layers.push_back(layer);
+}
+
+void NeuralNetwork::forward(Matrix& X) {
+    // Set the input matrix
+    Matrix* A = &X;
+
+    // Activation function objects
+    Sigmoid sigmoid;
+    Softmax softmax;
+
+    // Iterate through each layer
+    for (Layer* layer : layers) {
+        // Compute Z = W * A + b
+        layer->Z = new Matrix(layer->W->rows, A->cols);
+        *layer->Z = matmul(*layer->W, *A);
+        *layer->Z = *layer->Z + *layer->b;
+
+        // Compute A = activation(Z)
+        layer->A = new Matrix(layer->Z->rows, layer->Z->cols);
+        if (layer->activation == "Sigmoid") {
+            // Copy Z to A
+            *layer->A = *layer->Z;
+            // Apply sigmoid function
+            sigmoid.function(*layer->A);
+        }
+        else if (layer->activation == "Softmax") {
+            // Copy Z to A
+            *layer->A = *layer->Z;
+            // Apply softmax function
+            softmax.function(*layer->A);
+        }
+
+        A = layer->A;
+    }
 }

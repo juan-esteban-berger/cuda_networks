@@ -29,6 +29,17 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////
+// Matrix and Vector Operations
+// Element-wise multiplication
+Matrix operator*(Matrix& m1, Matrix& m2);
+
+// Matrix multiplication
+Matrix matmul(Matrix& m1, Matrix& m2);
+
+// Matrix-vector addition
+Matrix operator+(Matrix& m, Vector& v);
+
+//////////////////////////////////////////////////////////////////
 // Read from CSV
 void read_csv(const char* filename, Matrix* matrix);
 void read_csv_limited(const char* filename, Matrix* matrix_subset, int startRow, int endRow, int fileRows, int fileCols);

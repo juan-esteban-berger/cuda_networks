@@ -14,6 +14,13 @@ public:
     void derivative(Matrix& Z);
 };
 
+class Softmax {
+public:
+    void function(Matrix& Z);
+};
+
+//////////////////////////////////////////////////////////////////
+// Loss Function Classes
 class CatCrossEntropy {
 public:
     double function(Matrix& Y, Matrix& Y_hat);
@@ -42,8 +49,8 @@ class NeuralNetwork {
 public:
     NeuralNetwork();
     ~NeuralNetwork();
-
     void add_layer(Layer* layer);
+    void forward(Matrix& X);
 
 private:
     std::vector<Layer*> layers;

@@ -45,9 +45,9 @@ int main() {
 //////////////////////////////////////////////////////////////////
 // Initialize Neural Network
     NeuralNetwork nn;
-    nn.add_layer(new Layer(784, 200, "sigmoid"));
-    nn.add_layer(new Layer(200, 200, "sigmoid"));
-    nn.add_layer(new Layer(200, 10, "softmax"));
+    nn.add_layer(new Layer(784, 200, "Sigmoid"));
+    nn.add_layer(new Layer(200, 200, "Sigmoid"));
+    nn.add_layer(new Layer(200, 10, "Softmax"));
 
     std::cout << "Training..." << std::endl;
 
