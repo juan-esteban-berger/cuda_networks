@@ -17,10 +17,6 @@ print(f"X_train: {X_train.shape}")
 print(f"Y_train: {Y_train.shape}")
 
 ####################################################################
-# Get Number of Training Examples
-m = X_train.shape[0]
-
-####################################################################
 # Transpose Data
 X_train = X_train.T
 Y_train = Y_train.T

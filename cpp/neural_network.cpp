@@ -1,4 +1,6 @@
 #include <cmath>
+#include <string>
+#include <vector>
 
 #include "linear_algebra.h"
 #include "neural_network.h"
@@ -63,4 +65,19 @@ Layer::~Layer() {
     delete dZ;
     delete dW;
     delete db;
+}
+
+//////////////////////////////////////////////////////////////////
+// Neural Network Class
+NeuralNetwork::NeuralNetwork() {
+}
+
+NeuralNetwork::~NeuralNetwork() {
+    for (Layer* layer : layers) {
+        delete layer;
+    }
+}
+
+void NeuralNetwork::add_layer(Layer* layer) {
+    layers.push_back(layer);
 }

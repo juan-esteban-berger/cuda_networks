@@ -2,6 +2,7 @@
 #define NEURAL_NETWORK_H
 
 #include <string>
+#include <vector>
 
 #include "linear_algebra.h"
 
@@ -33,6 +34,19 @@ public:
 
     Layer(int input_num, int output_num, std::string activation_func);
     ~Layer();
+};
+
+//////////////////////////////////////////////////////////////////
+// Neural Network Class
+class NeuralNetwork {
+public:
+    NeuralNetwork();
+    ~NeuralNetwork();
+
+    void add_layer(Layer* layer);
+
+private:
+    std::vector<Layer*> layers;
 };
 
 #endif // NEURAL_NETWORK_H
