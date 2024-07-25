@@ -37,3 +37,30 @@ double CatCrossEntropy::function(Matrix& Y, Matrix& Y_hat) {
     }
     return loss;
 }
+
+//////////////////////////////////////////////////////////////////
+// Layer Class
+Layer::Layer(int input_num, int output_num, std::string activation_func) {
+    activation = activation_func;
+    W = new Matrix(output_num, input_num);
+    b = new Vector(output_num);
+    
+    random_matrix(W);
+    random_vector(b);
+
+    Z = nullptr;
+    A = nullptr;
+    dZ = nullptr;
+    dW = nullptr;
+    db = nullptr;
+}
+
+Layer::~Layer() {
+    delete W;
+    delete b;
+    delete Z;
+    delete A;
+    delete dZ;
+    delete dW;
+    delete db;
+}
