@@ -50,6 +50,7 @@ public:
     NeuralNetwork();
     ~NeuralNetwork();
     void add_layer(Layer* layer);
+    Matrix* getOutput();
     void forward(Matrix& X);
 
 private:

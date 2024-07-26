@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cmath>
 #include <string>
 #include <vector>
@@ -113,36 +114,97 @@ void NeuralNetwork::add_layer(Layer* layer) {
     layers.push_back(layer);
 }
 
+Matrix* NeuralNetwork::getOutput() {
+    return layers.back()->A;
+}
+
 void NeuralNetwork::forward(Matrix& X) {
-    // Set the input matrix
+    std::cout << "Entering forward function\n";
+    std::cout << "Input matrix X:\n";
+    preview_matrix(&X, 4);
+
     Matrix* A = &X;
 
-    // Activation function objects
     Sigmoid sigmoid;
     Softmax softmax;
 
-    // Iterate through each layer
-    for (Layer* layer : layers) {
-        // Compute Z = W * A + b
+    std::cout << "Number of layers: " << layers.size() << "\n";
+
+    for (size_t i = 0; i < layers.size(); ++i) {
+        std::cout << "\nProcessing layer " << i << "\n";
+        Layer* layer = layers[i];
+
+        std::cout << "Layer weights:\n";
+        preview_matrix(layer->W, 4);
+        std::cout << "Layer biases:\n";
+        preview_vector(layer->b, 4);
+
+        delete layer->Z;
+        delete layer->A;
+
         layer->Z = new Matrix(layer->W->rows, A->cols);
         *layer->Z = matmul(*layer->W, *A);
-        *layer->Z = *layer->Z + *layer->b;
+        std::cout << "After matmul:\n";
+        preview_matrix(layer->Z, 4);
 
-        // Compute A = activation(Z)
+        *layer->Z = *layer->Z + *layer->b;
+        std::cout << "After adding bias (Z):\n";
+        preview_matrix(layer->Z, 4);
+
         layer->A = new Matrix(layer->Z->rows, layer->Z->cols);
+        *layer->A = *layer->Z;  // Copy Z to A
+
+        std::cout << "Applying " << layer->activation << " activation\n";
         if (layer->activation == "Sigmoid") {
-            // Copy Z to A
-            *layer->A = *layer->Z;
-            // Apply sigmoid function
             sigmoid.function(*layer->A);
         }
         else if (layer->activation == "Softmax") {
-            // Copy Z to A
-            *layer->A = *layer->Z;
-            // Apply softmax function
             softmax.function(*layer->A);
         }
 
+        std::cout << "After activation (A):\n";
+        preview_matrix(layer->A, 4);
+
         A = layer->A;
     }
+
+    std::cout << "Finished forward propagation\n";
 }
+
+// void NeuralNetwork::forward(Matrix& X) {
+//     // Set the input matrix
+//     Matrix* A = &X;
+// 
+//     // Activation function objects
+//     Sigmoid sigmoid;
+//     Softmax softmax;
+// 
+//     // Iterate through each layer
+//     for (Layer* layer : layers) {
+//         // Clean up previous Z and A if they exist
+//         if (layer->Z != nullptr) {
+//             delete layer->Z;
+//         }
+//         if (layer->A != nullptr) {
+//             delete layer->A;
+//         }
+// 
+//         // Compute Z = W * A + b
+//         layer->Z = new Matrix(layer->W->rows, A->cols);
+//         *layer->Z = matmul(*layer->W, *A);
+//         *layer->Z = *layer->Z + *layer->b;
+// 
+//         // Compute A = activation(Z)
+//         layer->A = new Matrix(layer->Z->rows, layer->Z->cols);
+//         *layer->A = *layer->Z;  // Copy Z to A
+// 
+//         if (layer->activation == "Sigmoid") {
+//             sigmoid.function(*layer->A);
+//         }
+//         else if (layer->activation == "Softmax") {
+//             softmax.function(*layer->A);
+//         }
+// 
+//         A = layer->A;
+//     }
+// }
