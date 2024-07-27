@@ -118,113 +118,6 @@ Matrix* NeuralNetwork::getOutput() {
     return layers.back()->A;
 }
 
-// //////////////////////////////////////////////////////////////////
-// // Layer Class
-// class Layer {
-// public:
-//     Matrix* W;
-//     Vector* b;
-//     Matrix* Z;
-//     Matrix* A;
-//     Matrix* dZ;
-//     Matrix* dW;
-//     Vector* db;
-//     std::string activation;
-// 
-//     Layer(int input_num, int output_num, std::string activation_func);
-//     ~Layer();
-// };
-// 
-// //////////////////////////////////////////////////////////////////
-// // Neural Network Class
-// class NeuralNetwork {
-// public:
-//     NeuralNetwork();
-//     ~NeuralNetwork();
-//     void add_layer(Layer* layer);
-//     Matrix* getOutput();
-//     void forward(Matrix& X);
-// 
-// private:
-//     std::vector<Layer*> layers;
-// };
-
-// def forward(self, X):
-//     A = X
-//     for layer in self.layers:
-//         layer.Z = layer.W.dot(A) + layer.b
-//         layer.A = layer.activation.function(layer.Z)
-//         A = layer.A
-
-// #ifndef LINEAR_ALGEBRA_H
-// #define LINEAR_ALGEBRA_H
-// 
-// //////////////////////////////////////////////////////////////////
-// // Vector Class
-// class Vector {
-// public:
-//     double* data;
-//     int rows;
-// 
-//     Vector(int r);
-//     ~Vector();
-//     void setValue(int index, double value);
-//     double getValues(int index);
-// };
-// 
-// //////////////////////////////////////////////////////////////////
-// // Matrix Class
-// class Matrix {
-// public:
-//     double** data;
-//     int rows;
-//     int cols;
-// 
-//     Matrix(int r, int c);
-//     ~Matrix();
-//     void setValue(int row, int col, double value);
-//     double getValues(int row, int col);
-// };
-// 
-// //////////////////////////////////////////////////////////////////
-// // Matrix and Vector Operations
-// // Element-wise multiplication
-// Matrix operator*(Matrix& m1, Matrix& m2);
-// 
-// // Matrix multiplication
-// Matrix matmul(Matrix& m1, Matrix& m2);
-// 
-// // Matrix-vector addition
-// Matrix operator+(Matrix& m, Vector& v);
-// 
-// //////////////////////////////////////////////////////////////////
-// // Read from CSV
-// void read_csv(const char* filename, Matrix* matrix);
-// void read_csv_limited(const char* filename, Matrix* matrix_subset, int startRow, int endRow, int fileRows, int fileCols);
-// 
-// /////////////////////////////////////////////////////////////////
-// // Preview Functions
-// void preview_matrix(Matrix* m, int decimals);
-// void preview_vector(Vector* v, int decimals);
-// 
-// //////////////////////////////////////////////////////////////////
-// // Randomize Functions
-// void random_vector(Vector* v);
-// void random_matrix(Matrix* m);
-// 
-// //////////////////////////////////////////////////////////////////
-// // Transpose Function
-// Matrix* transpose_matrix(Matrix* m);
-// 
-// //////////////////////////////////////////////////////////////////
-// // Normalization Functions
-// void normalize_vector(Vector* v, double min, double max);
-// void normalize_matrix(Matrix* m, double min, double max);
-// void denormalize_vector(Vector* v, double min, double max);
-// void denormalize_matrix(Matrix* m, double min, double max);
-// 
-// #endif // LINEAR_ALGEBRA_H
-
 void NeuralNetwork::forward(Matrix& X) {
     // Initialize Matrix A
     Matrix A(X.rows, X.cols);
@@ -236,11 +129,6 @@ void NeuralNetwork::forward(Matrix& X) {
         }
     }
 
-    // Preview Matrix A
-    std::cout << "Matrix A" << std::endl;
-    // preview_matrix(A, 4);
-    preview_matrix(&A, 4);
-
     // Initialize Sigmoid object
     Sigmoid sigmoid;
     // Initialize Softmax object
@@ -248,20 +136,8 @@ void NeuralNetwork::forward(Matrix& X) {
     
     // Loop through each layer
     for (Layer* layer : layers) {
-        // Preview Matrix W
-        std::cout << "Matrix W" << std::endl;
-        preview_matrix(layer->W, 4);
-
-        // Preview Vector b
-        std::cout << "Vector b" << std::endl;
-        preview_vector(layer->b, 4);
-
         // Multiply weights by input matrix
         Matrix Z_temp = matmul(*layer->W, A);
-
-        // Preview Matrix Z1_temp
-        std::cout << "Matrix Z_temp" << std::endl;
-        preview_matrix(&Z_temp, 4);
 
         // Add bias to Z matrix
         Matrix Z = Z_temp + *layer->b;
@@ -274,31 +150,18 @@ void NeuralNetwork::forward(Matrix& X) {
             }
         }
         
-        // Preview Matrix Z
-        std::cout << "Matrix Z" << std::endl;
-        preview_matrix(layer->Z, 4);
-
         // if (layer->activation == "Sigmoid")
         if (layer->activation == "Sigmoid") {
             // Compute Sigmoid function
             sigmoid.function(Z);
 
-            // Preview Matrix Z
-            std::cout << "Matrix Z after Sigmoid" << std::endl;
-            preview_matrix(&Z, 4);
-
         } else if (layer->activation == "Softmax") {
             // Compute Softmax function
             softmax.function(Z);
 
-            // Preview Matrix Z
-            std::cout << "Matrix Z after Softmax" << std::endl;
-            preview_matrix(&Z, 4);
-
         }
 
-        // Create a new matrix for A and
-        // copy values from Z into A
+        // Create a new matrix copy values
         layer->A = new Matrix(Z.rows, Z.cols);
         for (int i = 0; i < Z.rows; i++) {
             for (int j = 0; j < Z.cols; j++) {
@@ -306,23 +169,30 @@ void NeuralNetwork::forward(Matrix& X) {
             }
         }
 
-        // Preview Matrix A
-        std::cout << "Matrix A" << std::endl;
-        preview_matrix(layer->A, 4);
+        // Update A for the next iteration
+        Matrix A_temp(layer->A->rows, layer->A->cols);
+        for (int i = 0; i < layer->A->rows; i++) {
+            for (int j = 0; j < layer->A->cols; j++) {
+                A_temp.setValue(i, j, layer->A->getValues(i, j));
+            }
+        }
 
-        // // Copy values from A into A
-        // A = Matrix(layer->Z->rows, layer->Z->cols);
-        // for (int i = 0; i < layer->Z->rows; i++) {
-        //     for (int j = 0; j < layer->Z->cols; j++) {
-        //         A.setValue(i, j, layer->Z->getValues(i, j));
-        //     }
-        // }
+        // Manually copy A_temp to A
+        for (int i = 0; i < A.rows; i++) {
+            delete[] A.data[i];
+        }
+        delete[] A.data;
 
-        // Preview Matrix A
-        std::cout << "Matrix A" << std::endl;
-        preview_matrix(&A, 4);
+        A.rows = A_temp.rows;
+        A.cols = A_temp.cols;
+        A.data = new double*[A.rows];
+        for (int i = 0; i < A.rows; i++) {
+            A.data[i] = new double[A.cols];
+            for (int j = 0; j < A.cols; j++) {
+                A.setValue(i, j, A_temp.getValues(i, j));
+            }
+        }
 
     }
-
-    std::cout << "Got to end of function" << std::endl;
 }
+

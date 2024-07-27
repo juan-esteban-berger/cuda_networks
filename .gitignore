@@ -8,6 +8,9 @@ data/
 cpp/build/
 cpp/lib/
 
+# Context Generator
+cpp/gen_context.sh
+
 # Binary files and executables
 *.exe
 *.dll
