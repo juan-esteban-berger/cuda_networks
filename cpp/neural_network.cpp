@@ -196,3 +196,9 @@ void NeuralNetwork::forward(Matrix& X) {
     }
 }
 
+void NeuralNetwork::backward(Matrix& X,
+                             Matrix& Y,
+                             std::string loss_func) {
+    // Print hello world for testing purposes
+    std::cout << "Backpropagation" << std::endl;
+}

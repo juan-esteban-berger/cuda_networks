@@ -53,6 +53,9 @@ public:
     void add_layer(Layer* layer);
     Matrix* getOutput();
     void forward(Matrix& X);
+    void backward(Matrix& X,
+                  Matrix& Y,
+                  std::string loss_func);
 
 private:
     std::vector<Layer*> layers;
