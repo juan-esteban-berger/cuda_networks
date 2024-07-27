@@ -278,28 +278,50 @@ void NeuralNetwork::forward(Matrix& X) {
         std::cout << "Matrix Z" << std::endl;
         preview_matrix(layer->Z, 4);
 
-        // Break
-        break;
+        // if (layer->activation == "Sigmoid")
+        if (layer->activation == "Sigmoid") {
+            // Compute Sigmoid function
+            sigmoid.function(Z);
 
-    //     
-    //     // if (layer->activation == "Sigmoid")
-    //     if (layer->activation == "Sigmoid") {
-    //         // Compute Sigmoid function
-    //         sigmoid.function(*Z);
+            // Preview Matrix Z
+            std::cout << "Matrix Z after Sigmoid" << std::endl;
+            preview_matrix(&Z, 4);
 
-    //         // Preview Matrix Z
-    //         std::cout << "Matrix Z after Sigmoid" << std::endl;
-    //         preview_matrix(Z, 4);
+        } else if (layer->activation == "Softmax") {
+            // Compute Softmax function
+            softmax.function(Z);
 
-    //     } else if (layer->activation == "Softmax") {
-    //         // Compute Softmax function
-    //         softmax.function(*Z);
+            // Preview Matrix Z
+            std::cout << "Matrix Z after Softmax" << std::endl;
+            preview_matrix(&Z, 4);
 
-    //         // Preview Matrix Z
-    //         std::cout << "Matrix Z after Softmax" << std::endl;
-    //         preview_matrix(Z, 4);
+        }
 
-    //     }
+        // Create a new matrix for A and
+        // copy values from Z into A
+        layer->A = new Matrix(Z.rows, Z.cols);
+        for (int i = 0; i < Z.rows; i++) {
+            for (int j = 0; j < Z.cols; j++) {
+                layer->A->setValue(i, j, Z.getValues(i, j));
+            }
+        }
+
+        // Preview Matrix A
+        std::cout << "Matrix A" << std::endl;
+        preview_matrix(layer->A, 4);
+
+        // // Copy values from A into A
+        // A = Matrix(layer->Z->rows, layer->Z->cols);
+        // for (int i = 0; i < layer->Z->rows; i++) {
+        //     for (int j = 0; j < layer->Z->cols; j++) {
+        //         A.setValue(i, j, layer->Z->getValues(i, j));
+        //     }
+        // }
+
+        // Preview Matrix A
+        std::cout << "Matrix A" << std::endl;
+        preview_matrix(&A, 4);
+
     }
 
     std::cout << "Got to end of function" << std::endl;
