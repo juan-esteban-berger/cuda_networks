@@ -10,6 +10,7 @@ cpp/lib/
 
 # Context Generator
 cpp/gen_context.sh
+cpp/context.txt
 
 # Binary files and executables
 *.exe
