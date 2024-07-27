@@ -21,7 +21,6 @@ public:
     double** data;
     int rows;
     int cols;
-
     Matrix(int r, int c);
     ~Matrix();
     void setValue(int row, int col, double value);

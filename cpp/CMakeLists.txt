@@ -4,6 +4,9 @@ project(CPP_Networks_Tests)
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
 
+# Set Debug mode
+set(CMAKE_BUILD_TYPE Debug)
+
 # Include directories for your project
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/lib/googletest/googletest/include)
