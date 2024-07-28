@@ -54,6 +54,22 @@ double Matrix::getValues(int row, int col) {
 
 //////////////////////////////////////////////////////////////////
 // Matrix and Vector Operations
+// Element-wise subtraction
+Matrix operator-(Matrix& m1, Matrix& m2) {
+    // Create matrix with m1.rows and m1.cols
+    Matrix result(m1.rows, m1.cols);
+    // Iterate over each row of the matrices
+    for (int i = 0; i < m1.rows; ++i) {
+        // Iterate over each column of the matrices
+        for (int j = 0; j < m1.cols; ++j) {
+            // Multiply corresponding elements and store in the result matrix
+            result.setValue(i, j, m1.getValues(i, j) - m2.getValues(i, j));
+        }
+    }
+    // Return the resulting matrix
+    return result;
+}
+
 // Element-wise multiplication
 Matrix operator*(Matrix& m1, Matrix& m2) {
     // Create matrix with m1.rows and m1.cols

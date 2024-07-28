@@ -919,11 +919,12 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
     int m = X.cols;
     std::cout << "Number of columns: " << m << "\n";
 
-    // Initialize Matrix dZ
-    Matrix dZ2(Z2.rows, Z2.cols);
+    // dz2 = Z - Y
+    Matrix dZ2 = Z2 - Y;
 
-    // dZ2 = Z2 - Y
-    // Subtraction Operator Overload
+    // Preview dZ2
+    std::cout << "Matrix dZ2:" << std::endl;
+    preview_matrix(&dZ2, 2);
 
     // Run backward propagation
     nn.backward(X,Y,"CatCrossEntropy");

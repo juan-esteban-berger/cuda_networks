@@ -201,14 +201,20 @@ void NeuralNetwork::backward(Matrix& X,
                              std::string loss_func) {
     // Get Number of Examples
     int m = X.cols;
+    std::cout << "Number of Columns: " << m << std::endl;
 
     // Initialize Sigmoid Object
     Sigmoid sigmoid;
+    
+    // Iterate through each layer reverse
+    for (int i = layers.size() - 1; i >= 0; i--) {
+        // Matrix dZ
+        Matrix dZ = *layers[i]->A - Y;
+        
+        // Preview dZ
+        std::cout << "Matrix dZ: " << std::endl;
+        preview_matrix(&dZ, 2);
+    }
 
-    // Iterate through layers in reverse
-    // for (int i = layers.size() - 1; i >= 0; i--) {
-    //     Layer* layer = layers[i];
-    // }
-
-    std::cout << "Number of columns: " << m << std::endl;
+    std::cout << "Got to end of function." << m << std::endl;
 }

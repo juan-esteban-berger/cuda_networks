@@ -29,6 +29,9 @@ public:
 
 //////////////////////////////////////////////////////////////////
 // Matrix and Vector Operations
+// Element-wise Subtraction
+Matrix operator-(Matrix& m1, Matrix& m2);
+
 // Element-wise multiplication
 Matrix operator*(Matrix& m1, Matrix& m2);
 
