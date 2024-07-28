@@ -41,6 +41,15 @@ Matrix matmul(Matrix& m1, Matrix& m2);
 // Matrix-vector addition
 Matrix operator+(Matrix& m, Vector& v);
 
+// Matrix-scalar division
+Matrix operator/(Matrix& m, double scalar);
+
+// Vector-scalar division
+Vector operator/(Vector& v, double scalar);
+
+// Sum matrix columns
+Vector sum_columns(Matrix& m);
+
 //////////////////////////////////////////////////////////////////
 // Read from CSV
 void read_csv(const char* filename, Matrix* matrix);

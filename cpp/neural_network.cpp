@@ -209,11 +209,65 @@ void NeuralNetwork::backward(Matrix& X,
     // Iterate through each layer reverse
     for (int i = layers.size() - 1; i >= 0; i--) {
         // Matrix dZ
-        Matrix dZ = *layers[i]->A - Y;
+        Matrix dZ_temp = *layers[i]->A - Y;
         
         // Preview dZ
         std::cout << "Matrix dZ: " << std::endl;
-        preview_matrix(&dZ, 2);
+        preview_matrix(&dZ_temp, 4);
+
+        // Preview Previous Layer Activation
+        if (i > 0) {
+            std::cout << "Matrix A: " << std::endl;
+            preview_matrix(layers[i - 1]->A, 4);
+
+            // Transpose Matrix
+            Matrix* A_transpose = transpose_matrix(layers[i - 1]->A);
+
+            // Preview Transpose Matrix
+            std::cout << "Matrix A Transpose: " << std::endl;
+            preview_matrix(A_transpose, 4);
+
+            // Multiply dZ with A.T
+            Matrix dW_temp = matmul(dZ_temp, *A_transpose);
+
+            // Preview dW
+            std::cout << "Matrix dW_temp: " << std::endl;
+            preview_matrix(&dW_temp, 4);
+
+            // Divide by scalar (operator overload for /)
+            Matrix dW = dW_temp / m;
+
+            // Preview dW
+            std::cout << "Matrix dW after division: " << std::endl;
+            preview_matrix(&dW, 4);
+
+        } else {
+            std::cout << "Matrix X: " << std::endl;
+            preview_matrix(&X, 4);
+
+            // Transpose Matrix
+            Matrix* X_transpose = transpose_matrix(&X);
+
+            // Preview Transpose Matrix
+            std::cout << "Matrix X Transpose: " << std::endl;
+            preview_matrix(X_transpose, 4);
+
+            // Multiply dZ with A.T
+            Matrix dW_temp = matmul(dZ_temp, *X_transpose);
+
+            // Preview dW
+            std::cout << "Matrix dW_temp: " << std::endl;
+            preview_matrix(&dW_temp, 4);
+
+            // // Divide by scalar (operator overload for /)
+            // Matrix dW = dW_temp / m;
+
+            // // Preview dW
+            // std::cout << "Matrix dW after division: " << std::endl;
+            // preview_matrix(&dW, 4);
+
+        }
+
     }
 
     std::cout << "Got to end of function." << m << std::endl;

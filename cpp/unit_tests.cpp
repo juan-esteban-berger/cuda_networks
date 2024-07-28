@@ -898,7 +898,7 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
     }
 
 //////////////////////////////////////////////////////////////////
-    // Forward Propagation Section
+    // Backward Propagation Section
     // Initialize output matrix
     Matrix Y(2, 2);  // 2 outputs, 2 examples
     // Initialize 2D array for inputs
@@ -913,21 +913,80 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
 
     // Preview input matrix
     std::cout << "Output Matrix Y:" << std::endl;
-    preview_matrix(&Y, 2);
+    preview_matrix(&Y, 4);
 
     // Get Number of Examples
     int m = X.cols;
     std::cout << "Number of columns: " << m << "\n";
 
-    // dz2 = Z - Y
-    Matrix dZ2 = Z2 - Y;
+    // dZ2 = Z - Y
+    Matrix dZ2_temp = Z2 - Y;
 
     // Preview dZ2
     std::cout << "Matrix dZ2:" << std::endl;
-    preview_matrix(&dZ2, 2);
+    preview_matrix(&dZ2_temp, 4);
+    
+    // Transpose A1
+    Matrix* A1 = transpose_matrix(&Z1);
 
-    // Run backward propagation
-    nn.backward(X,Y,"CatCrossEntropy");
+    // Preview A1
+    std::cout << "Matrix A1 Transposed:" << std::endl;
+    preview_matrix(A1, 4);
+
+    // Multiply dZ2 with A1.T
+    Matrix dW2_temp = matmul(dZ2_temp, *A1);
+
+    // Preview dW2
+    std::cout << "Matrix dW2:" << std::endl;
+    preview_matrix(&dW2_temp, 4);
+
+    // Matrix operator/(Matrix& m, double scalar);
+
+    // Divide by number of examples
+    Matrix dW2 = dW2_temp / m;
+
+    // Preview dW2
+    std::cout << "Matrix dW2 after division:" << std::endl;
+    preview_matrix(&dW2, 4);
+
+    // Compute db2
+    Vector db2_temp = sum_columns(dZ2_temp);
+
+    // Preview db2
+    std::cout << "Vector db2:" << std::endl;
+    preview_vector(&db2_temp, 4);
+
+    // Divide by number of examples
+    Vector db2 = db2_temp / m;
+
+    // Preview db2 after division
+    std::cout << "Vector db2 after division:" << std::endl;
+    preview_vector(&db2, 4);
+
+    // Transpose W2 (next layer weights)
+    
+    // Multiply W2.T with dZ2 (next layer dZ2)
+    
+    // Apply Sigmoid derivative to Z1
+
+    // Element wise multiplication derivative activated Z1
+    
+
+    
+    // Multiply current layer dZ (dZ1) with X.T
+
+    // Divide by number of examples
+    
+
+    // Compute db1
+
+
+
+    // Print divider
+    std::cout << "________________________________" << std::endl;
+
+    // // Run backward propagation
+    // nn.backward(X,Y,"CatCrossEntropy");
 
 }
 

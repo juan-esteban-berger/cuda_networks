@@ -87,7 +87,15 @@ class NeuralNetwork():
             else:
                 layer.dW = 1 / m * layer.dZ.dot(X.T)
 
+            print("Layer.dZ")
+            print(layer.dZ.shape)
+            print("np.sum(layer.dZ, axis=1, keepdims=True)")
+            print(np.sum(layer.dZ, axis=1, keepdims=True).shape)
+            print(np.sum(layer.dZ, axis=1, keepdims=True))
             layer.db = 1 / m * np.sum(layer.dZ, axis=1, keepdims=True)
+            print("Layer.db")
+            print(layer.db.shape)
+            print("--------------------")
 
     def update_params(self, learning_rate):
         for layer in self.layers:

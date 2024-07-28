@@ -125,6 +125,55 @@ Matrix operator+(Matrix& m, Vector& v) {
     return result;
 }
 
+// Matrix-scalar division
+Matrix operator/(Matrix& m, double scalar) {
+    // Initialize matrix with m.rows and m.cols
+    Matrix result(m.rows, m.cols);
+    // Iterate over each row of the matrix
+    for (int i = 0; i < m.rows; ++i) {
+        // Iterate over each column of the matrix
+        for (int j = 0; j < m.cols; ++j) {
+            // Divide each element by the scalar
+            result.setValue(i, j, m.getValues(i, j) / scalar);
+        }
+    }
+    // Return the resulting matrix
+    return result;
+}
+
+// Vector-scalar division
+Vector operator/(Vector& v, double scalar) {
+    // Initialize vector with v.rows
+    Vector result(v.rows);
+    // Iterate over each row of the vector
+    for (int i = 0; i < v.rows; i++) {
+        // Divide each element
+        result.setValue(i, v.getValues(i) / scalar);
+    }
+    // Return the resulting vector
+    return result;
+}
+
+// Sum matrix columns
+Vector sum_columns(Matrix& m) {
+    // Initialize vector with m.rows
+    Vector result(m.rows);
+    // Iterate over each row of the matrix
+    for (int i = 0; i < m.rows; ++i) {
+        // Initialize sum to 0
+        double sum = 0;
+        // Iterate over each column of the matrix
+        for (int j = 0; j < m.cols; ++j) {
+            // Add the element to the sum
+            sum += m.getValues(i, j);
+        }
+        // Store the sum in the result vector
+        result.setValue(i, sum);
+    }
+    // Return the result vector
+    return result;
+}
+
 //////////////////////////////////////////////////////////////////
 // Read from CSV
 void read_csv(const char* filename, Matrix* matrix) {
