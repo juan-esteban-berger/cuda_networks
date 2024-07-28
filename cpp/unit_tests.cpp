@@ -756,6 +756,8 @@ TEST(NeuralNetworkTest, ForwardPropagationTest) {
 }
 
 TEST(NeuralNetworkTest, BackwardPropagationTest) {
+//////////////////////////////////////////////////////////////////
+    // Forward Propagation Section
     // Initialize input matrix
     Matrix X(3, 2);  // 3 features, 2 examples
     // Initialize 2D array for inputs
@@ -895,9 +897,36 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
         }
     }
 
-    for (int i = 0; i < 5; i++) {
-        nn.backward(X,X,"CatCrossEntropy");
+//////////////////////////////////////////////////////////////////
+    // Forward Propagation Section
+    // Initialize output matrix
+    Matrix Y(2, 2);  // 2 outputs, 2 examples
+    // Initialize 2D array for inputs
+    double Y_values[3][2] = {{0, 0}, {1, 1}};
+    // Loop over rows
+    for (int i = 0; i < 2; i++) {
+        // Loop over columns
+        for (int j = 0; j < 2; j++) {
+            Y.setValue(i, j, Y_values[i][j]);
+        }
     }
+
+    // Preview input matrix
+    std::cout << "Output Matrix Y:" << std::endl;
+    preview_matrix(&Y, 2);
+
+    // Get Number of Examples
+    int m = X.cols;
+    std::cout << "Number of columns: " << m << "\n";
+
+    // Initialize Matrix dZ
+    Matrix dZ2(Z2.rows, Z2.cols);
+
+    // dZ2 = Z2 - Y
+    // Subtraction Operator Overload
+
+    // Run backward propagation
+    nn.backward(X,Y,"CatCrossEntropy");
 
 }
 

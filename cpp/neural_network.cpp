@@ -199,6 +199,16 @@ void NeuralNetwork::forward(Matrix& X) {
 void NeuralNetwork::backward(Matrix& X,
                              Matrix& Y,
                              std::string loss_func) {
-    // Print hello world for testing purposes
-    std::cout << "Backpropagation" << std::endl;
+    // Get Number of Examples
+    int m = X.cols;
+
+    // Initialize Sigmoid Object
+    Sigmoid sigmoid;
+
+    // Iterate through layers in reverse
+    // for (int i = layers.size() - 1; i >= 0; i--) {
+    //     Layer* layer = layers[i];
+    // }
+
+    std::cout << "Number of columns: " << m << std::endl;
 }
