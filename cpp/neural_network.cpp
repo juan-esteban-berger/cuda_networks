@@ -199,6 +199,8 @@ void NeuralNetwork::forward(Matrix& X) {
 void NeuralNetwork::backward(Matrix& X,
                              Matrix& Y,
                              std::string loss_func) {
+///////////////////////////////////////////////////////////////////////////////////
+// Function Setup
     // Get Number of Examples
     int m = X.cols;
     std::cout << "Number of Columns: " << m << std::endl;
@@ -206,21 +208,116 @@ void NeuralNetwork::backward(Matrix& X,
     // Initialize Sigmoid Object
     Sigmoid sigmoid;
     
+///////////////////////////////////////////////////////////////////////////////////
     // Iterate through each layer reverse
     for (int i = layers.size() - 1; i >= 0; i--) {
-        // Matrix dZ
-        Matrix dZ_temp = *layers[i]->A - Y;
-        
+
+///////////////////////////////////////////////////////////////////////////////////
+// Initialize matrices for gradients
+        // Initialize a Matrix for current layer's dZ
+        layers[i]->dZ = new Matrix(layers[i]->A->rows, layers[i]->A->cols);
+
+        // Initialize a Matrix for current layer's dW
+        layers[i]->dW = new Matrix(layers[i]->W->rows, layers[i]->W->cols);
+
+        // Initialize a Vector for current layer's db
+        layers[i]->db = new Vector(layers[i]->b->rows);
+
+///////////////////////////////////////////////////////////////////////////////////
+// Initialize pointer to current layer
+        // Pointer to layer
+        Layer* layer = layers[i];
+
+///////////////////////////////////////////////////////////////////////////////////
+// Calculate dZ
+        // Calculate dZ: if last layer and loss is CatCrossEntropy
+        if (i == layers.size() - 1 && loss_func == "CatCrossEntropy") {
+            // Matrix dZ_temp
+            Matrix dZ_temp = *layers[i]->A - Y;
+
+            // Preview dZ
+            std::cout << "Matrix dZ: " << std::endl;
+            preview_matrix(&dZ_temp, 4);
+
+            // Copy the values to layer's dZ using the pointer to layer
+            for (int i = 0; i < dZ_temp.rows; i++) {
+                for (int j = 0; j < dZ_temp.cols; j++) {
+                    layer->dZ->setValue(i, j, dZ_temp.getValues(i, j));
+                }
+            }
+
+        }
+        // Calculate dZ: all other layers
+        else {
+            // Get the next layer's dZ
+            Matrix* dZ_next = layers[i + 1]->dZ;
+            
+            // Preview dZ_next
+            std::cout << "Matrix dZ_next: " << std::endl;
+            preview_matrix(dZ_next, 4);
+
+            // Get the next layer's W
+            Matrix* W_next = layers[i + 1]->W;
+
+            // Transpose Matrix W_next
+            Matrix* W_next_transpose = transpose_matrix(W_next);
+
+            // Preview Transpose Matrix
+            std::cout << "Matrix W_next Transpose: " << std::endl;
+            preview_matrix(W_next_transpose, 4);
+
+            // Multiply W_next.T with dZ_next
+            Matrix dZ_temp = matmul(*W_next_transpose, *dZ_next);
+
+            // Preview dZ_temp
+            std::cout << "Matrix dZ_temp: " << std::endl;
+            preview_matrix(&dZ_temp, 4);
+
+            // Craete new matrix for derivative activated dZ
+            Matrix dZ_dev_act = Matrix(dZ_temp.rows, dZ_temp.cols);
+
+            // Copy values from the layer's dZ to dZ_dev_act
+            for (int i = 0; i < dZ_temp.rows; i++) {
+                for (int j = 0; j < dZ_temp.cols; j++) {
+                    dZ_dev_act.setValue(i, j, layers[i]->dZ->getValues(i, j));
+                }
+            }
+
+            if (layers[i]->activation == "Sigmoid") {
+                // Compute Sigmoid derivative
+                sigmoid.derivative(dZ_dev_act);
+            }
+
+            // Preview dZ_dev_act
+            std::cout << "Matrix dZ_dev_act: " << std::endl;
+            preview_matrix(&dZ_dev_act, 4);
+
+            // Elementwise Matrix Multiplication of dZ_temp and dZ_dev_act
+            // use overloaded operator *
+            Matrix dZ = dZ_temp * dZ_dev_act;
+
+            // Preview dZ
+            std::cout << "Matrix dZ: " << std::endl;
+            preview_matrix(&dZ, 4);
+
+            // Copy the values to layer's dZ using the pointer to layer
+            for (int i = 0; i < dZ.rows; i++) {
+                for (int j = 0; j < dZ.cols; j++) {
+                    layer->dZ->setValue(i, j, dZ.getValues(i, j));
+                }
+            }
+            
+        }
+
         // Preview dZ
-        std::cout << "Matrix dZ: " << std::endl;
-        preview_matrix(&dZ_temp, 4);
+        std::cout << "Matrix dZ directly from layer: " << std::endl;
+        preview_matrix(layers[i]->dZ, 4);
 
-        // Preview Previous Layer Activation
-        if (i > 0) {
-            std::cout << "Matrix A: " << std::endl;
-            preview_matrix(layers[i - 1]->A, 4);
-
-            // Transpose Matrix
+///////////////////////////////////////////////////////////////////////////////////
+// Calculate dW
+        // Calculate dW: all except the first layer
+        if (i != 0) {
+            // Transpose Matrix Previous Layer's A
             Matrix* A_transpose = transpose_matrix(layers[i - 1]->A);
 
             // Preview Transpose Matrix
@@ -228,7 +325,7 @@ void NeuralNetwork::backward(Matrix& X,
             preview_matrix(A_transpose, 4);
 
             // Multiply dZ with A.T
-            Matrix dW_temp = matmul(dZ_temp, *A_transpose);
+            Matrix dW_temp = matmul(*layers[i]->dZ, *A_transpose);
 
             // Preview dW
             std::cout << "Matrix dW_temp: " << std::endl;
@@ -241,33 +338,72 @@ void NeuralNetwork::backward(Matrix& X,
             std::cout << "Matrix dW after division: " << std::endl;
             preview_matrix(&dW, 4);
 
-        } else {
-            std::cout << "Matrix X: " << std::endl;
-            preview_matrix(&X, 4);
-
-            // Transpose Matrix
+            // Copy the values to layer's dW using the pointer to layer
+            for (int i = 0; i < dW.rows; i++) {
+                for (int j = 0; j < dW.cols; j++) {
+                    layer->dW->setValue(i, j, dW.getValues(i, j));
+                }
+            }
+        }
+        // Calculate dW: first layer
+        else {
+            // Transpose Matrix X
             Matrix* X_transpose = transpose_matrix(&X);
 
             // Preview Transpose Matrix
             std::cout << "Matrix X Transpose: " << std::endl;
             preview_matrix(X_transpose, 4);
 
-            // Multiply dZ with A.T
-            Matrix dW_temp = matmul(dZ_temp, *X_transpose);
+            // Multiply dZ with X.T
+            Matrix dW_temp = matmul(*layers[i]->dZ, *X_transpose);
 
             // Preview dW
             std::cout << "Matrix dW_temp: " << std::endl;
             preview_matrix(&dW_temp, 4);
 
-            // // Divide by scalar (operator overload for /)
-            // Matrix dW = dW_temp / m;
+            // Divide by scalar (operator overload for /)
+            Matrix dW = dW_temp / m;
 
-            // // Preview dW
-            // std::cout << "Matrix dW after division: " << std::endl;
-            // preview_matrix(&dW, 4);
+            // Preview dW
+            std::cout << "Matrix dW after division: " << std::endl;
+            preview_matrix(&dW, 4);
 
+            // Copy the values to layer's dW using the pointer to layer
+            for (int i = 0; i < dW.rows; i++) {
+                for (int j = 0; j < dW.cols; j++) {
+                    layer->dW->setValue(i, j, dW.getValues(i, j));
+                }
+            }
         }
 
+        // Preview dW
+        std::cout << "Matrix dW directly from layer: " << std::endl;
+        preview_matrix(layers[i]->dW, 4);
+
+///////////////////////////////////////////////////////////////////////////////////
+// Calculate db
+        // Sum columns of dZ
+        Vector db_temp = sum_columns(*layers[i]->dZ);
+
+        // Preview db
+        std::cout << "Vector db_temp: " << std::endl;
+        preview_vector(&db_temp, 4);
+
+        // Divide by scalar (operator overload for /)
+        Vector db = db_temp / m;
+
+        // Preview db
+        std::cout << "Vector db after division: " << std::endl;
+        preview_vector(&db, 4);
+
+        // Copy the values to layer's db using the pointer to layer
+        for (int i = 0; i < db.rows; i++) {
+            layer->db->setValue(i, db.getValues(i));
+        }
+
+        // Preview db
+        std::cout << "Vector db directly from layer: " << std::endl;
+        preview_vector(layer->db, 4);
     }
 
     std::cout << "Got to end of function." << m << std::endl;

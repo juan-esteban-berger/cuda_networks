@@ -964,29 +964,85 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
     preview_vector(&db2, 4);
 
     // Transpose W2 (next layer weights)
+    Matrix* W2_T = transpose_matrix(layer2->W);
+
+    // Preview W2_T
+    std::cout << "Matrix W2 Transposed:" << std::endl;
+    preview_matrix(W2_T, 4);
     
     // Multiply W2.T with dZ2 (next layer dZ2)
+    Matrix dZ1_temp = matmul(*W2_T, dZ2_temp);
     
-    // Apply Sigmoid derivative to Z1
+    // Preview dZ1
+    std::cout << "Matrix dZ1:" << std::endl;
+    preview_matrix(&dZ1_temp, 4);
+    
+    // Make a copy of Z1
+    Matrix Z1_copy(Z1.rows, Z1.cols);
+    for (int i = 0; i < Z1.rows; i++) {
+        for (int j = 0; j < Z1.cols; j++) {
+            Z1_copy.setValue(i, j, Z1.getValues(i, j));
+        }
+    }
+
+    // Preview Z1_copy
+    std::cout << "Matrix Z1_copy:" << std::endl;
+    preview_matrix(&Z1_copy, 4);
+
+    // Apply Sigmoid derivative to Z1_copy
+    sigmoid.derivative(Z1_copy);
+
+    // Preview Z1_copy after derivative
+    std::cout << "Matrix Z1_copy after derivative:" << std::endl;
+    preview_matrix(&Z1_copy, 4);
 
     // Element wise multiplication derivative activated Z1
+    Matrix dZ1 = dZ1_temp * Z1_copy;
+   
+    // Preview dZ1
+    std::cout << "Matrix dZ1:" << std::endl;
+    preview_matrix(&dZ1, 4);
     
+    // Transpose X
+    Matrix* X_T = transpose_matrix(&X);
 
-    
+    // Preview X_T
+    std::cout << "Matrix X Transposed:" << std::endl;
+    preview_matrix(X_T, 4);
+
     // Multiply current layer dZ (dZ1) with X.T
+    Matrix dW1_temp = matmul(dZ1, *X_T);
+
+    // Preview dW1
+    std::cout << "Matrix dW1_temp:" << std::endl;
+    preview_matrix(&dW1_temp, 4);
 
     // Divide by number of examples
+    Matrix dW1 = dW1_temp / m;
+
+    // Preview dW1 after division
+    std::cout << "Matrix dW1 after division:" << std::endl;
+    preview_matrix(&dW1, 4);
+
+    // Sum columns of dZ1
+    Vector db1_temp = sum_columns(dZ1);
+
+    // Preview db1
+    std::cout << "Vector db1_temp:" << std::endl;
+    preview_vector(&db1_temp, 4);
     
+    // Divide by number of examples
+    Vector db1 = db1_temp / m;
 
-    // Compute db1
-
-
-
+    // Preview db1 after division
+    std::cout << "Vector db1 after division:" << std::endl;
+    preview_vector(&db1, 4);
+    
     // Print divider
     std::cout << "________________________________" << std::endl;
 
-    // // Run backward propagation
-    // nn.backward(X,Y,"CatCrossEntropy");
+    // Run backward propagation
+    nn.backward(X,Y,"CatCrossEntropy");
 
 }
 
