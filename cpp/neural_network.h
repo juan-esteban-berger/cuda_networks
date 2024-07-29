@@ -57,7 +57,6 @@ public:
                   Matrix& Y,
                   std::string loss_func);
 
-private:
     std::vector<Layer*> layers;
 };
 
