@@ -118,7 +118,9 @@ Matrix* NeuralNetwork::getOutput() {
     return layers.back()->A;
 }
 
+//////////////////////////////////////////////////////////////////
 void NeuralNetwork::forward(Matrix& X) {
+//////////////////////////////////////////////////////////////////
     // Initialize Matrix A
     Matrix A(X.rows, X.cols);
 
@@ -129,13 +131,17 @@ void NeuralNetwork::forward(Matrix& X) {
         }
     }
 
+//////////////////////////////////////////////////////////////////
     // Initialize Sigmoid object
     Sigmoid sigmoid;
     // Initialize Softmax object
     Softmax softmax;
     
+//////////////////////////////////////////////////////////////////
     // Loop through each layer
     for (Layer* layer : layers) {
+//////////////////////////////////////////////////////////////////
+        // Calculate Z
         // Multiply weights by input matrix
         Matrix Z_temp = matmul(*layer->W, A);
 
@@ -150,6 +156,8 @@ void NeuralNetwork::forward(Matrix& X) {
             }
         }
         
+//////////////////////////////////////////////////////////////////
+        // Calculate A
         // if (layer->activation == "Sigmoid")
         if (layer->activation == "Sigmoid") {
             // Compute Sigmoid function
@@ -161,7 +169,7 @@ void NeuralNetwork::forward(Matrix& X) {
 
         }
 
-        // Create a new matrix copy values
+        // Create a new matrix for A copy values
         layer->A = new Matrix(Z.rows, Z.cols);
         for (int i = 0; i < Z.rows; i++) {
             for (int j = 0; j < Z.cols; j++) {
@@ -169,6 +177,7 @@ void NeuralNetwork::forward(Matrix& X) {
             }
         }
 
+//////////////////////////////////////////////////////////////////
         // Update A for the next iteration
         Matrix A_temp(layer->A->rows, layer->A->cols);
         for (int i = 0; i < layer->A->rows; i++) {
@@ -177,15 +186,18 @@ void NeuralNetwork::forward(Matrix& X) {
             }
         }
 
-        // Manually copy A_temp to A
+        // Deallocate Memory
         for (int i = 0; i < A.rows; i++) {
             delete[] A.data[i];
         }
         delete[] A.data;
 
+        // Deallocate Memory
         A.rows = A_temp.rows;
         A.cols = A_temp.cols;
         A.data = new double*[A.rows];
+
+        // Copy Values
         for (int i = 0; i < A.rows; i++) {
             A.data[i] = new double[A.cols];
             for (int j = 0; j < A.cols; j++) {
@@ -196,6 +208,7 @@ void NeuralNetwork::forward(Matrix& X) {
     }
 }
 
+//////////////////////////////////////////////////////////////////
 void NeuralNetwork::backward(Matrix& X,
                              Matrix& Y,
                              std::string loss_func) {
