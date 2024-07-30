@@ -924,34 +924,25 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
                         Z1_temp.getValues(i, j) + layer1->b->getValues(i));
         }
     }
-    // Preview Z1
-    std::cout << "Manual Z1:" << std::endl;
-    preview_matrix(&Z1, 4);
+    // // Preview Z1
+    // std::cout << "Manual Z1:" << std::endl;
+    // preview_matrix(&Z1, 4);
     
 //////////////////////////////////////////////////////////////////
     // Calculate A1
-    Matrix A1(Z1.rows, Z1.cols);
-    // Loop over rows
-    for (int i = 0; i < Z1.rows; i++) {
-        // Loop over columns
-        for (int j = 0; j < Z1.cols; j++) {
-            // Set values
-            A1.setValue(i, j, Z1.getValues(i, j));
-        }
-    }
     // Initialize Sigmoid object
     Sigmoid sigmoid;
     // Apply Sigmoid function
-    sigmoid.function(A1);
+    sigmoid.function(Z1);
 
-    // Preview Activated Z1
-    std::cout << "Activated Z1:" << std::endl;
-    preview_matrix(&A1, 4);
+    // // Preview Activated Z1
+    // std::cout << "Activated Z1:" << std::endl;
+    // preview_matrix(&Z1, 4);
 
 //////////////////////////////////////////////////////////////////
     // Calculate Z2
     // Multiply weights with A1
-    Matrix Z2_temp = matmul(*layer2->W, A1);
+    Matrix Z2_temp = matmul(*layer2->W, Z1);
     // Initialize matrix for Z2
     Matrix Z2(Z2_temp.rows, Z2_temp.cols);
     // Loop over rows
@@ -964,30 +955,21 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
         }
     }
 
-    // Preview Z2
-    std::cout << "Manual Z2:" << std::endl;
-    preview_matrix(&Z2, 4);
+    // // Preview Z2
+    // std::cout << "Manual Z2:" << std::endl;
+    // preview_matrix(&Z2, 4);
 
 //////////////////////////////////////////////////////////////////
     // Calculate A2
-    Matrix A2(Z2.rows, Z2.cols);
-    // Loop over rows
-    for (int i = 0; i < Z2.rows; i++) {
-        // Loop over columns
-        for (int j = 0; j < Z2.cols; j++) {
-            // Set values
-            A2.setValue(i, j, Z2.getValues(i, j));
-        }
-    }
-
     // Initialize Softmax object
     Softmax softmax;
-    // Apply Softmax function
-    softmax.function(A2);
 
-    // Preview A2
-    std::cout << "Activated Z2 (final output):" << std::endl;
-    preview_matrix(&A2, 4);
+    // Apply Softmax function
+    softmax.function(Z2);
+
+    // // Preview A2
+    // std::cout << "Activated Z2 (final output):" << std::endl;
+    // preview_matrix(&Z2, 4);
 
 //////////////////////////////////////////////////////////////////
     // Test Forward Function
@@ -998,54 +980,6 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
     // Run forward propagation
     nn.forward(X);
 
-//////////////////////////////////////////////////////////////////
-    // Check Z and A Matrices
-    // Get Z1 from neural network
-    Matrix* Z1_nn = nn.layers[0]->Z;
-    
-    // Preview Z1 from neural network
-    std::cout << "Neural Network Z1:" << std::endl;
-    preview_matrix(Z1_nn, 4);
-
-    // Preview Z1 from Test
-    std::cout << "Manual Z1:" << std::endl;
-    preview_matrix(&Z1, 4);
-
-    // Get A1 from neural network
-    Matrix* A1_nn = nn.layers[0]->A;
-
-    // Preview A1 from neural network
-    std::cout << "Neural Network A1:" << std::endl;
-    preview_matrix(A1_nn, 4);
-
-    // Preview A1 from Test
-    std::cout << "Manual A1:" << std::endl;
-    preview_matrix(&A1, 4);
-
-    // Get Z2 from neural network
-    Matrix* Z2_nn = nn.layers[1]->Z;
-
-    // Preview Z2 from neural network
-    std::cout << "Neural Network Z2:" << std::endl;
-    preview_matrix(Z2_nn, 4);
-
-    // Preview Z2 from Test
-    std::cout << "Manual Z2:" << std::endl;
-    preview_matrix(&Z2, 4);
-
-    // Preview A2 from neural network
-    Matrix* A2_nn = nn.layers[1]->A;
-
-    // Preview A2 from neural network
-    std::cout << "Neural Network A2:" << std::endl;
-    preview_matrix(A2_nn, 4);
-
-    // Preview A2 from Test
-    std::cout << "Manual A2:" << std::endl;
-    preview_matrix(&A2, 4);
-
-//////////////////////////////////////////////////////////////////
-    // Check output values
     // Get the output of the last layer
     Matrix* output = nn.getOutput();
 
@@ -1053,15 +987,12 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
     std::cout << "Neural Network output:" << std::endl;
     preview_matrix(output, 4);
 
-    // Preview output from test
-    std::cout << "Manual Z2:" << std::endl;
-    preview_matrix(&A2, 4);
-
-    // Check values
+//////////////////////////////////////////////////////////////////
+    // Check Values
     for (int i = 0; i < output->rows; i++) {
         for (int j = 0; j < output->cols; j++) {
             ASSERT_NEAR(output->getValues(i, j),
-                        A2.getValues(i, j), 1e-5);
+                        Z2.getValues(i, j), 1e-5);
         }
     }
 
@@ -1082,34 +1013,34 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
         }
     }
 
-    // // Preview input matrix
-    // std::cout << "Output Matrix Y:" << std::endl;
-    // preview_matrix(&Y, 4);
+    // Preview input matrix
+    std::cout << "Output Matrix Y:" << std::endl;
+    preview_matrix(&Y, 4);
 
 //////////////////////////////////////////////////////////////////
     // Get Number of Examples
     int m = X.cols;
-    // std::cout << "Number of columns: " << m << "\n";
+    std::cout << "Number of columns: " << m << "\n";
 
 //////////////////////////////////////////////////////////////////
     // Calculate dZ2
-    Matrix dZ2 = A2 - Y;
+    Matrix dZ2_temp = Z2 - Y;
 
-    // // Preview dZ2
-    // std::cout << "Matrix dZ2:" << std::endl;
-    // preview_matrix(&dZ2, 4);
+    // Preview dZ2
+    std::cout << "Matrix dZ2:" << std::endl;
+    preview_matrix(&dZ2_temp, 4);
     
 //////////////////////////////////////////////////////////////////
     // Calculate dW2
     // Transpose A1
-    Matrix* A1_transpose = transpose_matrix(&A1);
+    Matrix* A1 = transpose_matrix(&Z1);
 
     // // Preview A1
     // std::cout << "Matrix A1 Transposed:" << std::endl;
     // preview_matrix(A1, 4);
 
     // Multiply dZ2 with A1.T
-    Matrix dW2_temp = matmul(dZ2, *A1_transpose);
+    Matrix dW2_temp = matmul(dZ2_temp, *A1);
 
     // // Preview dW2
     // std::cout << "Matrix dW2:" << std::endl;
@@ -1124,7 +1055,7 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
 
 //////////////////////////////////////////////////////////////////
     // Calculate db2
-    Vector db2_temp = sum_columns(dZ2);
+    Vector db2_temp = sum_columns(dZ2_temp);
 
     // // Preview db2
     // std::cout << "Vector db2:" << std::endl;
@@ -1141,47 +1072,47 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
     // Calculate dZ1
     // // Preview previous layer's dZ
     // std::cout << "Matrix dZ_next:" << std::endl;
-    // preview_matrix(&dZ2, 4);
+    // preview_matrix(&dZ2_temp, 4);
 
     // Transpose W2 (next layer weights)
-    Matrix* W_next_transpose = transpose_matrix(layer2->W);
+    Matrix* W2_T = transpose_matrix(layer2->W);
 
-    // // Preview W_next_transpose
+    // // Preview W2_T
     // std::cout << "Matrix W2 Transposed:" << std::endl;
-    // preview_matrix(W_next_transpose, 4);
+    // preview_matrix(W2_T, 4);
     
     // Multiply W2.T with dZ2 (next layer dZ2)
-    Matrix dZ1_temp = matmul(*W_next_transpose, dZ2);
+    Matrix dZ1_temp = matmul(*W2_T, dZ2_temp);
     
-    // // Preview dZ1
-    // std::cout << "Matrix dZ1_temp:" << std::endl;
-    // preview_matrix(&dZ1_temp, 4);
+    // Preview dZ1
+    std::cout << "Matrix dZ1_temp:" << std::endl;
+    preview_matrix(&dZ1_temp, 4);
 
-    // // Preview Z1
-    // std::cout << "Matrix Z1:" << std::endl;
-    // preview_matrix(&Z1, 4);
+    // Preview Z1
+    std::cout << "Matrix Z1:" << std::endl;
+    preview_matrix(&Z1, 4);
     
     // Make a copy of Z1
-    Matrix Z1_deriv(Z1.rows, Z1.cols);
+    Matrix Z1_copy(Z1.rows, Z1.cols);
     for (int i = 0; i < Z1.rows; i++) {
         for (int j = 0; j < Z1.cols; j++) {
-            Z1_deriv.setValue(i, j, Z1.getValues(i, j));
+            Z1_copy.setValue(i, j, Z1.getValues(i, j));
         }
     }
 
-    // // Preview Z1_deriv
-    // std::cout << "Matrix Z1_deriv:" << std::endl;
-    // preview_matrix(&Z1_deriv, 4);
+    // Preview Z1_copy
+    std::cout << "Matrix Z1_copy:" << std::endl;
+    preview_matrix(&Z1_copy, 4);
 
-    // Apply Sigmoid derivative to Z1_deriv
-    sigmoid.derivative(Z1_deriv);
+    // Apply Sigmoid derivative to Z1_copy
+    sigmoid.derivative(Z1_copy);
 
-    // // Preview Z1_deriv after derivative
-    // std::cout << "Matrix Z1_deriv after derivative:" << std::endl;
-    // preview_matrix(&Z1_deriv, 4);
+    // Preview Z1_copy after derivative
+    std::cout << "Matrix Z1_copy after derivative:" << std::endl;
+    preview_matrix(&Z1_copy, 4);
 
     // Element wise multiplication derivative activated Z1
-    Matrix dZ1 = dZ1_temp * Z1_deriv;
+    Matrix dZ1 = dZ1_temp * Z1_copy;
    
     // // Preview dZ1
     // std::cout << "Matrix dZ1:" << std::endl;
@@ -1244,13 +1175,13 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
 
     // Preview Layer 2 dZ (from the test)
     std::cout << "Layer 2 dZ (from the test):" << std::endl;
-    preview_matrix(&dZ2, 4);
+    preview_matrix(&dZ2_temp, 4);
 
     // Check values
     for (int i = 0; i < nn.layers[1]->dZ->rows; i++) {
         for (int j = 0; j < nn.layers[1]->dZ->cols; j++) {
             ASSERT_NEAR(nn.layers[1]->dZ->getValues(i, j),
-                        dZ2.getValues(i, j), 1e-5);
+                        dZ2_temp.getValues(i, j), 1e-5);
         }
     }
 
@@ -1300,35 +1231,18 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
         }
     }
 
-    // Preview Layer 1 dW (from inside the neural network)
-    std::cout << "Layer 1 dW:" << std::endl;
-    preview_matrix(nn.layers[0]->dW, 4);
+    // // Preview Layer 1 dW (from inside the neural network)
+    // std::cout << "Layer 1 dW:" << std::endl;
+    // preview_matrix(nn.layers[0]->dW, 4);
+    // 
+    // // Check values
 
-    // Preview Layer 1 dW (from the test)
-    std::cout << "Layer 1 dW (from the test):" << std::endl;
-    preview_matrix(&dW1, 4);
+    // // Preview Layer 1 db (from inside the neural network)
+    // std::cout << "Layer 1 db:" << std::endl;
+    // preview_vector(nn.layers[0]->db, 4);
 
-    // Check values
-    for (int i = 0; i < nn.layers[0]->dW->rows; i++) {
-        for (int j = 0; j < nn.layers[0]->dW->cols; j++) {
-            ASSERT_NEAR(nn.layers[0]->dW->getValues(i, j),
-                        dW1.getValues(i, j), 1e-5);
-        }
-    }
+    // // Check values
 
-    // Preview Layer 1 db (from inside the neural network)
-    std::cout << "Layer 1 db:" << std::endl;
-    preview_vector(nn.layers[0]->db, 4);
-
-    // Preview Layer 1 db (from the test)
-    std::cout << "Layer 1 db (from the test):" << std::endl;
-    preview_vector(&db1, 4);
-
-    // Check values
-    for (int i = 0; i < nn.layers[0]->db->rows; i++) {
-        ASSERT_NEAR(nn.layers[0]->db->getValues(i),
-                    db1.getValues(i), 1e-5);
-    }
 }
 
 ////////////////////////////////////////////////////////////////////

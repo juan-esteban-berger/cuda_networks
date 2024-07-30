@@ -212,20 +212,20 @@ void NeuralNetwork::forward(Matrix& X) {
 void NeuralNetwork::backward(Matrix& X,
                              Matrix& Y,
                              std::string loss_func) {
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 // Function Setup
     // Get Number of Examples
     int m = X.cols;
-    // std::cout << "Number of Columns: " << m << std::endl;
+    std::cout << "Number of Columns: " << m << std::endl;
 
     // Initialize Sigmoid Object
     Sigmoid sigmoid;
     
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
     // Iterate through each layer reverse
     for (int i = layers.size() - 1; i >= 0; i--) {
 
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 // Initialize matrices for gradients
         // Initialize a Matrix for current layer's dZ
         layers[i]->dZ = new Matrix(layers[i]->A->rows, layers[i]->A->cols);
@@ -236,12 +236,12 @@ void NeuralNetwork::backward(Matrix& X,
         // Initialize a Vector for current layer's db
         layers[i]->db = new Vector(layers[i]->b->rows);
 
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 // Initialize pointer to current layer
         // Pointer to layer
         Layer* layer = layers[i];
 
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 // Calculate dZ
         // Calculate dZ: if last layer and loss is CatCrossEntropy
         if (i == layers.size() - 1 && loss_func == "CatCrossEntropy") {
@@ -282,39 +282,40 @@ void NeuralNetwork::backward(Matrix& X,
             // Multiply W_next.T with dZ_next
             Matrix dZ_temp = matmul(*W_next_transpose, *dZ_next);
 
-            // // Preview dZ_temp
-            // std::cout << "Matrix dZ_temp: " << std::endl;
-            // preview_matrix(&dZ_temp, 4);
+            // Preview dZ_temp
+            std::cout << "Matrix dZ_temp: " << std::endl;
+            preview_matrix(&dZ_temp, 4);
 
-            // // Preview layer's Z
-            // std::cout << "Matrix Z1: " << std::endl;
-            // preview_matrix(layers[i]->Z, 4);
+            // Preview layer's Z
+            std::cout << "Matrix Z: " << std::endl;
+            preview_matrix(layers[i]->Z, 4);
 
-            // Make a copy of pervious layers Z
-            Matrix Z_deriv(layers[i]->Z->rows, layers[i]->Z->cols);
-            for (int row = 0; row < layers[i]->Z->rows; row++) {
-                for (int col = 0; col < layers[i]->Z->cols; col++) {
-                    Z_deriv.setValue(row, col,
-                    layers[i]->Z->getValues(row, col));
+            // Craete new matrix for derivative activated dZ
+            Matrix Z_dev_act = Matrix(dZ_temp.rows, dZ_temp.cols);
+
+            // Copy values from the layer's Z to Z_dev_act
+            for (int i = 0; i < dZ_temp.rows; i++) {
+                for (int j = 0; j < dZ_temp.cols; j++) {
+                    Z_dev_act.setValue(i, j, layers[i]->Z->getValues(i, j));
                 }
             }
 
-            // // Preview Z_deriv
-            // std::cout << "Matrix Z1_deriv: " << std::endl;
-            // preview_matrix(&Z_deriv, 4);
+            // Preview Z_dev_act
+            std::cout << "Matrix Z1_copy: " << std::endl;
+            preview_matrix(&Z_dev_act, 4);
 
             if (layers[i]->activation == "Sigmoid") {
                 // Compute Sigmoid derivative
-                sigmoid.derivative(Z_deriv);
+                sigmoid.derivative(Z_dev_act);
             }
 
-            // // Preview Z_deriv
-            // std::cout << "Matrix Z_deriv after derivative: " << std::endl;
-            // preview_matrix(&Z_deriv, 4);
+            // Preview Z_dev_act
+            std::cout << "Matrix Z_dev_act: " << std::endl;
+            preview_matrix(&Z_dev_act, 4);
 
-            // Elementwise Matrix Multiplication of dZ_temp and Z_deriv
+            // Elementwise Matrix Multiplication of dZ_temp and Z_dev_act
             // use overloaded operator *
-            Matrix dZ = dZ_temp * Z_deriv;
+            Matrix dZ = dZ_temp * Z_dev_act;
 
             // // Preview dZ
             // std::cout << "Matrix dZ: " << std::endl;
@@ -333,7 +334,7 @@ void NeuralNetwork::backward(Matrix& X,
         // std::cout << "Matrix dZ directly from layer: " << std::endl;
         // preview_matrix(layers[i]->dZ, 4);
 
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 // Calculate dW
         // Calculate dW: all except the first layer
         if (i != 0) {
@@ -400,7 +401,7 @@ void NeuralNetwork::backward(Matrix& X,
         // std::cout << "Matrix dW directly from layer: " << std::endl;
         // preview_matrix(layers[i]->dW, 4);
 
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 // Calculate db
         // Sum columns of dZ
         Vector db_temp = sum_columns(*layers[i]->dZ);
