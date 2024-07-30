@@ -228,10 +228,12 @@ void NeuralNetwork::backward(Matrix& X,
 //////////////////////////////////////////////////////////////////
 // Initialize matrices for gradients
         // Initialize a Matrix for current layer's dZ
-        layers[i]->dZ = new Matrix(layers[i]->A->rows, layers[i]->A->cols);
+        layers[i]->dZ = new Matrix(layers[i]->A->rows,
+                                   layers[i]->A->cols);
 
         // Initialize a Matrix for current layer's dW
-        layers[i]->dW = new Matrix(layers[i]->W->rows, layers[i]->W->cols);
+        layers[i]->dW = new Matrix(layers[i]->W->rows,
+                                   layers[i]->W->cols);
 
         // Initialize a Vector for current layer's db
         layers[i]->db = new Vector(layers[i]->b->rows);
@@ -248,10 +250,6 @@ void NeuralNetwork::backward(Matrix& X,
             // Matrix dZ_temp
             Matrix dZ_temp = *layers[i]->A - Y;
 
-            // // Preview dZ
-            // std::cout << "Matrix dZ: " << std::endl;
-            // preview_matrix(&dZ_temp, 4);
-
             // Copy the values to layer's dZ using the pointer to layer
             for (int i = 0; i < dZ_temp.rows; i++) {
                 for (int j = 0; j < dZ_temp.cols; j++) {
@@ -265,30 +263,14 @@ void NeuralNetwork::backward(Matrix& X,
             // Get the next layer's dZ
             Matrix* dZ_next = layers[i + 1]->dZ;
             
-            // // Preview dZ_next
-            // std::cout << "Matrix dZ_next: " << std::endl;
-            // preview_matrix(dZ_next, 4);
-
             // Get the next layer's W
             Matrix* W_next = layers[i + 1]->W;
 
             // Transpose Matrix W_next
             Matrix* W_next_transpose = transpose_matrix(W_next);
 
-            // // Preview Transpose Matrix
-            // std::cout << "Matrix W_next Transpose: " << std::endl;
-            // preview_matrix(W_next_transpose, 4);
-
             // Multiply W_next.T with dZ_next
             Matrix dZ_temp = matmul(*W_next_transpose, *dZ_next);
-
-            // // Preview dZ_temp
-            // std::cout << "Matrix dZ_temp: " << std::endl;
-            // preview_matrix(&dZ_temp, 4);
-
-            // // Preview layer's Z
-            // std::cout << "Matrix Z1: " << std::endl;
-            // preview_matrix(layers[i]->Z, 4);
 
             // Make a copy of pervious layers Z
             Matrix Z_deriv(layers[i]->Z->rows, layers[i]->Z->cols);
@@ -299,26 +281,12 @@ void NeuralNetwork::backward(Matrix& X,
                 }
             }
 
-            // // Preview Z_deriv
-            // std::cout << "Matrix Z1_deriv: " << std::endl;
-            // preview_matrix(&Z_deriv, 4);
-
             if (layers[i]->activation == "Sigmoid") {
                 // Compute Sigmoid derivative
                 sigmoid.derivative(Z_deriv);
             }
 
-            // // Preview Z_deriv
-            // std::cout << "Matrix Z_deriv after derivative: " << std::endl;
-            // preview_matrix(&Z_deriv, 4);
-
-            // Elementwise Matrix Multiplication of dZ_temp and Z_deriv
-            // use overloaded operator *
             Matrix dZ = dZ_temp * Z_deriv;
-
-            // // Preview dZ
-            // std::cout << "Matrix dZ: " << std::endl;
-            // preview_matrix(&dZ, 4);
 
             // Copy the values to layer's dZ using the pointer to layer
             for (int i = 0; i < dZ.rows; i++) {
@@ -329,10 +297,6 @@ void NeuralNetwork::backward(Matrix& X,
             
         }
 
-        // // Preview dZ
-        // std::cout << "Matrix dZ directly from layer: " << std::endl;
-        // preview_matrix(layers[i]->dZ, 4);
-
 //////////////////////////////////////////////////////////////////
 // Calculate dW
         // Calculate dW: all except the first layer
@@ -340,23 +304,11 @@ void NeuralNetwork::backward(Matrix& X,
             // Transpose Matrix Previous Layer's A
             Matrix* A_transpose = transpose_matrix(layers[i - 1]->A);
 
-            // // Preview Transpose Matrix
-            // std::cout << "Matrix A Transpose: " << std::endl;
-            // preview_matrix(A_transpose, 4);
-
             // Multiply dZ with A.T
             Matrix dW_temp = matmul(*layers[i]->dZ, *A_transpose);
 
-            // // Preview dW
-            // std::cout << "Matrix dW_temp: " << std::endl;
-            // preview_matrix(&dW_temp, 4);
-
             // Divide by scalar (operator overload for /)
             Matrix dW = dW_temp / m;
-
-            // // Preview dW
-            // std::cout << "Matrix dW after division: " << std::endl;
-            // preview_matrix(&dW, 4);
 
             // Copy the values to layer's dW using the pointer to layer
             for (int i = 0; i < dW.rows; i++) {
@@ -370,23 +322,11 @@ void NeuralNetwork::backward(Matrix& X,
             // Transpose Matrix X
             Matrix* X_transpose = transpose_matrix(&X);
 
-            // // Preview Transpose Matrix
-            // std::cout << "Matrix X Transpose: " << std::endl;
-            // preview_matrix(X_transpose, 4);
-
             // Multiply dZ with X.T
             Matrix dW_temp = matmul(*layers[i]->dZ, *X_transpose);
 
-            // // Preview dW
-            // std::cout << "Matrix dW_temp: " << std::endl;
-            // preview_matrix(&dW_temp, 4);
-
             // Divide by scalar (operator overload for /)
             Matrix dW = dW_temp / m;
-
-            // // Preview dW
-            // std::cout << "Matrix dW after division: " << std::endl;
-            // preview_matrix(&dW, 4);
 
             // Copy the values to layer's dW using the pointer to layer
             for (int i = 0; i < dW.rows; i++) {
@@ -396,35 +336,59 @@ void NeuralNetwork::backward(Matrix& X,
             }
         }
 
-        // // Preview dW
-        // std::cout << "Matrix dW directly from layer: " << std::endl;
-        // preview_matrix(layers[i]->dW, 4);
-
 //////////////////////////////////////////////////////////////////
 // Calculate db
         // Sum columns of dZ
         Vector db_temp = sum_columns(*layers[i]->dZ);
 
-        // // Preview db
-        // std::cout << "Vector db_temp: " << std::endl;
-        // preview_vector(&db_temp, 4);
-
         // Divide by scalar (operator overload for /)
         Vector db = db_temp / m;
-
-        // // Preview db
-        // std::cout << "Vector db after division: " << std::endl;
-        // preview_vector(&db, 4);
 
         // Copy the values to layer's db using the pointer to layer
         for (int i = 0; i < db.rows; i++) {
             layer->db->setValue(i, db.getValues(i));
         }
-
-        // // Preview db
-        // std::cout << "Vector db directly from layer: " << std::endl;
-        // preview_vector(layer->db, 4);
     }
+}
 
-    std::cout << "Got to end of function." << m << std::endl;
+//////////////////////////////////////////////////////////////////
+void NeuralNetwork::update_params(double learning_rate) {
+    // Iterate through each layer using index
+    for (int idx = 0; idx < layers.size(); idx++) {
+        Layer* layer = layers[idx];
+
+        // Update weights
+        for (int i = 0; i < layer->W->rows; i++) {
+            for (int j = 0; j < layer->W->cols; j++) {
+                // Get current weight and gradient
+                double current_weight = layer->W->getValues(i, j);
+                double gradient_weight = layer->dW->getValues(i, j);
+
+                // Multiply gradient by learning rate
+                double weight_delta = learning_rate * gradient_weight;
+
+                // Update weight
+                double updated_weight = current_weight - weight_delta;
+
+                // Set new weight
+                layer->W->setValue(i, j, updated_weight);
+            }
+        }
+
+        // Update biases
+        for (int i = 0; i < layer->b->rows; i++) {
+            // Get current bias and gradient
+            double current_bias = layer->b->getValues(i);
+            double gradient_bias = layer->db->getValues(i);
+
+            // Multiply gradient by learning rate
+            double bias_delta = learning_rate * gradient_bias;
+
+            // Update bias
+            double updated_bias = current_bias - bias_delta;
+
+            // Set new bias
+            layer->b->setValue(i, updated_bias);
+        }
+    }
 }

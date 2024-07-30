@@ -1082,10 +1082,6 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
         }
     }
 
-    // // Preview input matrix
-    // std::cout << "Output Matrix Y:" << std::endl;
-    // preview_matrix(&Y, 4);
-
 //////////////////////////////////////////////////////////////////
     // Get Number of Examples
     int m = X.cols;
@@ -1094,72 +1090,32 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
 //////////////////////////////////////////////////////////////////
     // Calculate dZ2
     Matrix dZ2 = A2 - Y;
-
-    // // Preview dZ2
-    // std::cout << "Matrix dZ2:" << std::endl;
-    // preview_matrix(&dZ2, 4);
     
 //////////////////////////////////////////////////////////////////
     // Calculate dW2
     // Transpose A1
     Matrix* A1_transpose = transpose_matrix(&A1);
 
-    // // Preview A1
-    // std::cout << "Matrix A1 Transposed:" << std::endl;
-    // preview_matrix(A1, 4);
-
     // Multiply dZ2 with A1.T
     Matrix dW2_temp = matmul(dZ2, *A1_transpose);
 
-    // // Preview dW2
-    // std::cout << "Matrix dW2:" << std::endl;
-    // preview_matrix(&dW2_temp, 4);
-
     // Divide by number of examples
     Matrix dW2 = dW2_temp / m;
-
-    // // Preview dW2
-    // std::cout << "Matrix dW2 after division:" << std::endl;
-    // preview_matrix(&dW2, 4);
 
 //////////////////////////////////////////////////////////////////
     // Calculate db2
     Vector db2_temp = sum_columns(dZ2);
 
-    // // Preview db2
-    // std::cout << "Vector db2:" << std::endl;
-    // preview_vector(&db2_temp, 4);
-
     // Divide by number of examples
     Vector db2 = db2_temp / m;
 
-    // // Preview db2 after division
-    // std::cout << "Vector db2 after division:" << std::endl;
-    // preview_vector(&db2, 4);
-
 //////////////////////////////////////////////////////////////////
     // Calculate dZ1
-    // // Preview previous layer's dZ
-    // std::cout << "Matrix dZ_next:" << std::endl;
-    // preview_matrix(&dZ2, 4);
-
     // Transpose W2 (next layer weights)
     Matrix* W_next_transpose = transpose_matrix(layer2->W);
 
-    // // Preview W_next_transpose
-    // std::cout << "Matrix W2 Transposed:" << std::endl;
-    // preview_matrix(W_next_transpose, 4);
-    
     // Multiply W2.T with dZ2 (next layer dZ2)
     Matrix dZ1_temp = matmul(*W_next_transpose, dZ2);
-    
-    // // Preview dZ1
-    // std::cout << "Matrix dZ1_temp:" << std::endl;
-    // preview_matrix(&dZ1_temp, 4);
-
-    // // Preview Z1
-    // std::cout << "Matrix Z1:" << std::endl;
-    // preview_matrix(&Z1, 4);
     
     // Make a copy of Z1
     Matrix Z1_deriv(Z1.rows, Z1.cols);
@@ -1169,63 +1125,31 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
         }
     }
 
-    // // Preview Z1_deriv
-    // std::cout << "Matrix Z1_deriv:" << std::endl;
-    // preview_matrix(&Z1_deriv, 4);
-
     // Apply Sigmoid derivative to Z1_deriv
     sigmoid.derivative(Z1_deriv);
-
-    // // Preview Z1_deriv after derivative
-    // std::cout << "Matrix Z1_deriv after derivative:" << std::endl;
-    // preview_matrix(&Z1_deriv, 4);
 
     // Element wise multiplication derivative activated Z1
     Matrix dZ1 = dZ1_temp * Z1_deriv;
    
-    // // Preview dZ1
-    // std::cout << "Matrix dZ1:" << std::endl;
-    // preview_matrix(&dZ1, 4);
-    
 //////////////////////////////////////////////////////////////////
     // Calculate dW1
     // Transpose X
     Matrix* X_T = transpose_matrix(&X);
 
-    // // Preview X_T
-    // std::cout << "Matrix X Transposed:" << std::endl;
-    // preview_matrix(X_T, 4);
-
     // Multiply current layer dZ (dZ1) with X.T
     Matrix dW1_temp = matmul(dZ1, *X_T);
 
-    // // Preview dW1
-    // std::cout << "Matrix dW1_temp:" << std::endl;
-    // preview_matrix(&dW1_temp, 4);
-
     // Divide by number of examples
     Matrix dW1 = dW1_temp / m;
-
-    // // Preview dW1 after division
-    // std::cout << "Matrix dW1 after division:" << std::endl;
-    // preview_matrix(&dW1, 4);
 
 //////////////////////////////////////////////////////////////////
     // Calculate db1
     // Sum columns of dZ1
     Vector db1_temp = sum_columns(dZ1);
 
-    // // Preview db1
-    // std::cout << "Vector db1_temp:" << std::endl;
-    // preview_vector(&db1_temp, 4);
-    
     // Divide by number of examples
     Vector db1 = db1_temp / m;
 
-    // // Preview db1 after division
-    // std::cout << "Vector db1 after division:" << std::endl;
-    // preview_vector(&db1, 4);
-    
 //////////////////////////////////////////////////////////////////
     // Test backward propagation function
     // Print divider
@@ -1328,6 +1252,594 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
     for (int i = 0; i < nn.layers[0]->db->rows; i++) {
         ASSERT_NEAR(nn.layers[0]->db->getValues(i),
                     db1.getValues(i), 1e-5);
+    }
+}
+
+TEST(NeuralNetworkTest, UpdateParamsTest) {
+//////////////////////////////////////////////////////////////////
+    // Forward Propagation Section
+//////////////////////////////////////////////////////////////////
+    // Initialize input matrix
+    Matrix X(3, 2);  // 3 features, 2 examples
+    // Initialize 2D array for inputs
+    double X_values[3][2] = {{1, 4}, {2, 5}, {3, 6}};
+    // Loop over rows
+    for (int i = 0; i < 3; i++) {
+        // Loop over columns
+        for (int j = 0; j < 2; j++) {
+            X.setValue(i, j, X_values[i][j]);
+        }
+    }
+
+    // Preview input matrix
+    std::cout << "Input Matrix X:" << std::endl;
+    preview_matrix(&X, 2);
+
+//////////////////////////////////////////////////////////////////
+    // Create a simple neural network
+    NeuralNetwork nn;
+    Layer* layer1 = new Layer(3, 2, "Sigmoid");
+    Layer* layer2 = new Layer(2, 2, "Softmax");
+
+//////////////////////////////////////////////////////////////////
+    // Initialize 2D arrays for weights
+    double W1_values[2][3] = {{0.1, 0.2, 0.3}, {0.4, 0.5, 0.6}};
+    // Initialize 1D arrays for biases
+    double b1_values[2] = {0.1, 0.2};
+    // Loop over rows
+    for (int i = 0; i < 2; i++) {
+        // Loop over columns
+        for (int j = 0; j < 3; j++) {
+            layer1->W->setValue(i, j, W1_values[i][j]);
+        }
+        layer1->b->setValue(i, b1_values[i]);
+    }
+
+    // Preview layer 1 weights
+    std::cout << "Layer 1 Weights:" << std::endl;
+    preview_matrix(layer1->W, 4);
+
+    // Preview layer 1 biases
+    std::cout << "Layer 1 Biases:" << std::endl;
+    preview_vector(layer1->b, 4);
+
+//////////////////////////////////////////////////////////////////
+    // Initialize 2D arrays for weights
+    double W2_values[2][2] = {{0.7, 0.8}, {0.9, 1.0}};
+    // Initialize 1D arrays for biases
+    double b2_values[2] = {0.3, 0.4};
+    // Loop over rows
+    for (int i = 0; i < 2; i++) {
+        // Loop over columns
+        for (int j = 0; j < 2; j++) {
+            layer2->W->setValue(i, j, W2_values[i][j]);
+        }
+        layer2->b->setValue(i, b2_values[i]);
+    }
+
+    // Preview layer 2 weights
+    std::cout << "Layer 2 Weights:" << std::endl;
+    preview_matrix(layer2->W, 4);
+
+    // Preview layer 2 biases
+    std::cout << "Layer 2 Biases:" << std::endl;
+    preview_vector(layer2->b, 4);
+
+//////////////////////////////////////////////////////////////////
+    // Calculate Z1
+    // Multiply weights with input
+    Matrix Z1_temp = matmul(*layer1->W, X);
+    // Initialize matrix for Z1
+    Matrix Z1(Z1_temp.rows, Z1_temp.cols);
+    // Loop over rows
+    for (int i = 0; i < Z1.rows; i++) {
+        // Loop over columns
+        for (int j = 0; j < Z1.cols; j++) {
+            // Add bias to the result
+            Z1.setValue(i, j,
+                        Z1_temp.getValues(i, j) + layer1->b->getValues(i));
+        }
+    }
+    // Preview Z1
+    std::cout << "Manual Z1:" << std::endl;
+    preview_matrix(&Z1, 4);
+    
+//////////////////////////////////////////////////////////////////
+    // Calculate A1
+    Matrix A1(Z1.rows, Z1.cols);
+    // Loop over rows
+    for (int i = 0; i < Z1.rows; i++) {
+        // Loop over columns
+        for (int j = 0; j < Z1.cols; j++) {
+            // Set values
+            A1.setValue(i, j, Z1.getValues(i, j));
+        }
+    }
+    // Initialize Sigmoid object
+    Sigmoid sigmoid;
+    // Apply Sigmoid function
+    sigmoid.function(A1);
+
+    // Preview Activated Z1
+    std::cout << "Activated Z1:" << std::endl;
+    preview_matrix(&A1, 4);
+
+//////////////////////////////////////////////////////////////////
+    // Calculate Z2
+    // Multiply weights with A1
+    Matrix Z2_temp = matmul(*layer2->W, A1);
+    // Initialize matrix for Z2
+    Matrix Z2(Z2_temp.rows, Z2_temp.cols);
+    // Loop over rows
+    for (int i = 0; i < Z2.rows; i++) {
+        // Loop over columns
+        for (int j = 0; j < Z2.cols; j++) {
+            // Add bias to the result
+            Z2.setValue(i, j,
+                        Z2_temp.getValues(i, j) + layer2->b->getValues(i));
+        }
+    }
+
+    // Preview Z2
+    std::cout << "Manual Z2:" << std::endl;
+    preview_matrix(&Z2, 4);
+
+//////////////////////////////////////////////////////////////////
+    // Calculate A2
+    Matrix A2(Z2.rows, Z2.cols);
+    // Loop over rows
+    for (int i = 0; i < Z2.rows; i++) {
+        // Loop over columns
+        for (int j = 0; j < Z2.cols; j++) {
+            // Set values
+            A2.setValue(i, j, Z2.getValues(i, j));
+        }
+    }
+
+    // Initialize Softmax object
+    Softmax softmax;
+    // Apply Softmax function
+    softmax.function(A2);
+
+    // Preview A2
+    std::cout << "Activated Z2 (final output):" << std::endl;
+    preview_matrix(&A2, 4);
+
+//////////////////////////////////////////////////////////////////
+    // Test Forward Function
+    // Add layers to the neural network
+    nn.add_layer(layer1);
+    nn.add_layer(layer2);
+
+    // Run forward propagation
+    nn.forward(X);
+
+//////////////////////////////////////////////////////////////////
+    // Check Z and A Matrices
+    // Get Z1 from neural network
+    Matrix* Z1_nn = nn.layers[0]->Z;
+    
+    // Preview Z1 from neural network
+    std::cout << "Neural Network Z1:" << std::endl;
+    preview_matrix(Z1_nn, 4);
+
+    // Preview Z1 from Test
+    std::cout << "Manual Z1:" << std::endl;
+    preview_matrix(&Z1, 4);
+
+    // Get A1 from neural network
+    Matrix* A1_nn = nn.layers[0]->A;
+
+    // Preview A1 from neural network
+    std::cout << "Neural Network A1:" << std::endl;
+    preview_matrix(A1_nn, 4);
+
+    // Preview A1 from Test
+    std::cout << "Manual A1:" << std::endl;
+    preview_matrix(&A1, 4);
+
+    // Get Z2 from neural network
+    Matrix* Z2_nn = nn.layers[1]->Z;
+
+    // Preview Z2 from neural network
+    std::cout << "Neural Network Z2:" << std::endl;
+    preview_matrix(Z2_nn, 4);
+
+    // Preview Z2 from Test
+    std::cout << "Manual Z2:" << std::endl;
+    preview_matrix(&Z2, 4);
+
+    // Preview A2 from neural network
+    Matrix* A2_nn = nn.layers[1]->A;
+
+    // Preview A2 from neural network
+    std::cout << "Neural Network A2:" << std::endl;
+    preview_matrix(A2_nn, 4);
+
+    // Preview A2 from Test
+    std::cout << "Manual A2:" << std::endl;
+    preview_matrix(&A2, 4);
+
+//////////////////////////////////////////////////////////////////
+    // Check output values
+    // Get the output of the last layer
+    Matrix* output = nn.getOutput();
+
+    // Preview Neural Network output
+    std::cout << "Neural Network output:" << std::endl;
+    preview_matrix(output, 4);
+
+    // Preview output from test
+    std::cout << "Manual Z2:" << std::endl;
+    preview_matrix(&A2, 4);
+
+    // Check values
+    for (int i = 0; i < output->rows; i++) {
+        for (int j = 0; j < output->cols; j++) {
+            ASSERT_NEAR(output->getValues(i, j),
+                        A2.getValues(i, j), 1e-5);
+        }
+    }
+
+//////////////////////////////////////////////////////////////////
+    // Backward Propagation Section
+    // Print divider
+    std::cout << "________________________________" << std::endl;
+//////////////////////////////////////////////////////////////////
+    // Initialize output matrix
+    Matrix Y(2, 2);  // 2 outputs, 2 examples
+    // Initialize 2D array for inputs
+    double Y_values[3][2] = {{0, 0}, {1, 1}};
+    // Loop over rows
+    for (int i = 0; i < 2; i++) {
+        // Loop over columns
+        for (int j = 0; j < 2; j++) {
+            Y.setValue(i, j, Y_values[i][j]);
+        }
+    }
+
+//////////////////////////////////////////////////////////////////
+    // Get Number of Examples
+    int m = X.cols;
+    // std::cout << "Number of columns: " << m << "\n";
+
+//////////////////////////////////////////////////////////////////
+    // Calculate dZ2
+    Matrix dZ2 = A2 - Y;
+    
+//////////////////////////////////////////////////////////////////
+    // Calculate dW2
+    // Transpose A1
+    Matrix* A1_transpose = transpose_matrix(&A1);
+
+    // Multiply dZ2 with A1.T
+    Matrix dW2_temp = matmul(dZ2, *A1_transpose);
+
+    // Divide by number of examples
+    Matrix dW2 = dW2_temp / m;
+
+//////////////////////////////////////////////////////////////////
+    // Calculate db2
+    Vector db2_temp = sum_columns(dZ2);
+
+    // Divide by number of examples
+    Vector db2 = db2_temp / m;
+
+//////////////////////////////////////////////////////////////////
+    // Calculate dZ1
+    // Transpose W2 (next layer weights)
+    Matrix* W_next_transpose = transpose_matrix(layer2->W);
+
+    // Multiply W2.T with dZ2 (next layer dZ2)
+    Matrix dZ1_temp = matmul(*W_next_transpose, dZ2);
+    
+    // Make a copy of Z1
+    Matrix Z1_deriv(Z1.rows, Z1.cols);
+    for (int i = 0; i < Z1.rows; i++) {
+        for (int j = 0; j < Z1.cols; j++) {
+            Z1_deriv.setValue(i, j, Z1.getValues(i, j));
+        }
+    }
+
+    // Apply Sigmoid derivative to Z1_deriv
+    sigmoid.derivative(Z1_deriv);
+
+    // Element wise multiplication derivative activated Z1
+    Matrix dZ1 = dZ1_temp * Z1_deriv;
+   
+//////////////////////////////////////////////////////////////////
+    // Calculate dW1
+    // Transpose X
+    Matrix* X_T = transpose_matrix(&X);
+
+    // Multiply current layer dZ (dZ1) with X.T
+    Matrix dW1_temp = matmul(dZ1, *X_T);
+
+    // Divide by number of examples
+    Matrix dW1 = dW1_temp / m;
+
+//////////////////////////////////////////////////////////////////
+    // Calculate db1
+    // Sum columns of dZ1
+    Vector db1_temp = sum_columns(dZ1);
+
+    // Divide by number of examples
+    Vector db1 = db1_temp / m;
+
+//////////////////////////////////////////////////////////////////
+    // Test backward propagation function
+    // Print divider
+    std::cout << "________________________________" << std::endl;
+
+    // Run backward propagation
+    nn.backward(X,Y,"CatCrossEntropy");
+
+//////////////////////////////////////////////////////////////////
+    // Print divider
+    std::cout << "________________________________" << std::endl;
+
+    // Preview Layer 2 dZ (from inside the neural network)
+    std::cout << "Layer 2 dZ:" << std::endl;
+    preview_matrix(nn.layers[1]->dZ, 4);
+
+    // Preview Layer 2 dZ (from the test)
+    std::cout << "Layer 2 dZ (from the test):" << std::endl;
+    preview_matrix(&dZ2, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[1]->dZ->rows; i++) {
+        for (int j = 0; j < nn.layers[1]->dZ->cols; j++) {
+            ASSERT_NEAR(nn.layers[1]->dZ->getValues(i, j),
+                        dZ2.getValues(i, j), 1e-5);
+        }
+    }
+
+    // Preview Layer 2 dW (from inside the neural network)
+    std::cout << "Layer 2 dW:" << std::endl;
+    preview_matrix(nn.layers[1]->dW, 4);
+
+    // Preview Layer 2 dW (from the test)
+    std::cout << "Layer 2 dW (from the test):" << std::endl;
+    preview_matrix(&dW2, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[1]->dW->rows; i++) {
+        for (int j = 0; j < nn.layers[1]->dW->cols; j++) {
+            ASSERT_NEAR(nn.layers[1]->dW->getValues(i, j),
+                        dW2.getValues(i, j), 1e-5);
+        }
+    }
+
+    // Preview Layer 2 db (from inside the neural network)
+    std::cout << "Layer 2 db:" << std::endl;
+    preview_vector(nn.layers[1]->db, 4);
+
+    // Preview Layer 2 db (from the test)
+    std::cout << "Layer 2 db (from the test):" << std::endl;
+    preview_vector(&db2, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[1]->db->rows; i++) {
+        ASSERT_NEAR(nn.layers[1]->db->getValues(i),
+                    db2.getValues(i), 1e-5);
+    }
+
+    // Preview Layer 1 dZ (from inside the neural network)
+    std::cout << "Layer 1 dZ:" << std::endl;
+    preview_matrix(nn.layers[0]->dZ, 4);
+
+    // Preview Layer 1 dZ (from the test)
+    std::cout << "Layer 1 dZ (from the test):" << std::endl;
+    preview_matrix(&dZ1, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[0]->dZ->rows; i++) {
+        for (int j = 0; j < nn.layers[0]->dZ->cols; j++) {
+            ASSERT_NEAR(nn.layers[0]->dZ->getValues(i, j),
+                        dZ1.getValues(i, j), 1e-5);
+        }
+    }
+
+    // Preview Layer 1 dW (from inside the neural network)
+    std::cout << "Layer 1 dW:" << std::endl;
+    preview_matrix(nn.layers[0]->dW, 4);
+
+    // Preview Layer 1 dW (from the test)
+    std::cout << "Layer 1 dW (from the test):" << std::endl;
+    preview_matrix(&dW1, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[0]->dW->rows; i++) {
+        for (int j = 0; j < nn.layers[0]->dW->cols; j++) {
+            ASSERT_NEAR(nn.layers[0]->dW->getValues(i, j),
+                        dW1.getValues(i, j), 1e-5);
+        }
+    }
+
+    // Preview Layer 1 db (from inside the neural network)
+    std::cout << "Layer 1 db:" << std::endl;
+    preview_vector(nn.layers[0]->db, 4);
+
+    // Preview Layer 1 db (from the test)
+    std::cout << "Layer 1 db (from the test):" << std::endl;
+    preview_vector(&db1, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[0]->db->rows; i++) {
+        ASSERT_NEAR(nn.layers[0]->db->getValues(i),
+                    db1.getValues(i), 1e-5);
+    }
+//////////////////////////////////////////////////////////////////
+    // Update Parameters Section
+    double learning_rate = 0.01;
+
+    // Create matrix for W2_test
+    Matrix W2_test(layer2->W->rows, layer2->W->cols);
+    for (int i = 0; i < layer2->W->rows; i++) {
+        for (int j = 0; j < layer2->W->cols; j++) {
+            W2_test.setValue(i, j, layer2->W->getValues(i, j));
+        }
+    }
+
+    // Create matrix for b2_test
+    Vector b2_test(layer2->b->rows);
+    for (int i = 0; i < layer2->b->rows; i++) {
+        b2_test.setValue(i, layer2->b->getValues(i));
+    }
+
+    // Create matrix for W1_test
+    Matrix W1_test(layer1->W->rows, layer1->W->cols);
+    for (int i = 0; i < layer1->W->rows; i++) {
+        for (int j = 0; j < layer1->W->cols; j++) {
+            W1_test.setValue(i, j, layer1->W->getValues(i, j));
+        }
+    }
+
+    // Create matrix for b1_test
+    Vector b1_test(layer1->b->rows);
+    for (int i = 0; i < layer1->b->rows; i++) {
+        b1_test.setValue(i, layer1->b->getValues(i));
+    }
+
+//////////////////////////////////////////////////////////////////
+    // Update W2
+    for (int i = 0; i < layer2->W->rows; i++) {
+        for (int j = 0; j < layer2->W->cols; j++) {
+            // Get current weight and gradient
+            double current_weight = layer2->W->getValues(i, j);
+            double current_gradient = dW2.getValues(i, j);
+
+            // Multiply gradient by learning rate
+            double weight_delta = learning_rate * current_gradient;
+
+            // Update weight
+            double update_weight = current_weight - weight_delta;
+
+            // Set new weight
+            W2_test.setValue(i, j, update_weight);
+        }
+    }
+
+//////////////////////////////////////////////////////////////////
+    // Update b2
+    for (int i = 0; i < layer2->b->rows; i++) {
+        // Get current bias and gradient
+        double current_bias = layer2->b->getValues(i);
+        double gradient_bias = db2.getValues(i);
+
+        // Multiply gradient by learning rate
+        double bias_delta = learning_rate * gradient_bias;
+
+        // Update bias
+        double update_bias = current_bias - bias_delta;
+
+        // Set new bias
+        b2_test.setValue(i, update_bias);
+    }
+
+//////////////////////////////////////////////////////////////////
+    // Update W1
+    for (int i = 0; i < layer1->W->rows; i++) {
+        for (int j = 0; j < layer1->W->cols; j++) {
+            // Get current weight and gradient
+            double current_weight = layer1->W->getValues(i, j);
+            double current_gradient = dW1.getValues(i, j);
+
+            // Multiply gradient by learning rate
+            double weight_delta = learning_rate * current_gradient;
+
+            // Update weight
+            double update_weight = current_weight - weight_delta;
+
+            // Set new weight
+            W1_test.setValue(i, j, update_weight);
+        }
+    }
+
+//////////////////////////////////////////////////////////////////
+    // Update b1
+    for (int i = 0; i < layer1->b->rows; i++) {
+        // Get current bias and gradient
+        double current_bias = layer1->b->getValues(i);
+        double gradient_bias = db1.getValues(i);
+
+        // Multiply gradient by learning rate
+        double bias_delta = learning_rate * gradient_bias;
+
+        // Update bias
+        double update_bias = current_bias - bias_delta;
+
+        // Set new bias
+        b1_test.setValue(i, update_bias);
+    }
+
+//////////////////////////////////////////////////////////////////
+// Run the Update Parameters function
+    nn.update_params(learning_rate);
+
+//////////////////////////////////////////////////////////////////
+    // Test update parameters functions
+    // Print divider
+    std::cout << "________________________________" << std::endl;
+
+    // Preview W2_test
+    std::cout << "W2_test:" << std::endl;
+    preview_matrix(&W2_test, 4);
+
+    // Preview W2 from neural network
+    std::cout << "Neural Network W2:" << std::endl;
+    preview_matrix(nn.layers[1]->W, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[1]->W->rows; i++) {
+        for (int j = 0; j < nn.layers[1]->W->cols; j++) {
+            ASSERT_NEAR(nn.layers[1]->W->getValues(i, j),
+                        W2_test.getValues(i, j), 1e-5);
+        }
+    }
+
+    // Preview b2_test
+    std::cout << "b2_test:" << std::endl;
+    preview_vector(&b2_test, 4);
+
+    // Preview b2 from neural network
+    std::cout << "Neural Network b2:" << std::endl;
+    preview_vector(nn.layers[1]->b, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[1]->b->rows; i++) {
+        ASSERT_NEAR(nn.layers[1]->b->getValues(i),
+                    b2_test.getValues(i), 1e-5);
+    }
+
+    // Preview W1_test
+    std::cout << "W1_test:" << std::endl;
+    preview_matrix(&W1_test, 4);
+
+    // Preview W1 from neural network
+    std::cout << "Neural Network W1:" << std::endl;
+    preview_matrix(nn.layers[0]->W, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[0]->W->rows; i++) {
+        for (int j = 0; j < nn.layers[0]->W->cols; j++) {
+            ASSERT_NEAR(nn.layers[0]->W->getValues(i, j),
+                        W1_test.getValues(i, j), 1e-5);
+        }
+    }
+
+    // Preview b1_test
+    std::cout << "b1_test:" << std::endl;
+    preview_vector(&b1_test, 4);
+
+    // Preview b1 from neural network
+    std::cout << "Neural Network b1:" << std::endl;
+    preview_vector(nn.layers[0]->b, 4);
+
+    // Check values
+    for (int i = 0; i < nn.layers[0]->b->rows; i++) {
+        ASSERT_NEAR(nn.layers[0]->b->getValues(i),
+                    b1_test.getValues(i), 1e-5);
     }
 }
 

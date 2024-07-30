@@ -56,6 +56,7 @@ public:
     void backward(Matrix& X,
                   Matrix& Y,
                   std::string loss_func);
+    void update_params(double learning_rate);
 
     std::vector<Layer*> layers;
 };
