@@ -58,6 +58,12 @@ public:
                   std::string loss_func);
     void update_params(double learning_rate);
     double get_accuracy(Matrix& Y_true);
+    void train(Matrix& X_train,
+               Matrix& Y_train,
+               int epochs,
+               double learning_rate,
+               std::string loss,
+               std::string history_path);
 
     std::vector<Layer*> layers;
 };

@@ -412,3 +412,23 @@ double NeuralNetwork::get_accuracy(Matrix& Y_true) {
 
     return correct_count / Y_true.cols;
 }
+
+void NeuralNetwork::train(Matrix& X_train,
+                          Matrix& Y_train,
+                          int epochs,
+                          double learning_rate,
+                          std::string loss,
+                          std::string history_path) {
+    for (int epoch = 0; epoch < epochs; ++epoch) {
+        // Print accuracy
+        std::cout << "Epoch:" << epoch << "\n";
+
+        forward(X_train);
+        backward(X_train, Y_train, loss);
+        update_params(learning_rate);
+
+        // Print accuracy
+        double accuracy = get_accuracy(Y_train);
+        std::cout << "Accuracy: " << accuracy << "\n";
+    }
+}

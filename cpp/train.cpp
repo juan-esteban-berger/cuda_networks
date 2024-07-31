@@ -9,9 +9,13 @@ int main() {
 // Load Data
     std::cout << "Loading Data..." << std::endl;
     // Define matrix dimensions
-    int X_train_rows = 60000;
+    // int X_train_rows = 60000;
+    // int X_train_cols = 784;
+    // int Y_train_rows = 60000;
+    // int Y_train_cols = 10;
+    int X_train_rows = 1000;
     int X_train_cols = 784;
-    int Y_train_rows = 60000;
+    int Y_train_rows = 1000;
     int Y_train_cols = 10;
     
     // Initialize matrices
@@ -19,8 +23,15 @@ int main() {
     Matrix Y_train(Y_train_rows, Y_train_cols);
     
     // Read data
-    read_csv("data/X_train.csv", &X_train);
-    read_csv("data/Y_train.csv", &Y_train);
+    // read_csv("data/X_train.csv", &X_train);
+    // read_csv("data/Y_train.csv", &Y_train);
+
+    read_csv_limited("data/X_train.csv",
+                     &X_train,
+                     0, 1000, 0, 784);
+    read_csv_limited("data/X_train.csv",
+                     &Y_train,
+                     0, 1000, 0, 10);
     
     // Print Shape
     std::cout << "X_train: (" 
@@ -50,6 +61,18 @@ int main() {
     nn.add_layer(new Layer(200, 10, "Softmax"));
 
     std::cout << "Training..." << std::endl;
+
+    // Training Parameters
+    int epochs = 10;
+    double learning_rate = 0.1;
+    std::string loss = "CatCrossEntropy";
+    std::string history_path = "history.csv";
+    nn.train(*X_train_T,
+             *Y_train_T,
+             epochs,
+             learning_rate,
+             loss,
+             history_path);
 
 //////////////////////////////////////////////////////////////////
 // Clean up
