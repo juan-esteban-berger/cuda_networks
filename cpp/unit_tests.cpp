@@ -356,6 +356,35 @@ TEST(NormalizeTest, MatrixDenormalizeTest) {
 }
 
 //////////////////////////////////////////////////////////////////
+// Matrix Argmax Test
+// Test for Argmax of each column
+TEST(ArgmaxTest, ColumnArgmaxTest) {
+    // Initialize matrix with specific values
+    Matrix m(3, 2); // 3 rows, 2 columns
+    m.setValue(0, 0, 1.0);
+    m.setValue(1, 0, 3.0);
+    m.setValue(2, 0, 2.0);
+    m.setValue(0, 1, 4.0);
+    m.setValue(1, 1, 1.0);
+    m.setValue(2, 1, 3.0);
+
+    // Preview matrix before argmax
+    std::cout << "Before Argmax: " << std::endl;
+    preview_matrix(&m, 2);
+
+    // Calculate argmax
+    Vector result = argmax(m);
+
+    // Preview result after argmax
+    std::cout << "Result of Argmax: " << std::endl;
+    preview_vector(&result, 2);
+
+    // Check results
+    ASSERT_EQ(result.getValues(0), 1);
+    ASSERT_EQ(result.getValues(1), 0);
+}
+
+//////////////////////////////////////////////////////////////////
 // Activation Function Tests
 double sigmoid(double z) {
     return 1.0 / (1.0 + exp(-z));
@@ -1841,6 +1870,126 @@ TEST(NeuralNetworkTest, UpdateParamsTest) {
         ASSERT_NEAR(nn.layers[0]->b->getValues(i),
                     b1_test.getValues(i), 1e-5);
     }
+}
+//////////////////////////////////////////////////////////////////
+TEST(NeuralNetworkTest, GetAccuracyTest) {
+    // Initialize input matrix
+    Matrix X(3, 2);  // 3 features, 2 examples
+    // Initialize 2D array for inputs
+    double X_values[3][2] = {{1, 4}, {2, 5}, {3, 6}};
+    // Loop over rows
+    for (int i = 0; i < 3; i++) {
+        // Loop over columns
+        for (int j = 0; j < 2; j++) {
+            X.setValue(i, j, X_values[i][j]);
+        }
+    }
+
+    // Initialize output matrix
+    Matrix Y(2, 2);  // 2 outputs, 2 examples
+    // Initialize 2D array for inputs
+    double Y_values[3][2] = {{0, 0}, {1, 1}};
+    // Loop over rows
+    for (int i = 0; i < 2; i++) {
+        // Loop over columns
+        for (int j = 0; j < 2; j++) {
+            Y.setValue(i, j, Y_values[i][j]);
+        }
+    }
+
+    // Create a simple neural network
+    NeuralNetwork nn;
+    Layer* layer1 = new Layer(3, 2, "Sigmoid");
+    Layer* layer2 = new Layer(2, 2, "Softmax");
+
+    // Initialize 2D arrays for weights
+    double W1_values[2][3] = {{0.1, 0.2, 0.3}, {0.4, 0.5, 0.6}};
+    // Initialize 1D arrays for biases
+    double b1_values[2] = {0.1, 0.2};
+    // Loop over rows
+    for (int i = 0; i < 2; i++) {
+        // Loop over columns
+        for (int j = 0; j < 3; j++) {
+            layer1->W->setValue(i, j, W1_values[i][j]);
+        }
+        layer1->b->setValue(i, b1_values[i]);
+    }
+
+    // Initialize 2D arrays for weights
+    double W2_values[2][2] = {{0.7, 0.8}, {0.9, 1.0}};
+    // Initialize 1D arrays for biases
+    double b2_values[2] = {0.3, 0.4};
+    // Loop over rows
+    for (int i = 0; i < 2; i++) {
+        // Loop over columns
+        for (int j = 0; j < 2; j++) {
+            layer2->W->setValue(i, j, W2_values[i][j]);
+        }
+        layer2->b->setValue(i, b2_values[i]);
+    }
+
+    // Add layers to the neural network
+    nn.add_layer(layer1);
+    nn.add_layer(layer2);
+
+    // Run forward propagation
+    nn.forward(X);
+
+    // Run backward propagation
+    nn.backward(X,Y,"CatCrossEntropy");
+
+    // Update Parameters
+    double learning_rate = 0.01;
+    nn.update_params(learning_rate);
+
+    // Print divider
+    std::cout << "________________________________" << std::endl;
+
+    // Get output
+    Matrix* Y_pred = nn.getOutput();
+
+    // Preview Y
+    std::cout << "Y:" << std::endl;
+    preview_matrix(&Y, 4);
+
+    // Preview Y_pred
+    std::cout << "Y_pred:" << std::endl;
+    preview_matrix(Y_pred, 4);
+
+    // Get argmax of true and predicted labels
+    Vector true_labels = argmax(Y);
+    Vector pred_labels = argmax(*Y_pred);
+
+    // Preview true labels
+    std::cout << "True Labels:" << std::endl;
+    preview_vector(&true_labels, 4);
+
+    // Preview predicted labels
+    std::cout << "Predicted Labels:" << std::endl;
+    preview_vector(&pred_labels, 4);
+
+    // Check number of correct predictions
+    double correct_count = 0.0;
+    for (int i = 0; i < Y.cols; i++) {
+        if (true_labels.getValues(i) == pred_labels.getValues(i)) {
+            correct_count += 1.0;
+        }
+    }
+
+    double test_accuracy = correct_count / Y.cols;
+
+    // Get accuracy
+    double accuracy = nn.get_accuracy(Y);
+
+    // Print accuracy from test
+    std::cout << "Test Accuracy: " << test_accuracy << std::endl;
+
+    // Print accuracy from function
+    std::cout << "Function Accuracy: " << accuracy << std::endl;
+
+    // Check values
+    ASSERT_NEAR(accuracy, test_accuracy, 1e-5);
+
 }
 
 ////////////////////////////////////////////////////////////////////

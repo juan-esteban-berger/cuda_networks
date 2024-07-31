@@ -88,22 +88,8 @@ class NeuralNetwork():
             layer.b -= learning_rate * layer.db
 
     def get_accuracy(self, Y):
-        print("self.layers[-1].A:")
-        print(self.layers[-1].A.shape)
-        print(pd.DataFrame(self.layers[-1].A))
         predictions = np.argmax(self.layers[-1].A, 0)
-        print("predictions:")
-        print(predictions.shape)
-        print(pd.DataFrame(predictions))
-        print("Y:")
-        print(Y.shape)
-        print(pd.DataFrame(Y))
         Y_decoded = np.argmax(Y, 0)
-        print("Y_decoded:")
-        print(Y_decoded.shape)
-        print(pd.DataFrame(Y_decoded))
-        print("np.sum(predictions == Y_decoded) / Y_decoded.size:")
-        print(np.sum(predictions == Y_decoded) / Y_decoded.size)
         return np.sum(predictions == Y_decoded) / Y_decoded.size
 
     def train(self, X_train,

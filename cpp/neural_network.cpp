@@ -392,3 +392,23 @@ void NeuralNetwork::update_params(double learning_rate) {
         }
     }
 }
+
+//////////////////////////////////////////////////////////////////
+double NeuralNetwork::get_accuracy(Matrix& Y_true) {
+    // Get output
+    Matrix* Y_pred = getOutput();
+
+    // Get argmax of true and predicted labels
+    Vector true_labels = argmax(Y_true);
+    Vector pred_labels = argmax(*Y_pred);
+
+    // Check number of correct predictions
+    double correct_count = 0.0;
+    for (int i = 0; i < Y_true.cols; ++i) {
+        if (pred_labels.getValues(i) == true_labels.getValues(i)) {
+            correct_count += 1.0;
+        }
+    }
+
+    return correct_count / Y_true.cols;
+}

@@ -57,6 +57,7 @@ public:
                   Matrix& Y,
                   std::string loss_func);
     void update_params(double learning_rate);
+    double get_accuracy(Matrix& Y_true);
 
     std::vector<Layer*> layers;
 };
