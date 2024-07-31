@@ -398,9 +398,24 @@ double NeuralNetwork::get_accuracy(Matrix& Y_true) {
     // Get output
     Matrix* Y_pred = getOutput();
 
+    // Preview true labels
+    std::cout << "True Labels: \n";
+    preview_matrix(&Y_true, 4);
+
+    // Preview output
+    std::cout << "Output: \n";
+    preview_matrix(Y_pred, 4);
+
     // Get argmax of true and predicted labels
     Vector true_labels = argmax(Y_true);
     Vector pred_labels = argmax(*Y_pred);
+
+    // Preview true and predicted labels
+    std::cout << "True Labels: \n";
+    preview_vector(&true_labels, 4);
+
+    std::cout << "Predicted Labels: \n";
+    preview_vector(&pred_labels, 4);
 
     // Check number of correct predictions
     double correct_count = 0.0;
@@ -423,8 +438,28 @@ void NeuralNetwork::train(Matrix& X_train,
         // Print accuracy
         std::cout << "Epoch:" << epoch << "\n";
 
+        std::cout << "Forward Pass\n";
         forward(X_train);
+        
+        // // Preview output
+        // Matrix* output = getOutput();
+        // std::cout << "Output: \n";
+        // preview_matrix(output, 4);
+
+        std::cout << "Backward Pass\n";
         backward(X_train, Y_train, loss);
+
+        // Preview Gradients
+        std::cout << "Layer 2 dZ: \n";
+        preview_matrix(layers[1]->dZ, 4);
+
+        std::cout << "Layer 2 dW: \n";
+        preview_matrix(layers[1]->dW, 4);
+
+        std::cout << "Layer 2 db: \n";
+        preview_vector(layers[1]->db, 4);
+
+        std::cout << "Update Parameters\n";
         update_params(learning_rate);
 
         // Print accuracy

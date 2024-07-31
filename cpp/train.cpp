@@ -13,25 +13,24 @@ int main() {
     // int X_train_cols = 784;
     // int Y_train_rows = 60000;
     // int Y_train_cols = 10;
-    int X_train_rows = 1000;
+    int X_train_rows = 2000;
     int X_train_cols = 784;
-    int Y_train_rows = 1000;
+    int Y_train_rows = 2000;
     int Y_train_cols = 10;
     
     // Initialize matrices
     Matrix X_train(X_train_rows, X_train_cols);
     Matrix Y_train(Y_train_rows, Y_train_cols);
     
-    // Read data
+    // // Read data
     // read_csv("data/X_train.csv", &X_train);
     // read_csv("data/Y_train.csv", &Y_train);
 
-    read_csv_limited("data/X_train.csv",
-                     &X_train,
-                     0, 1000, 0, 784);
-    read_csv_limited("data/X_train.csv",
-                     &Y_train,
-                     0, 1000, 0, 10);
+// void read_csv_limited(const char* filename, Matrix* matrix_subset,
+//                       int startRow, int endRow, int fileRows, int fileCols)
+
+    read_csv_limited("data/X_train.csv", &X_train, 0, 2000, 60000, 784);
+    read_csv_limited("data/Y_train.csv", &Y_train, 0, 2000, 60000, 10);
     
     // Print Shape
     std::cout << "X_train: (" 
@@ -49,6 +48,13 @@ int main() {
     Matrix* X_train_T = transpose_matrix(&X_train);
     Matrix* Y_train_T = transpose_matrix(&Y_train);
 
+    // Preview Transposed Data
+    std::cout << "X_train_T:" << std::endl;
+    preview_matrix(X_train_T, 4);
+
+    std::cout << "Y_train_T:" << std::endl;
+    preview_matrix(Y_train_T, 4);
+
 //////////////////////////////////////////////////////////////////
 // Normalize X values
     normalize_matrix(X_train_T, 0, 255);
@@ -63,7 +69,7 @@ int main() {
     std::cout << "Training..." << std::endl;
 
     // Training Parameters
-    int epochs = 10;
+    int epochs = 100;
     double learning_rate = 0.1;
     std::string loss = "CatCrossEntropy";
     std::string history_path = "history.csv";
