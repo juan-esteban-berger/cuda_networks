@@ -1,6 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <cmath>
+#include <ctime>
 #include <string>
 #include <vector>
 
@@ -414,12 +416,16 @@ double NeuralNetwork::get_accuracy(Matrix& Y_true) {
     return correct_count / Y_true.cols;
 }
 
-void progress_bar(int epoch, int total_epochs, double accuracy, double loss) {
+void progress_bar(int epoch,
+                  int total_epochs,
+                  double accuracy,
+                  double loss,
+                  double duration) {
     // Calculate percentage of completion
     double progress = (epoch + 1) / static_cast<double>(total_epochs);
 
     // Define the width for the progress bar
-    int barWidth = 30;
+    int barWidth = 25;
     int pos = static_cast<int>(barWidth * progress);
 
     // Clear the current line
@@ -427,6 +433,7 @@ void progress_bar(int epoch, int total_epochs, double accuracy, double loss) {
     std::cout << "Epoch: " << std::setw(3) << epoch + 1 << "/" << total_epochs
               << ", Accuracy: " << std::fixed << std::setprecision(3) << accuracy
               << ", Loss: " << std::fixed << std::setprecision(0) << loss << " "
+              << ", Duration: " << std::fixed << std::setprecision(4) << duration << "s "
               << std::setw(3) << int(progress * 100.0) << "% [";
 
     // Draw the progress bar
@@ -446,17 +453,54 @@ void progress_bar(int epoch, int total_epochs, double accuracy, double loss) {
     }
 }
 
+void save_history(std::string history_path,
+                  std::vector<int>& epoch_list,
+                  std::vector<double>& accuracy_list,
+                  std::vector<double>& loss_list,
+                  std::vector<double>& duration_list) {
+    // Open the file for writing
+    std::ofstream file(history_path);
+
+    // Write the data
+    for (int i = 0; i < epoch_list.size(); ++i) {
+        file << epoch_list[i] << ","
+             << accuracy_list[i] << ","
+             << loss_list[i] << ","
+             << duration_list[i] << std::endl;
+    }
+
+    // Close the file
+    file.close();
+}
+
 void NeuralNetwork::train(Matrix& X_train,
                           Matrix& Y_train,
                           int epochs,
                           double learning_rate,
                           std::string loss,
                           std::string history_path) {
+
+    // Vectors to store history
+    std::vector<int> epoch_list;
+    std::vector<double> accuracy_list;
+    std::vector<double> loss_list;
+    std::vector<double> duration_list;
+
+    // Start the timer
+    std::clock_t start_time = std::clock();
+    
+    // Iterate through epochs
     for (int epoch = 0; epoch < epochs; ++epoch) {
+        // Forward, Backward, and Update
         forward(X_train);
         backward(X_train, Y_train, loss);
         update_params(learning_rate);
 
+        // Calculate duration
+        std::clock_t end_time = std::clock();
+        double duration = (end_time - start_time) / static_cast<double>(CLOCKS_PER_SEC);
+
+        // Calculate accuracy
         double accuracy = get_accuracy(Y_train);
 
         // Calculate loss
@@ -465,9 +509,21 @@ void NeuralNetwork::train(Matrix& X_train,
             CatCrossEntropy ce;
             loss_val = ce.function(Y_train, *getOutput());
         }
+        
+        // Append to history lists
+        epoch_list.push_back(epoch);
+        accuracy_list.push_back(accuracy);
+        loss_list.push_back(loss_val);
+        duration_list.push_back(duration);
 
-
-        // Progress Bar
-        progress_bar(epoch, epochs, accuracy, loss_val);
+        // Print progress bar
+        progress_bar(epoch, epochs, accuracy, loss_val, duration);
     }
+
+    // Save history
+    save_history(history_path,
+                 epoch_list,
+                 accuracy_list,
+                 loss_list,
+                 duration_list);
 }

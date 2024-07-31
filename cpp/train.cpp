@@ -67,10 +67,12 @@ int main() {
     nn.add_layer(new Layer(200, 10, "Softmax"));
 
     std::cout << "Training..." << std::endl;
-    int epochs = 100;
+    // int epochs = 1000;
+    // int epochs = 3;
+    int epochs = 10;
     double learning_rate = 0.1;
     std::string loss = "CatCrossEntropy";
-    std::string history_path = "history.csv";
+    std::string history_path = "models/cpp_history.csv";
     nn.train(*X_train_T,
              *Y_train_T,
              epochs,
@@ -79,6 +81,8 @@ int main() {
              history_path);
 
     std::cout << "Saving Model..." << std::endl;
+    // nn.save_config("models/cpp_config.csv")
+    // nn.save_weights("models/cpp_weights.csv")
 
     return 0;
 }
