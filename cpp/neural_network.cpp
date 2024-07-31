@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 #include <string>
 #include <vector>
@@ -413,6 +414,38 @@ double NeuralNetwork::get_accuracy(Matrix& Y_true) {
     return correct_count / Y_true.cols;
 }
 
+void progress_bar(int epoch, int total_epochs, double accuracy, double loss) {
+    // Calculate percentage of completion
+    double progress = (epoch + 1) / static_cast<double>(total_epochs);
+
+    // Define the width for the progress bar
+    int barWidth = 30;
+    int pos = static_cast<int>(barWidth * progress);
+
+    // Clear the current line
+    std::cout << "\r"; // Carriage return to the beginning of the line
+    std::cout << "Epoch: " << std::setw(3) << epoch + 1 << "/" << total_epochs
+              << ", Accuracy: " << std::fixed << std::setprecision(3) << accuracy
+              << ", Loss: " << std::fixed << std::setprecision(0) << loss << " "
+              << std::setw(3) << int(progress * 100.0) << "% [";
+
+    // Draw the progress bar
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    std::cout << "]";
+
+    // Flush the stream to ensure immediate display
+    std::cout.flush();
+
+    // If this is the last epoch, print a new line
+    if (epoch == total_epochs - 1) {
+        std::cout << std::endl;
+    }
+}
+
 void NeuralNetwork::train(Matrix& X_train,
                           Matrix& Y_train,
                           int epochs,
@@ -426,8 +459,15 @@ void NeuralNetwork::train(Matrix& X_train,
 
         double accuracy = get_accuracy(Y_train);
 
-        // Print Epoch and accuracy
-        std::cout << "Epoch: " << epoch << " Accuracy: " << accuracy << std::endl;
-        
+        // Calculate loss
+        double loss_val = 0.0;
+        if (loss == "CatCrossEntropy") {
+            CatCrossEntropy ce;
+            loss_val = ce.function(Y_train, *getOutput());
+        }
+
+
+        // Progress Bar
+        progress_bar(epoch, epochs, accuracy, loss_val);
     }
 }

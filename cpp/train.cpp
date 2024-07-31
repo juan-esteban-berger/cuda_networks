@@ -67,8 +67,6 @@ int main() {
     nn.add_layer(new Layer(200, 10, "Softmax"));
 
     std::cout << "Training..." << std::endl;
-
-    // Training Parameters
     int epochs = 100;
     double learning_rate = 0.1;
     std::string loss = "CatCrossEntropy";
@@ -80,10 +78,7 @@ int main() {
              loss,
              history_path);
 
-//////////////////////////////////////////////////////////////////
-// Clean up
-    delete X_train_T;
-    delete Y_train_T;
+    std::cout << "Saving Model..." << std::endl;
 
     return 0;
 }
