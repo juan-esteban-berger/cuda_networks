@@ -50,6 +50,9 @@ Vector operator/(Vector& v, double scalar);
 // Sum matrix columns
 Vector sum_columns(Matrix& m);
 
+// Argmax of each column
+Vector argmax(Matrix& m);
+
 //////////////////////////////////////////////////////////////////
 // Read from CSV
 void read_csv(const char* filename, Matrix* matrix);

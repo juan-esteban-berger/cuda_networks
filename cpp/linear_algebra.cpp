@@ -174,6 +174,28 @@ Vector sum_columns(Matrix& m) {
     return result;
 }
 
+// Argmax of each column
+Vector argmax(Matrix& m) {
+    // Initialize vector with m.cols
+    Vector result(m.cols);
+    // Iterate over each column of the matrix
+    for (int j = 0; j < m.cols; ++j) {
+        int maxIndex = 0;
+        double maxValue = m.getValues(0, j);
+        // Iterate over each row of the matrix
+        for (int i = 1; i < m.rows; ++i) {
+            // Check if element is greater than maxValue
+            if (m.getValues(i, j) > maxValue) {
+                maxValue = m.getValues(i, j);
+                maxIndex = i;
+            }
+        }
+        // Set Index
+        result.setValue(j, maxIndex);
+    }
+    return result;
+}
+
 //////////////////////////////////////////////////////////////////
 // Read from CSV
 void read_csv(const char* filename, Matrix* matrix) {
