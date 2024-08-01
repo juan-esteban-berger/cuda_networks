@@ -64,6 +64,8 @@ public:
                double learning_rate,
                std::string loss,
                std::string history_path);
+    void save_config(std::string filepath);
+    void save_weights(std::string filepath);
 
     std::vector<Layer*> layers;
 };

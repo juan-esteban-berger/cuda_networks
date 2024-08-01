@@ -527,3 +527,46 @@ void NeuralNetwork::train(Matrix& X_train,
                  loss_list,
                  duration_list);
 }
+
+void NeuralNetwork::save_config(std::string filepath) {
+    std::ofstream file(filepath);
+
+    for (Layer* layer : layers) {
+        int input_num = layer->W->cols;
+        int output_num = layer->W->rows;
+        std::string activation = layer->activation;
+
+        file << input_num << "," << output_num << "," << activation << "\n";
+    }
+
+    file.close();
+}
+
+void NeuralNetwork::save_weights(std::string filepath) {
+    std::ofstream file(filepath);
+
+    file << std::fixed << std::setprecision(8);
+    for (Layer* layer : layers) {
+        // Write weights in a single line
+        for (int i = 0; i < layer->W->rows; i++) {
+            for (int j = 0; j < layer->W->cols; j++) {
+                file << layer->W->getValues(i, j);
+                if (!(i == layer->W->rows - 1 && j == layer->W->cols - 1)) {
+                    file << ",";
+                }
+            }
+        }
+        file << "\n";
+
+        // Write biases in a single line
+        for (int i = 0; i < layer->b->rows; i++) {
+            file << layer->b->getValues(i);
+            if (i < layer->b->rows - 1) {
+                file << ",";
+            }
+        }
+        file << "\n";
+    }
+
+    file.close();
+}

@@ -81,8 +81,8 @@ int main() {
              history_path);
 
     std::cout << "Saving Model..." << std::endl;
-    // nn.save_config("models/cpp_config.csv")
-    // nn.save_weights("models/cpp_weights.csv")
+    nn.save_config("models/cpp_config.csv");
+    nn.save_weights("models/cpp_weights.csv");
 
     return 0;
 }
