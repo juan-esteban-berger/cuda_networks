@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <cmath>
 #include <ctime>
@@ -113,6 +114,32 @@ NeuralNetwork::~NeuralNetwork() {
     }
 }
 
+void NeuralNetwork::describe() const {
+    std::cout << "Neural Network Architecture:" << std::endl;
+    for (size_t i = 0; i < layers.size(); ++i) {
+        std::cout << "Layer " << i + 1 << ":" << std::endl;
+        std::cout << "  Input:      " << layers[i]->W->cols << std::endl;
+        std::cout << "  Output:     " << layers[i]->W->rows << std::endl;
+        std::cout << "  Activation: " << layers[i]->activation << std::endl;
+        std::cout << std::endl;
+    }
+}
+
+void NeuralNetwork::preview_parameters(int decimals) const {
+    std::cout << "Neural Network Parameters:" << std::endl;
+    for (size_t i = 0; i < layers.size(); ++i) {
+        std::cout << "Layer " << i + 1 << ":" << std::endl;
+        
+        std::cout << "Weights (W):" << std::endl;
+        preview_matrix(layers[i]->W, decimals);
+        
+        std::cout << "Biases (b):" << std::endl;
+        preview_vector(layers[i]->b, decimals);
+        
+        std::cout << std::endl;
+    }
+}
+
 void NeuralNetwork::add_layer(Layer* layer) {
     layers.push_back(layer);
 }
@@ -158,7 +185,7 @@ void NeuralNetwork::forward(Matrix& X) {
                 layer->Z->setValue(i, j, Z.getValues(i, j));
             }
         }
-        
+
 //////////////////////////////////////////////////////////////////
         // Calculate A
         // if (layer->activation == "Sigmoid")
@@ -528,14 +555,28 @@ void NeuralNetwork::train(Matrix& X_train,
                  duration_list);
 }
 
+Vector NeuralNetwork::predict(Matrix& X) {
+    // Forward pass
+    forward(X);
+    // Get predictions
+    Matrix* output = getOutput();
+    // Get argmax of predictions
+    Vector predictions = argmax(*output);
+
+    return predictions;
+}
+
 void NeuralNetwork::save_config(std::string filepath) {
     std::ofstream file(filepath);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file for writing: " << filepath << std::endl;
+        return;
+    }
 
     for (Layer* layer : layers) {
         int input_num = layer->W->cols;
         int output_num = layer->W->rows;
         std::string activation = layer->activation;
-
         file << input_num << "," << output_num << "," << activation << "\n";
     }
 
@@ -544,28 +585,93 @@ void NeuralNetwork::save_config(std::string filepath) {
 
 void NeuralNetwork::save_weights(std::string filepath) {
     std::ofstream file(filepath);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file for writing: " << filepath << std::endl;
+        return;
+    }
 
     file << std::fixed << std::setprecision(8);
+
     for (Layer* layer : layers) {
-        // Write weights in a single line
-        for (int i = 0; i < layer->W->rows; i++) {
-            for (int j = 0; j < layer->W->cols; j++) {
+        // Save weights
+        for (int i = 0; i < layer->W->rows; ++i) {
+            for (int j = 0; j < layer->W->cols; ++j) {
                 file << layer->W->getValues(i, j);
-                if (!(i == layer->W->rows - 1 && j == layer->W->cols - 1)) {
-                    file << ",";
+                if (j < layer->W->cols - 1) file << ",";
+            }
+            file << "\n";
+        }
+
+        // Save biases
+        for (int i = 0; i < layer->b->rows; ++i) {
+            file << layer->b->getValues(i);
+            if (i < layer->b->rows - 1) file << ",";
+        }
+        file << "\n";
+    }
+
+    file.close();
+}
+
+void NeuralNetwork::load_config(std::string filepath) {
+    std::ifstream file(filepath);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file for reading: " << filepath << std::endl;
+        return;
+    }
+
+    layers.clear();
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string token;
+        std::vector<std::string> tokens;
+        while (std::getline(iss, token, ',')) {
+            tokens.push_back(token);
+        }
+        if (tokens.size() == 3) {
+            int input_num = std::stoi(tokens[0]);
+            int output_num = std::stoi(tokens[1]);
+            std::string activation = tokens[2];
+            add_layer(new Layer(input_num, output_num, activation));
+        }
+    }
+
+    file.close();
+}
+
+void NeuralNetwork::load_weights(std::string filepath) {
+    std::ifstream file(filepath);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file for reading: " << filepath << std::endl;
+        return;
+    }
+
+    std::string line;
+    for (Layer* layer : layers) {
+        // Load W
+        for (int i = 0; i < layer->W->rows; ++i) {
+            if (std::getline(file, line)) {
+                std::istringstream iss(line);
+                std::string value;
+                int j = 0;
+                while (std::getline(iss, value, ',') && j < layer->W->cols) {
+                    layer->W->setValue(i, j, std::stod(value));
+                    j++;
                 }
             }
         }
-        file << "\n";
 
-        // Write biases in a single line
-        for (int i = 0; i < layer->b->rows; i++) {
-            file << layer->b->getValues(i);
-            if (i < layer->b->rows - 1) {
-                file << ",";
+        // Load b
+        if (std::getline(file, line)) {
+            std::istringstream iss(line);
+            std::string value;
+            int i = 0;
+            while (std::getline(iss, value, ',') && i < layer->b->rows) {
+                layer->b->setValue(i, std::stod(value));
+                i++;
             }
         }
-        file << "\n";
     }
 
     file.close();

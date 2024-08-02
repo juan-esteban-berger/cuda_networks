@@ -50,6 +50,8 @@ class NeuralNetwork {
 public:
     NeuralNetwork();
     ~NeuralNetwork();
+    void describe() const;
+    void preview_parameters(int decimals = 4) const;
     void add_layer(Layer* layer);
     Matrix* getOutput();
     void forward(Matrix& X);
@@ -64,8 +66,11 @@ public:
                double learning_rate,
                std::string loss,
                std::string history_path);
+    Vector predict(Matrix& X);
     void save_config(std::string filepath);
     void save_weights(std::string filepath);
+    void load_config(std::string filepath);
+    void load_weights(std::string filepath);
 
     std::vector<Layer*> layers;
 };
