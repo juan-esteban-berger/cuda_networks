@@ -1,13 +1,12 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctime>
 #include <iomanip>
-
-#include <immintrin.h>  // For AVX intrinsics
-#include <omp.h>        // For OpenMP parallelization
+#include <thread>
 
 #include "linear_algebra.h"
 
@@ -89,26 +88,92 @@ Matrix operator*(Matrix& m1, Matrix& m2) {
     return result;
 }
 
-// Matrix multiplication
-Matrix matmul(Matrix& m1, Matrix& m2) {
-    // Initialize Matrix with m1.rows and m2.cols
-    Matrix result(m1.rows, m2.cols);
-    // Iterate over each row of the first matrix
-    for (int i = 0; i < m1.rows; ++i) {
-        // Iterate over each column of the second matrix
-        for (int j = 0; j < m2.cols; ++j) {
-            // Initialize sum for the dot product
-            double sum = 0;
-            // Perform dot product of row from m1 and column from m2
-            for (int k = 0; k < m1.cols; ++k) {
-                // Add product of corresponding elements to sum
-                sum += m1.getValues(i, k) * m2.getValues(k, j);
+// Compute portion of matrix multiplication
+void compute_portion(Matrix& result, Matrix& m1, Matrix& m2,
+                     int start_row, int end_row) {
+    // Iterate over the assigned rows
+    for (int i = start_row; i < end_row; ++i) {
+        // Iterate over the columns of m1 (=rows of m2)
+        for (int k = 0; k < m1.cols; ++k) {
+            // Get the value of m1 at row i and column k
+            const double m1_ik = m1.getValues(i, k);
+            
+            // Iterate over the columns of m2
+            for (int j = 0; j < m2.cols; ++j) {
+                // Calculate dot product
+                result.data[i][j] += m1_ik * m2.getValues(k, j);
             }
-            // Store the result of the dot product in the result matrix
-            result.setValue(i, j, sum);
         }
     }
-    // Return the resulting matrix
+}
+
+// Matrix Multiplication
+Matrix matmul(Matrix& m1, Matrix& m2) {
+    // Create result matrix
+    Matrix result(m1.rows, m2.cols);
+
+    // Get number of concurrent threads supported by the hardware
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    
+    // Limit threads between 1 and 16, if fails default to 4
+    if (num_threads == 0 || num_threads > 16) {
+        num_threads = 4;
+    }
+
+    // Calculate the number of rows each thread should process
+    int rows_per_thread = m1.rows / num_threads;
+
+    // Create a vector to store the thread objects
+    std::vector<std::thread> threads;
+
+    // Create and launch threads
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        // Calculate the starting row for this thread
+        int start_row = t * rows_per_thread;
+        
+        // Initialize int for ending row
+        int end_row;
+        // If this is the last thread
+        if (t == num_threads - 1) {
+            // Assign the remaining rows to this thread
+            end_row = m1.rows;
+        // If not the last thread
+        } else {
+            // Assign the next set of rows to this thread
+            end_row = (t + 1) * rows_per_thread;
+        }
+        
+        // Create and launch a new thread
+        threads.emplace_back(
+            // Function to be executed by the new thread
+            compute_portion,
+            
+            // std::ref creates a reference wrapper for 'result'
+            // ensuring thread works on original matrix, not a copy
+            std::ref(result),
+            
+            // std::ref creates a reference wrapper for 'm1'
+            // ensuring thread works on original matrix, not a copy
+            std::ref(m1),
+            
+            // std::ref creates a reference wrapper for 'm2'
+            // ensuring thread works on original matrix, not a copy
+            std::ref(m2),
+            
+            // start_row
+            start_row,
+            
+            // end_row
+            end_row);
+    }
+
+    // Wait for all threads to complete their computations
+    for (auto& thread : threads) {
+        // Join each thread, blocking until it finishes
+        thread.join();
+    }
+
+    // Return the computed result matrix
     return result;
 }
 
@@ -288,7 +353,8 @@ void preview_matrix(Matrix* m, int decimals) {
             for (int k = 0; k < m->cols; k++) {
                 if (k == 5 && m->cols > 10) {
                     std::cout << "...\t";
-                    k = m->cols - 5;  // Jump to last 5 columns
+                    // Jump to last 5 columns
+                    k = m->cols - 5;
                 }
                 std::cout << "...\t";
             }

@@ -10,11 +10,11 @@
 //////////////////////////////////////////////////////////////////
 // Function to Display Image
 void display_image(Matrix* X, int index) {
-    int image_size = 28;  // Assuming 28x28 MNIST images
+    int image_size = 28;
     for (int i = 0; i < image_size; ++i) {
         for (int j = 0; j < image_size; ++j) {
-            double pixel = X->getValues(i * image_size + j, index);
-            // if pixel equals 0, print "  ", else print "##"
+            int linear_index = i * image_size + j;
+            double pixel = X->getValues(linear_index, index);
             if (pixel == 0) {
                 std::cout << "  ";
             } else {
@@ -80,32 +80,37 @@ int main() {
 
 //////////////////////////////////////////////////////////////////
 // Preview 5 Random Images
-    // Preview 5 Random Images
-    std::cout << "Displaying 5 Random Images..." << std::endl;
-    
     // Initialize random number generator
     std::mt19937 rng(std::time(0));
     std::uniform_int_distribution<int> dist(0, X_test_T->cols - 1);
-
+    
+    std::cout << "Displaying 5 Random Images..." << std::endl;
     for (int i = 0; i < 5; ++i) {
+        // Get random index
         int random_index = dist(rng);
+        // Get predicted value
         int pred_val = static_cast<int>(pred.getValues(random_index));
-        
-        // Find true label (argmax of Y_test_T column)
+        // Initialize true value
         int y_val = 0;
+        // Get values from Y_test_T
         double max_prob = Y_test_T->getValues(0, random_index);
+        // Loop over rows
         for (int j = 1; j < Y_test_T->rows; ++j) {
+            // If value is greater than max_prob
             if (Y_test_T->getValues(j, random_index) > max_prob) {
+                // Update max_prob
                 max_prob = Y_test_T->getValues(j, random_index);
+                // Update y_val
                 y_val = j;
             }
         }
 
-        std::cout << "Predicted: " << pred_val << ", True: " << y_val << std::endl;
+        std::cout << "Predicted: " << pred_val;
+        std::cout << ", True: " << y_val << std::endl;
         display_image(X_test_T, random_index);
 
         std::cout << "Press Enter to see the next image..." << std::endl;
-        std::cin.get();  // Wait for user input
+        std::cin.get();
     }
 
     return 0;
