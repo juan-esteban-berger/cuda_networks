@@ -35,9 +35,11 @@ nn.add_layer(Layer(200, 10, Softmax()))
 print("Training...")
 nn.train(X_train,
          Y_train,
-         epochs=1000,
+         epochs=250,
          learning_rate=0.1,
          loss=CatCrossEntropy(),
+         optimizer="mini_batch_gradient_descent",
+         batch_size=1000,
          history_path="models/python_history.csv")
 
 print("Saving Model...")

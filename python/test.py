@@ -46,7 +46,7 @@ nn_loaded.load_weights("models/python_weights.csv")
 
 print("Testing...")
 pred = nn_loaded.predict(X_test)
-acc = nn_loaded.get_accuracy(Y_test)
+acc = nn_loaded.get_accuracy(X_test, Y_test)
 print(f"Accuracy: {acc}")
 
 ####################################################################

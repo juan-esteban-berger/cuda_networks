@@ -87,17 +87,29 @@ class NeuralNetwork():
             layer.W -= learning_rate * layer.dW
             layer.b -= learning_rate * layer.db
 
-    def get_accuracy(self, Y):
-        predictions = np.argmax(self.layers[-1].A, 0)
-        Y_decoded = np.argmax(Y, 0)
+    def get_accuracy(self, X, Y):
+        self.forward(X)
+        predictions = np.argmax(self.layers[-1].A, axis=0)
+        Y_decoded = np.argmax(Y, axis=0)
         return np.sum(predictions == Y_decoded) / Y_decoded.size
+
+    def gradient_descent(self,
+                             X_train,
+                             Y_train,
+                             loss,
+                             learning_rate):
+        self.forward(X_train)
+        self.backward(X_train, Y_train, loss)
+        self.update_params(learning_rate)
 
     def train(self, X_train,
                     Y_train,
                     epochs,
                     learning_rate,
                     loss,
-                    history_path):
+                    optimizer,
+                    batch_size=1000,
+                    history_path='history.csv'):
         epoch_list = []
         accuracy_list = []
         loss_list = []
@@ -107,15 +119,34 @@ class NeuralNetwork():
 
         pbar = tqdm(range(epochs), position=0, leave=True)
         for epoch in pbar:
-            self.forward(X_train)
-            self.backward(X_train, Y_train, loss)
-            self.update_params(learning_rate)
+            if optimizer == 'batch_gradient_descent':
+                self.gradient_descent(X_train,
+                                      Y_train,
+                                      loss,
+                                      learning_rate)
+                acc = self.get_accuracy(X_train, Y_train)
+                loss_val = loss.function(Y_train, self.layers[-1].A)
+            elif optimizer == 'mini_batch_gradient_descent':
+                acc_temp_list = []
+                loss_temp_list = []
+                for i in range(0, X_train.shape[1], batch_size):
+                    X_batch = X_train[:, i:i+batch_size]
+                    Y_batch = Y_train[:, i:i+batch_size]
+                    self.gradient_descent(X_batch,
+                                            Y_batch,
+                                            loss,
+                                            learning_rate)
+                    acc_batch = self.get_accuracy(X_batch, Y_batch)
+                    acc_temp_list.append(acc_batch)
+                    loss_batch = loss.function(Y_batch, self.layers[-1].A)
+                    loss_temp_list.append(loss_batch)
+                acc = np.mean(acc_temp_list)
+                loss_val = np.mean(loss_temp_list)
 
             end_time = time.time()
             duration = end_time - start_time
 
-            acc = self.get_accuracy(Y_train)
-            loss_val = loss.function(Y_train, self.layers[-1].A)
+            
             description = ("Epoch: %d, Accuracy: %f, Loss: %.0f" %
                            (epoch, acc, loss_val))
             pbar.set_description(description)
