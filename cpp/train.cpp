@@ -71,12 +71,16 @@ int main() {
     int epochs = 100;
     double learning_rate = 0.1;
     std::string loss = "CatCrossEntropy";
+    std::string optimizer = "mini_batch_gradient_descent";
+    double batch_size = 1000;
     std::string history_path = "models/cpp_history.csv";
     nn.train(*X_train_T,
              *Y_train_T,
              epochs,
              learning_rate,
              loss,
+             optimizer,
+             batch_size,
              history_path);
 
     std::cout << "Saving Model..." << std::endl;

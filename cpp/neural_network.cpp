@@ -504,7 +504,6 @@ void NeuralNetwork::gradient_descent(Matrix& X_train,
                                      Matrix& Y_train,
                                      std::string loss,
                                      double learning_rate) {
-    // Forward, Backward, and Update
     forward(X_train);
     backward(X_train, Y_train, loss);
     update_params(learning_rate);
@@ -515,6 +514,8 @@ void NeuralNetwork::train(Matrix& X_train,
                           int epochs,
                           double learning_rate,
                           std::string loss,
+                          std::string optimizer,
+                          double batch_size,
                           std::string history_path) {
 
     // Vectors to store history
@@ -528,16 +529,18 @@ void NeuralNetwork::train(Matrix& X_train,
     
     // Iterate through epochs
     for (int epoch = 0; epoch < epochs; ++epoch) {
-        // // Forward, Backward, and Update
-        // forward(X_train);
-        // backward(X_train, Y_train, loss);
-        // update_params(learning_rate);
         
-        // Gradient Descent
-        gradient_descent(X_train,
-                         Y_train,
-                         loss,
-                         learning_rate);
+        if (optimizer == "batch_gradient_descent") {
+            gradient_descent(X_train,
+                             Y_train,
+                             loss,
+                             learning_rate);
+        } else if (optimizer == "mini_batch_gradient_descent") {
+            gradient_descent(X_train,
+                             Y_train,
+                             loss,
+                             learning_rate);
+        }
 
         // Calculate duration
         std::clock_t end_time = std::clock();

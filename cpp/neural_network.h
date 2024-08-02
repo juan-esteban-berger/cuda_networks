@@ -69,7 +69,9 @@ public:
                int epochs,
                double learning_rate,
                std::string loss,
-               std::string history_path);
+               std::string optimizer,
+               double batch_size=1000,
+               std::string history_path="history.csv");
     Vector predict(Matrix& X);
     void save_config(std::string filepath);
     void save_weights(std::string filepath);
