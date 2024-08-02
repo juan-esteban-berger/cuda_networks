@@ -68,8 +68,6 @@ int main() {
 
     std::cout << "Training..." << std::endl;
     // int epochs = 1000;
-    // int epochs = 3;
-    // int epochs = 10;
     int epochs = 100;
     double learning_rate = 0.1;
     std::string loss = "CatCrossEntropy";

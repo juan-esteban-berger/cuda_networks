@@ -6,6 +6,9 @@
 #include <ctime>
 #include <iomanip>
 
+#include <immintrin.h>  // For AVX intrinsics
+#include <omp.h>        // For OpenMP parallelization
+
 #include "linear_algebra.h"
 
 //////////////////////////////////////////////////////////////////
@@ -108,42 +111,6 @@ Matrix matmul(Matrix& m1, Matrix& m2) {
     // Return the resulting matrix
     return result;
 }
-// Matrix matmul(Matrix& m1, Matrix& m2) {
-//     // Start the timer
-//     std::clock_t start_time = std::clock();
-// 
-//     // Initialize Matrix with m1.rows and m2.cols
-//     Matrix result(m1.rows, m2.cols);
-//     
-//     // Iterate over each row of the first matrix
-//     for (int i = 0; i < m1.rows; ++i) {
-//         // Iterate over each column of the second matrix
-//         for (int j = 0; j < m2.cols; ++j) {
-//             // Initialize sum for the dot product
-//             double sum = 0;
-//             // Perform dot product of row from m1 and column from m2
-//             for (int k = 0; k < m1.cols; ++k) {
-//                 // Add product of corresponding elements to sum
-//                 sum += m1.getValues(i, k) * m2.getValues(k, j);
-//             }
-//             // Store the result of the dot product in the result matrix
-//             result.setValue(i, j, sum);
-//         }
-//     }
-// 
-//     // End the timer
-//     std::clock_t end_time = std::clock();
-// 
-//     // Calculate the duration in seconds
-//     double duration = (end_time - start_time) / static_cast<double>(CLOCKS_PER_SEC);
-// 
-//     // Print the duration
-//     std::cout << "Matrix multiplication duration: " 
-//               << duration << " seconds" << std::endl;
-// 
-//     // Return the resulting matrix
-//     return result;
-// }
 
 // Matrix-vector addition (unchanged from previous example)
 Matrix operator+(Matrix& m, Vector& v) {

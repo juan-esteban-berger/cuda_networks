@@ -41,8 +41,8 @@ def display_image(X, index):
 nn_loaded = NeuralNetwork()
 
 print("Loading Model...")
-nn_loaded.load_config("models/python_config.csv")
-nn_loaded.load_weights("models/python_weights.csv")
+nn_loaded.load_config("test_models/python_config.csv")
+nn_loaded.load_weights("test_models/python_weights.csv")
 
 print("Testing...")
 pred = nn_loaded.predict(X_test)

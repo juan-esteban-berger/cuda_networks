@@ -1,10 +1,32 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <random>
+#include <ctime>
 
 #include "linear_algebra.h"
 #include "neural_network.h"
 
+//////////////////////////////////////////////////////////////////
+// Function to Display Image
+void display_image(Matrix* X, int index) {
+    int image_size = 28;  // Assuming 28x28 MNIST images
+    for (int i = 0; i < image_size; ++i) {
+        for (int j = 0; j < image_size; ++j) {
+            double pixel = X->getValues(i * image_size + j, index);
+            // if pixel equals 0, print "  ", else print "##"
+            if (pixel == 0) {
+                std::cout << "  ";
+            } else {
+                std::cout << "##";
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
+//////////////////////////////////////////////////////////////////
+// Main Function
 int main() {
 //////////////////////////////////////////////////////////////////
 // Load Data
@@ -44,9 +66,6 @@ int main() {
     normalize_matrix(X_test_T, 0, 255);
 
 //////////////////////////////////////////////////////////////////
-// Function to Display Image
-
-//////////////////////////////////////////////////////////////////
 // Test Neural Network
     NeuralNetwork nn;
 
@@ -61,6 +80,33 @@ int main() {
 
 //////////////////////////////////////////////////////////////////
 // Preview 5 Random Images
+    // Preview 5 Random Images
+    std::cout << "Displaying 5 Random Images..." << std::endl;
+    
+    // Initialize random number generator
+    std::mt19937 rng(std::time(0));
+    std::uniform_int_distribution<int> dist(0, X_test_T->cols - 1);
+
+    for (int i = 0; i < 5; ++i) {
+        int random_index = dist(rng);
+        int pred_val = static_cast<int>(pred.getValues(random_index));
+        
+        // Find true label (argmax of Y_test_T column)
+        int y_val = 0;
+        double max_prob = Y_test_T->getValues(0, random_index);
+        for (int j = 1; j < Y_test_T->rows; ++j) {
+            if (Y_test_T->getValues(j, random_index) > max_prob) {
+                max_prob = Y_test_T->getValues(j, random_index);
+                y_val = j;
+            }
+        }
+
+        std::cout << "Predicted: " << pred_val << ", True: " << y_val << std::endl;
+        display_image(X_test_T, random_index);
+
+        std::cout << "Press Enter to see the next image..." << std::endl;
+        std::cin.get();  // Wait for user input
+    }
 
     return 0;
 }
