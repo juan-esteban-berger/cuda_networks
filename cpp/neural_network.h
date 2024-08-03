@@ -59,7 +59,7 @@ public:
                   Matrix& Y,
                   std::string loss_func);
     void update_params(double learning_rate);
-    double get_accuracy(Matrix& Y_true);
+    double get_accuracy(Matrix& X, Matrix& Y_true);
     void gradient_descent(Matrix& X_train,
                           Matrix& Y_train,
                           std::string loss,

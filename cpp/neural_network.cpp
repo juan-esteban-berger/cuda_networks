@@ -424,22 +424,17 @@ void NeuralNetwork::update_params(double learning_rate) {
 }
 
 //////////////////////////////////////////////////////////////////
-double NeuralNetwork::get_accuracy(Matrix& Y_true) {
-    // Get output
+double NeuralNetwork::get_accuracy(Matrix& X, Matrix& Y_true) {
+    forward(X);
     Matrix* Y_pred = getOutput();
-
-    // Get argmax of true and predicted labels
     Vector true_labels = argmax(Y_true);
     Vector pred_labels = argmax(*Y_pred);
-
-    // Check number of correct predictions
     double correct_count = 0.0;
     for (int i = 0; i < Y_true.cols; ++i) {
         if (pred_labels.getValues(i) == true_labels.getValues(i)) {
             correct_count += 1.0;
         }
     }
-
     return correct_count / Y_true.cols;
 }
 
@@ -529,17 +524,58 @@ void NeuralNetwork::train(Matrix& X_train,
     
     // Iterate through epochs
     for (int epoch = 0; epoch < epochs; ++epoch) {
-        
+        // Initialize variables
+        double acc = 0.0;
+        double loss_val = 0.0;
+
         if (optimizer == "batch_gradient_descent") {
-            gradient_descent(X_train,
-                             Y_train,
-                             loss,
-                             learning_rate);
+            // Gradient Descent
+            gradient_descent(X_train, Y_train, loss, learning_rate);
+            // Calculate accuracy
+            acc = get_accuracy(X_train, Y_train);
+            // Calculate loss
+            double loss_val = 0.0;
+            if (loss == "CatCrossEntropy") {
+                CatCrossEntropy ce;
+                loss_val = ce.function(Y_train, *getOutput());
+            }
         } else if (optimizer == "mini_batch_gradient_descent") {
-            gradient_descent(X_train,
-                             Y_train,
-                             loss,
-                             learning_rate);
+            // Temporary lists
+            std::vector<double> acc_temp_list;
+            std::vector<double> loss_temp_list;
+            // Loop through mini-batches
+            for (int i = 0; i < X_train.cols; i += batch_size) {
+                // Get end index
+                int end_idx = i + batch_size;
+                // Check if end index is greater than total columns
+                if (end_idx > X_train.cols) end_idx = X_train.cols;
+
+                // Get mini-batches
+                Matrix X_batch = X_train.iloc(0, X_train.rows, i, end_idx);
+                Matrix Y_batch = Y_train.iloc(0, Y_train.rows, i, end_idx);
+               
+                // Gradient Descent
+                gradient_descent(X_batch, Y_batch, loss, learning_rate);
+                
+                // Calculate accuracy
+                double acc_batch = get_accuracy(X_batch, Y_batch);
+                acc_temp_list.push_back(acc_batch);
+                
+                if (loss == "CatCrossEntropy") {
+                    CatCrossEntropy ce;
+                    double loss_batch = ce.function(Y_batch, *getOutput());
+                    loss_temp_list.push_back(loss_batch);
+                }
+            }
+            // Calculate average accuracy and loss
+            acc = 0.0;
+            loss_val = 0.0;
+            for (int i = 0; i < acc_temp_list.size(); ++i) {
+                acc += acc_temp_list[i];
+                loss_val += loss_temp_list[i];
+            }
+            acc /= acc_temp_list.size();
+            loss_val /= loss_temp_list.size();
         }
 
         // Calculate duration
@@ -547,15 +583,8 @@ void NeuralNetwork::train(Matrix& X_train,
         double duration = (end_time - start_time) / static_cast<double>(CLOCKS_PER_SEC);
 
         // Calculate accuracy
-        double accuracy = get_accuracy(Y_train);
+        double accuracy = get_accuracy(X_train, Y_train);
 
-        // Calculate loss
-        double loss_val = 0.0;
-        if (loss == "CatCrossEntropy") {
-            CatCrossEntropy ce;
-            loss_val = ce.function(Y_train, *getOutput());
-        }
-        
         // Append to history lists
         epoch_list.push_back(epoch);
         accuracy_list.push_back(accuracy);

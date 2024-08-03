@@ -29,6 +29,21 @@ double Vector::getValues(int index) {
     return data[index];
 }
 
+// Matrix slicing
+Matrix Matrix::iloc(int row_start, int row_end,
+                    int col_start, int col_end) {
+    Matrix result(row_end - row_start, col_end - col_start);
+
+    for (int i = 0; i < result.rows; ++i) {
+        for (int j = 0; j < result.cols; ++j) {
+            result.data[i][j] = data[i + row_start][j + col_start];
+        }
+    }
+
+    return result;
+}
+
+
 //////////////////////////////////////////////////////////////////
 // Matrix Class
 Matrix::Matrix(int r, int c) : rows(r), cols(c) {

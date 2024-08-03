@@ -7,6 +7,62 @@
 #include "neural_network.h"
 
 //////////////////////////////////////////////////////////////////
+// Matrix Slicing Test
+TEST(MatrixTest, ilocTest) {
+    // Initialize matrix with specific values
+    Matrix m(5, 5);
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            // m will be [0 1 2 3 4;
+            //            5 6 7 8 9;
+            //            ...
+            //            20 21 22 23 24]
+            m.setValue(i, j, i * 5 + j);
+        }
+    }
+
+    // Preview original matrix
+    std::cout << "Original Matrix:" << std::endl;
+    preview_matrix(&m, 2);
+
+    // Perform slicing
+    Matrix slice = m.iloc(1, 4, 2, 5);
+
+    // Preview sliced matrix
+    std::cout << "Sliced Matrix:" << std::endl;
+    preview_matrix(&slice, 2);
+
+    // Check dimensions of sliced matrix
+    ASSERT_EQ(slice.rows, 3);
+    ASSERT_EQ(slice.cols, 3);
+
+    // Check values in sliced matrix
+    for (int i = 0; i < slice.rows; i++) {
+        for (int j = 0; j < slice.cols; j++) {
+            ASSERT_EQ(slice.getValues(i, j), m.getValues(i + 1, j + 2));
+        }
+    }
+
+    // Test edge case: slicing entire matrix
+    Matrix full_slice = m.iloc(0, 5, 0, 5);
+    
+    // Preview full slice
+    std::cout << "Full Slice Matrix:" << std::endl;
+    preview_matrix(&full_slice, 2);
+
+    // Check dimensions of full slice
+    ASSERT_EQ(full_slice.rows, 5);
+    ASSERT_EQ(full_slice.cols, 5);
+
+    // Check values in full slice
+    for (int i = 0; i < full_slice.rows; i++) {
+        for (int j = 0; j < full_slice.cols; j++) {
+            ASSERT_EQ(full_slice.getValues(i, j), m.getValues(i, j));
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////
 // Matrix and Vector Operations Tests
 // Test for element-wise multiplication (*)
 TEST(OperatorTest, ElementWiseMultiplicationTest) {
@@ -1871,6 +1927,7 @@ TEST(NeuralNetworkTest, UpdateParamsTest) {
                     b1_test.getValues(i), 1e-5);
     }
 }
+
 //////////////////////////////////////////////////////////////////
 TEST(NeuralNetworkTest, GetAccuracyTest) {
     // Initialize input matrix
@@ -1936,7 +1993,7 @@ TEST(NeuralNetworkTest, GetAccuracyTest) {
     nn.forward(X);
 
     // Run backward propagation
-    nn.backward(X,Y,"CatCrossEntropy");
+    nn.backward(X, Y, "CatCrossEntropy");
 
     // Update Parameters
     double learning_rate = 0.01;
@@ -1975,11 +2032,10 @@ TEST(NeuralNetworkTest, GetAccuracyTest) {
             correct_count += 1.0;
         }
     }
-
     double test_accuracy = correct_count / Y.cols;
 
     // Get accuracy
-    double accuracy = nn.get_accuracy(Y);
+    double accuracy = nn.get_accuracy(X, Y);
 
     // Print accuracy from test
     std::cout << "Test Accuracy: " << test_accuracy << std::endl;
@@ -1989,7 +2045,6 @@ TEST(NeuralNetworkTest, GetAccuracyTest) {
 
     // Check values
     ASSERT_NEAR(accuracy, test_accuracy, 1e-5);
-
 }
 
 ////////////////////////////////////////////////////////////////////

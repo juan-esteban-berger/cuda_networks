@@ -75,7 +75,7 @@ int main() {
 
     std::cout << "Testing..." << std::endl;
     Vector pred = nn.predict(*X_test_T);
-    double acc = nn.get_accuracy(*Y_test_T);
+    double acc = nn.get_accuracy(*X_test_T, *Y_test_T);
     std::cout << "Accuracy: " << std::fixed << std::setprecision(4) << acc << std::endl;
 
 //////////////////////////////////////////////////////////////////

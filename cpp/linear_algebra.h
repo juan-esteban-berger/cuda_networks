@@ -25,6 +25,7 @@ public:
     ~Matrix();
     void setValue(int row, int col, double value);
     double getValues(int row, int col);
+    Matrix iloc(int row_start, int row_end, int col_start, int col_end);
 };
 
 //////////////////////////////////////////////////////////////////
