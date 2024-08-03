@@ -8,19 +8,34 @@ int main() {
 //////////////////////////////////////////////////////////////////
 // Load Data
     std::cout << "Loading Data..." << std::endl;
+    // // Define matrix dimensions
+    // int X_train_rows = 60000;
+    // int X_train_cols = 784;
+    // int Y_train_rows = 60000;
+    // int Y_train_cols = 10;
+    // 
+    // // Initialize matrices
+    // Matrix X_train(X_train_rows, X_train_cols);
+    // Matrix Y_train(Y_train_rows, Y_train_cols);
+    // 
+    // // Read data
+    // read_csv("data/X_train.csv", &X_train);
+    // read_csv("data/Y_train.csv", &Y_train);
+
     // Define matrix dimensions
-    int X_train_rows = 60000;
+    int num_rows = 1000;
+    int X_train_rows = num_rows;
     int X_train_cols = 784;
-    int Y_train_rows = 60000;
+    int Y_train_rows = num_rows;
     int Y_train_cols = 10;
-    
     // Initialize matrices
     Matrix X_train(X_train_rows, X_train_cols);
     Matrix Y_train(Y_train_rows, Y_train_cols);
-    
     // Read data
-    read_csv("data/X_train.csv", &X_train);
-    read_csv("data/Y_train.csv", &Y_train);
+    read_csv_limited("data/X_train.csv", &X_train,
+                     0, X_train_rows, X_train_rows, 784);
+    read_csv_limited("data/Y_train.csv", &Y_train,
+                     0, Y_train_rows, Y_train_rows, 10);
 
     // Print Shape
     std::cout << "X_train: (" 
@@ -50,7 +65,8 @@ int main() {
     nn.add_layer(new Layer(200, 10, "Softmax"));
 
     std::cout << "Training..." << std::endl;
-    int epochs = 200;
+    // int epochs = 200;
+    int epochs = 10;
     double learning_rate = 0.1;
     std::string loss = "CatCrossEntropy";
     std::string optimizer = "mini_batch_gradient_descent";

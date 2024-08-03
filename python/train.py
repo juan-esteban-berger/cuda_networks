@@ -35,7 +35,7 @@ nn.add_layer(Layer(200, 10, Softmax()))
 print("Training...")
 nn.train(X_train,
          Y_train,
-         epochs=250,
+         epochs=200,
          learning_rate=0.1,
          loss=CatCrossEntropy(),
          optimizer="mini_batch_gradient_descent",
