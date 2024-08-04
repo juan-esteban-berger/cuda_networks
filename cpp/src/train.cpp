@@ -62,6 +62,7 @@ int main() {
 // Initialize Neural Network
     NeuralNetwork nn;
     int batch_size = 8;
+    double batch_size_dbl = static_cast<double>(batch_size);
     nn.add_layer(new Layer(784, 200, "Sigmoid", batch_size));
     nn.add_layer(new Layer(200, 200, "Sigmoid", batch_size));
     nn.add_layer(new Layer(200, 10, "Softmax", batch_size));
@@ -74,7 +75,6 @@ int main() {
     std::string loss = "CatCrossEntropy";
     std::string optimizer = "mini_batch_gradient_descent";
     // double batch_size = 1000;
-    double batch_size_dbl = static_cast<double>(batch_size);
     std::string history_path = "models/cpp_history.csv";
     nn.train(*X_train_T,
              *Y_train_T,
