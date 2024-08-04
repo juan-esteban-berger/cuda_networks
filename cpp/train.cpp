@@ -23,8 +23,8 @@ int main() {
     // read_csv("data/Y_train.csv", &Y_train);
 
     // // Define matrix dimensions
-    int num_rows = 10000;
-    // int num_rows = 1000;
+    // int num_rows = 10000;
+    int num_rows = 1000;
     int X_train_rows = num_rows;
     int X_train_cols = 784;
     int Y_train_rows = num_rows;

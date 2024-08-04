@@ -29,20 +29,34 @@ double Vector::getValues(int index) {
     return data[index];
 }
 
-// Matrix slicing
-// Matrix Matrix::iloc(int row_start, int row_end,
-//                     int col_start, int col_end) {
-//     Matrix result(row_end - row_start, col_end - col_start);
-// 
-//     for (int i = 0; i < result.rows; ++i) {
-//         for (int j = 0; j < result.cols; ++j) {
-//             result.data[i][j] = data[i + row_start][j + col_start];
-//         }
-//     }
-// 
-//     return result;
-// }
+//////////////////////////////////////////////////////////////////
+// Matrix Class
+Matrix::Matrix(int r, int c) : rows(r), cols(c) {
+    data = new double*[rows];
+    for (int i = 0; i < rows; ++i) {
+        data[i] = new double[cols];
+        memset(data[i], 0, cols * sizeof(double));
+    }
+}
 
+Matrix::~Matrix() {
+    for (int i = 0; i < rows; ++i) {
+        delete[] data[i];
+    }
+    delete[] data;
+}
+
+void Matrix::setValue(int row, int col, double value) {
+    data[row][col] = value;
+}
+
+double Matrix::getValues(int row, int col) {
+    return data[row][col];
+}
+
+//////////////////////////////////////////////////////////////////
+// Matrix and Vector Operations
+// Matrix iloc
 Matrix Matrix::iloc(int row_start, int row_end, int col_start, int col_end) {
     Matrix result(row_end - row_start, col_end - col_start);
 
@@ -76,6 +90,7 @@ Matrix Matrix::iloc(int row_start, int row_end, int col_start, int col_end) {
     return result;
 }
 
+// Matrix slicing
 void Matrix::slice(int row_start, int row_end, int col_start, int col_end, Matrix& result) {
     // Determine number of threads
     unsigned int num_threads = std::thread::hardware_concurrency();
@@ -105,45 +120,7 @@ void Matrix::slice(int row_start, int row_end, int col_start, int col_end, Matri
     }
 }
 
-//////////////////////////////////////////////////////////////////
-// Matrix Class
-Matrix::Matrix(int r, int c) : rows(r), cols(c) {
-    data = new double*[rows];
-    for (int i = 0; i < rows; ++i) {
-        data[i] = new double[cols];
-        memset(data[i], 0, cols * sizeof(double));
-    }
-}
-
-Matrix::~Matrix() {
-    for (int i = 0; i < rows; ++i) {
-        delete[] data[i];
-    }
-    delete[] data;
-}
-
-void Matrix::setValue(int row, int col, double value) {
-    data[row][col] = value;
-}
-
-double Matrix::getValues(int row, int col) {
-    return data[row][col];
-}
-
-//////////////////////////////////////////////////////////////////
-// Matrix and Vector Operations
 // Vector Assignment operator
-// Vector& Vector::operator=(Vector& other) {
-//     if (this != &other) {
-//         delete[] data;
-//         rows = other.rows;
-//         data = new double[rows];
-//         for (int i = 0; i < rows; i++) {
-//             data[i] = other.data[i];
-//         }
-//     }
-//     return *this;
-// }
 Vector& Vector::operator=(Vector& other) {
     if (this != &other) {
         delete[] data;
@@ -178,23 +155,7 @@ Vector& Vector::operator=(Vector& other) {
     return *this;
 }
 
-// // Matrix Assignment operator
-// Matrix& Matrix::operator=(Matrix& other) {
-//     // Copy dimensions
-//     rows = other.rows;
-//     cols = other.cols;
-// 
-//     // Allocate new memory
-//     data = new double*[rows];
-//     for (int i = 0; i < rows; i++) {
-//         data[i] = new double[cols];
-//         // Copy data
-//         for (int j = 0; j < cols; j++) {
-//             data[i][j] = other.data[i][j];
-//         }
-//     }
-//     return *this;
-// }
+// Matrix Assignment operator
 Matrix& Matrix::operator=(Matrix& other) {
     if (this != &other) {
         // Copy dimensions
@@ -238,20 +199,6 @@ Matrix& Matrix::operator=(Matrix& other) {
 }
 
 // Element-wise subtraction
-// Matrix operator-(Matrix& m1, Matrix& m2) {
-//     // Create matrix with m1.rows and m1.cols
-//     Matrix result(m1.rows, m1.cols);
-//     // Iterate over each row of the matrices
-//     for (int i = 0; i < m1.rows; ++i) {
-//         // Iterate over each column of the matrices
-//         for (int j = 0; j < m1.cols; ++j) {
-//             // Multiply corresponding elements and store in the result matrix
-//             result.setValue(i, j, m1.getValues(i, j) - m2.getValues(i, j));
-//         }
-//     }
-//     // Return the resulting matrix
-//     return result;
-// }
 Matrix operator-(Matrix& m1, Matrix& m2) {
     // Create matrix with m1.rows and m1.cols
     Matrix result(m1.rows, m1.cols);
@@ -288,21 +235,6 @@ Matrix operator-(Matrix& m1, Matrix& m2) {
 }
 
 // Element-wise multiplication
-// Matrix operator*(Matrix& m1, Matrix& m2) {
-//     // Create matrix with m1.rows and m1.cols
-//     Matrix result(m1.rows, m1.cols);
-//     // Iterate over each row of the matrices
-//     for (int i = 0; i < m1.rows; ++i) {
-//         // Iterate over each column of the matrices
-//         for (int j = 0; j < m1.cols; ++j) {
-//             // Multiply corresponding elements and store in the result matrix
-//             result.setValue(i, j, m1.getValues(i, j) * m2.getValues(i, j));
-//         }
-//     }
-//     // Return the resulting matrix
-//     return result;
-// }
-
 Matrix operator*(Matrix& m1, Matrix& m2) {
     // Create matrix with m1.rows and m1.cols
     Matrix result(m1.rows, m1.cols);
@@ -428,21 +360,6 @@ Matrix matmul(Matrix& m1, Matrix& m2) {
 }
 
 // Matrix-vector addition (unchanged from previous example)
-// Matrix operator+(Matrix& m, Vector& v) {
-//     // Initialize matrix
-//     Matrix result(m.rows, m.cols);
-//     // Iterate over each row of the matrix
-//     for (int i = 0; i < m.rows; ++i) {
-//         // Iterate over each column of the matrix
-//         for (int j = 0; j < m.cols; ++j) {
-//             // Add the corresponding vector element to each matrix element
-//             result.setValue(i, j, m.getValues(i, j) + v.getValues(i));
-//         }
-//     }
-//     // Return the resulting matrix
-//     return result;
-// }
-
 Matrix operator+(Matrix& m, Vector& v) {
     // Initialize matrix
     Matrix result(m.rows, m.cols);
@@ -479,20 +396,6 @@ Matrix operator+(Matrix& m, Vector& v) {
 }
 
 // Matrix-scalar division
-// Matrix operator/(Matrix& m, double scalar) {
-//     // Initialize matrix with m.rows and m.cols
-//     Matrix result(m.rows, m.cols);
-//     // Iterate over each row of the matrix
-//     for (int i = 0; i < m.rows; ++i) {
-//         // Iterate over each column of the matrix
-//         for (int j = 0; j < m.cols; ++j) {
-//             // Divide each element by the scalar
-//             result.setValue(i, j, m.getValues(i, j) / scalar);
-//         }
-//     }
-//     // Return the resulting matrix
-//     return result;
-// }
 Matrix operator/(Matrix& m, double scalar) {
     // Initialize matrix with m.rows and m.cols
     Matrix result(m.rows, m.cols);
@@ -529,18 +432,6 @@ Matrix operator/(Matrix& m, double scalar) {
 }
 
 // Vector-scalar division
-// Vector operator/(Vector& v, double scalar) {
-//     // Initialize vector with v.rows
-//     Vector result(v.rows);
-//     // Iterate over each row of the vector
-//     for (int i = 0; i < v.rows; i++) {
-//         // Divide each element
-//         result.setValue(i, v.getValues(i) / scalar);
-//     }
-//     // Return the resulting vector
-//     return result;
-// }
-
 Vector operator/(Vector& v, double scalar) {
     // Initialize vector with v.rows
     Vector result(v.rows);
@@ -575,24 +466,6 @@ Vector operator/(Vector& v, double scalar) {
 }
 
 // Sum matrix columns
-// Vector sum_columns(Matrix& m) {
-//     // Initialize vector with m.rows
-//     Vector result(m.rows);
-//     // Iterate over each row of the matrix
-//     for (int i = 0; i < m.rows; ++i) {
-//         // Initialize sum to 0
-//         double sum = 0;
-//         // Iterate over each column of the matrix
-//         for (int j = 0; j < m.cols; ++j) {
-//             // Add the element to the sum
-//             sum += m.getValues(i, j);
-//         }
-//         // Store the sum in the result vector
-//         result.setValue(i, sum);
-//     }
-//     // Return the result vector
-//     return result;
-// }
 Vector sum_columns(Matrix& m) {
     // Initialize vector with m.rows
     Vector result(m.rows);

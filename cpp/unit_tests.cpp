@@ -720,8 +720,8 @@ TEST(NeuralNetworkTest, ForwardPropagationTest) {
 //////////////////////////////////////////////////////////////////
     // Create a simple neural network
     NeuralNetwork nn;
-    Layer* layer1 = new Layer(3, 2, "Sigmoid");
-    Layer* layer2 = new Layer(2, 2, "Softmax");
+    Layer* layer1 = new Layer(3, 2, "Sigmoid", X.cols);
+    Layer* layer2 = new Layer(2, 2, "Softmax", X.cols);
 
 //////////////////////////////////////////////////////////////////
     // Initialize 2D arrays for weights
@@ -947,8 +947,8 @@ TEST(NeuralNetworkTest, BackwardPropagationTest) {
 //////////////////////////////////////////////////////////////////
     // Create a simple neural network
     NeuralNetwork nn;
-    Layer* layer1 = new Layer(3, 2, "Sigmoid");
-    Layer* layer2 = new Layer(2, 2, "Softmax");
+    Layer* layer1 = new Layer(3, 2, "Sigmoid", X.cols);
+    Layer* layer2 = new Layer(2, 2, "Softmax", X.cols);
 
 //////////////////////////////////////////////////////////////////
     // Initialize 2D arrays for weights
@@ -1363,8 +1363,8 @@ TEST(NeuralNetworkTest, UpdateParamsTest) {
 //////////////////////////////////////////////////////////////////
     // Create a simple neural network
     NeuralNetwork nn;
-    Layer* layer1 = new Layer(3, 2, "Sigmoid");
-    Layer* layer2 = new Layer(2, 2, "Softmax");
+    Layer* layer1 = new Layer(3, 2, "Sigmoid", X.cols);
+    Layer* layer2 = new Layer(2, 2, "Softmax", X.cols);
 
 //////////////////////////////////////////////////////////////////
     // Initialize 2D arrays for weights
@@ -1956,8 +1956,8 @@ TEST(NeuralNetworkTest, GetAccuracyTest) {
 
     // Create a simple neural network
     NeuralNetwork nn;
-    Layer* layer1 = new Layer(3, 2, "Sigmoid");
-    Layer* layer2 = new Layer(2, 2, "Softmax");
+    Layer* layer1 = new Layer(3, 2, "Sigmoid", X.cols);
+    Layer* layer2 = new Layer(2, 2, "Softmax", X.cols);
 
     // Initialize 2D arrays for weights
     double W1_values[2][3] = {{0.1, 0.2, 0.3}, {0.4, 0.5, 0.6}};

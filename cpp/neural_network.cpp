@@ -83,6 +83,8 @@ Layer::Layer(int input_num,
              std::string activation_func,
              int batch_size) {
     activation = activation_func;
+    this->batch_size = batch_size;
+
     W = new Matrix(output_num, input_num);
     b = new Vector(output_num);
     
@@ -235,19 +237,6 @@ void NeuralNetwork::backward(Matrix& X,
 //////////////////////////////////////////////////////////////////
     // Iterate through each layer reverse
     for (int i = layers.size() - 1; i >= 0; i--) {
-
-//////////////////////////////////////////////////////////////////
-// Initialize matrices for gradients
-        // // Initialize a Matrix for current layer's dZ
-        // layers[i]->dZ = new Matrix(layers[i]->A->rows,
-        //                            layers[i]->A->cols);
-
-        // // Initialize a Matrix for current layer's dW
-        // layers[i]->dW = new Matrix(layers[i]->W->rows,
-        //                            layers[i]->W->cols);
-
-        // // Initialize a Vector for current layer's db
-        // layers[i]->db = new Vector(layers[i]->b->rows);
 
 //////////////////////////////////////////////////////////////////
 // Initialize pointer to current layer
@@ -512,8 +501,6 @@ void NeuralNetwork::train(Matrix& X_train,
                 if (end_idx > X_train.cols) end_idx = X_train.cols;
 
                 // // Get mini-batches
-                // Matrix X_batch = X_train.iloc(0, X_train.rows, i, end_idx);
-                // Matrix Y_batch = Y_train.iloc(0, Y_train.rows, i, end_idx);
                 // Use slice function to operate on existing matrices
                 X_train.slice(0, X_train.rows, i, end_idx, X_batch);
                 Y_train.slice(0, Y_train.rows, i, end_idx, Y_batch);
@@ -585,14 +572,13 @@ void NeuralNetwork::save_config(std::string filepath) {
         std::cerr << "Unable to open file for writing: " << filepath << std::endl;
         return;
     }
-
     for (Layer* layer : layers) {
         int input_num = layer->W->cols;
         int output_num = layer->W->rows;
         std::string activation = layer->activation;
-        file << input_num << "," << output_num << "," << activation << "\n";
+        int batch_size = layer->batch_size;
+        file << input_num << "," << output_num << "," << activation << "," << batch_size << "\n";
     }
-
     file.close();
 }
 
@@ -632,7 +618,6 @@ void NeuralNetwork::load_config(std::string filepath) {
         std::cerr << "Unable to open file for reading: " << filepath << std::endl;
         return;
     }
-
     layers.clear();
     std::string line;
     while (std::getline(file, line)) {
@@ -642,14 +627,14 @@ void NeuralNetwork::load_config(std::string filepath) {
         while (std::getline(iss, token, ',')) {
             tokens.push_back(token);
         }
-        if (tokens.size() == 3) {
+        if (tokens.size() == 4) {
             int input_num = std::stoi(tokens[0]);
             int output_num = std::stoi(tokens[1]);
             std::string activation = tokens[2];
-            add_layer(new Layer(input_num, output_num, activation, 8));
+            int batch_size = std::stoi(tokens[3]);
+            add_layer(new Layer(input_num, output_num, activation, batch_size));
         }
     }
-
     file.close();
 }
 

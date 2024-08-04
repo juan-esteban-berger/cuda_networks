@@ -40,6 +40,8 @@ public:
     Vector* db;
     std::string activation;
 
+    int batch_size;
+
     Layer(int input_num,
           int output_num,
           std::string activation_func,
