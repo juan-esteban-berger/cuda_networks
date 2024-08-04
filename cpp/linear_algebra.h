@@ -12,6 +12,7 @@ public:
     ~Vector();
     void setValue(int index, double value);
     double getValues(int index);
+    Vector& operator=(Vector& other);
 };
 
 //////////////////////////////////////////////////////////////////
@@ -26,6 +27,8 @@ public:
     void setValue(int row, int col, double value);
     double getValues(int row, int col);
     Matrix iloc(int row_start, int row_end, int col_start, int col_end);
+    void slice(int row_start, int row_end, int col_start, int col_end, Matrix& result);
+    Matrix& operator=(Matrix& other);
 };
 
 //////////////////////////////////////////////////////////////////

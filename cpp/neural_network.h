@@ -40,7 +40,10 @@ public:
     Vector* db;
     std::string activation;
 
-    Layer(int input_num, int output_num, std::string activation_func);
+    Layer(int input_num,
+          int output_num,
+          std::string activation_func,
+          int batch_size);
     ~Layer();
 };
 

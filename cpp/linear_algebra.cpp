@@ -30,19 +30,80 @@ double Vector::getValues(int index) {
 }
 
 // Matrix slicing
-Matrix Matrix::iloc(int row_start, int row_end,
-                    int col_start, int col_end) {
+// Matrix Matrix::iloc(int row_start, int row_end,
+//                     int col_start, int col_end) {
+//     Matrix result(row_end - row_start, col_end - col_start);
+// 
+//     for (int i = 0; i < result.rows; ++i) {
+//         for (int j = 0; j < result.cols; ++j) {
+//             result.data[i][j] = data[i + row_start][j + col_start];
+//         }
+//     }
+// 
+//     return result;
+// }
+
+Matrix Matrix::iloc(int row_start, int row_end, int col_start, int col_end) {
     Matrix result(row_end - row_start, col_end - col_start);
 
-    for (int i = 0; i < result.rows; ++i) {
-        for (int j = 0; j < result.cols; ++j) {
-            result.data[i][j] = data[i + row_start][j + col_start];
-        }
+    // Determine number of threads
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+    // Calculate rows per thread
+    int rows_per_thread = result.rows / num_threads;
+
+    // Create threads
+    std::vector<std::thread> threads;
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        int start_row = t * rows_per_thread;
+        int end_row = (t == num_threads - 1) ? result.rows : (t + 1) * rows_per_thread;
+
+        threads.emplace_back([this, &result, row_start, col_start, start_row, end_row]() {
+            for (int i = start_row; i < end_row; ++i) {
+                for (int j = 0; j < result.cols; ++j) {
+                    result.data[i][j] = data[i + row_start][j + col_start];
+                }
+            }
+        });
+    }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
     }
 
     return result;
 }
 
+void Matrix::slice(int row_start, int row_end, int col_start, int col_end, Matrix& result) {
+    // Determine number of threads
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+    // Calculate rows per thread
+    int rows_per_thread = (row_end - row_start) / num_threads;
+
+    // Create threads
+    std::vector<std::thread> threads;
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        int start_row = row_start + t * rows_per_thread;
+        int end_row = (t == num_threads - 1) ? row_end : (row_start + (t + 1) * rows_per_thread);
+
+        threads.emplace_back([this, &result, row_start, col_start, start_row, end_row, col_end]() {
+            for (int i = start_row; i < end_row; ++i) {
+                for (int j = col_start; j < col_end; ++j) {
+                    result.data[i - row_start][j - col_start] = data[i][j];
+                }
+            }
+        });
+    }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+}
 
 //////////////////////////////////////////////////////////////////
 // Matrix Class
@@ -71,34 +132,208 @@ double Matrix::getValues(int row, int col) {
 
 //////////////////////////////////////////////////////////////////
 // Matrix and Vector Operations
+// Vector Assignment operator
+// Vector& Vector::operator=(Vector& other) {
+//     if (this != &other) {
+//         delete[] data;
+//         rows = other.rows;
+//         data = new double[rows];
+//         for (int i = 0; i < rows; i++) {
+//             data[i] = other.data[i];
+//         }
+//     }
+//     return *this;
+// }
+Vector& Vector::operator=(Vector& other) {
+    if (this != &other) {
+        delete[] data;
+        rows = other.rows;
+        data = new double[rows];
+
+        // Determine number of threads
+        unsigned int num_threads = std::thread::hardware_concurrency();
+        num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+        // Calculate elements per thread
+        int elements_per_thread = rows / num_threads;
+
+        // Create threads
+        std::vector<std::thread> threads;
+        for (unsigned int t = 0; t < num_threads; ++t) {
+            int start_index = t * elements_per_thread;
+            int end_index = (t == num_threads - 1) ? rows : (t + 1) * elements_per_thread;
+
+            threads.emplace_back([this, &other, start_index, end_index]() {
+                for (int i = start_index; i < end_index; i++) {
+                    data[i] = other.data[i];
+                }
+            });
+        }
+
+        // Wait for all threads to complete
+        for (auto& thread : threads) {
+            thread.join();
+        }
+    }
+    return *this;
+}
+
+// // Matrix Assignment operator
+// Matrix& Matrix::operator=(Matrix& other) {
+//     // Copy dimensions
+//     rows = other.rows;
+//     cols = other.cols;
+// 
+//     // Allocate new memory
+//     data = new double*[rows];
+//     for (int i = 0; i < rows; i++) {
+//         data[i] = new double[cols];
+//         // Copy data
+//         for (int j = 0; j < cols; j++) {
+//             data[i][j] = other.data[i][j];
+//         }
+//     }
+//     return *this;
+// }
+Matrix& Matrix::operator=(Matrix& other) {
+    if (this != &other) {
+        // Copy dimensions
+        rows = other.rows;
+        cols = other.cols;
+
+        // Allocate new memory
+        data = new double*[rows];
+        for (int i = 0; i < rows; i++) {
+            data[i] = new double[cols];
+        }
+
+        // Determine number of threads
+        unsigned int num_threads = std::thread::hardware_concurrency();
+        num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+        // Calculate rows per thread
+        int rows_per_thread = rows / num_threads;
+
+        // Create threads
+        std::vector<std::thread> threads;
+        for (unsigned int t = 0; t < num_threads; ++t) {
+            int start_row = t * rows_per_thread;
+            int end_row = (t == num_threads - 1) ? rows : (t + 1) * rows_per_thread;
+
+            threads.emplace_back([this, &other, start_row, end_row]() {
+                for (int i = start_row; i < end_row; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        data[i][j] = other.data[i][j];
+                    }
+                }
+            });
+        }
+
+        // Wait for all threads to complete
+        for (auto& thread : threads) {
+            thread.join();
+        }
+    }
+    return *this;
+}
+
 // Element-wise subtraction
+// Matrix operator-(Matrix& m1, Matrix& m2) {
+//     // Create matrix with m1.rows and m1.cols
+//     Matrix result(m1.rows, m1.cols);
+//     // Iterate over each row of the matrices
+//     for (int i = 0; i < m1.rows; ++i) {
+//         // Iterate over each column of the matrices
+//         for (int j = 0; j < m1.cols; ++j) {
+//             // Multiply corresponding elements and store in the result matrix
+//             result.setValue(i, j, m1.getValues(i, j) - m2.getValues(i, j));
+//         }
+//     }
+//     // Return the resulting matrix
+//     return result;
+// }
 Matrix operator-(Matrix& m1, Matrix& m2) {
     // Create matrix with m1.rows and m1.cols
     Matrix result(m1.rows, m1.cols);
-    // Iterate over each row of the matrices
-    for (int i = 0; i < m1.rows; ++i) {
-        // Iterate over each column of the matrices
-        for (int j = 0; j < m1.cols; ++j) {
-            // Multiply corresponding elements and store in the result matrix
-            result.setValue(i, j, m1.getValues(i, j) - m2.getValues(i, j));
-        }
+
+    // Determine number of threads
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+    // Calculate rows per thread
+    int rows_per_thread = m1.rows / num_threads;
+
+    // Create threads
+    std::vector<std::thread> threads;
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        int start_row = t * rows_per_thread;
+        int end_row = (t == num_threads - 1) ? m1.rows : (t + 1) * rows_per_thread;
+
+        threads.emplace_back([&m1, &m2, &result, start_row, end_row]() {
+            for (int i = start_row; i < end_row; ++i) {
+                for (int j = 0; j < m1.cols; ++j) {
+                    result.setValue(i, j, m1.getValues(i, j) - m2.getValues(i, j));
+                }
+            }
+        });
     }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
     // Return the resulting matrix
     return result;
 }
 
 // Element-wise multiplication
+// Matrix operator*(Matrix& m1, Matrix& m2) {
+//     // Create matrix with m1.rows and m1.cols
+//     Matrix result(m1.rows, m1.cols);
+//     // Iterate over each row of the matrices
+//     for (int i = 0; i < m1.rows; ++i) {
+//         // Iterate over each column of the matrices
+//         for (int j = 0; j < m1.cols; ++j) {
+//             // Multiply corresponding elements and store in the result matrix
+//             result.setValue(i, j, m1.getValues(i, j) * m2.getValues(i, j));
+//         }
+//     }
+//     // Return the resulting matrix
+//     return result;
+// }
+
 Matrix operator*(Matrix& m1, Matrix& m2) {
     // Create matrix with m1.rows and m1.cols
     Matrix result(m1.rows, m1.cols);
-    // Iterate over each row of the matrices
-    for (int i = 0; i < m1.rows; ++i) {
-        // Iterate over each column of the matrices
-        for (int j = 0; j < m1.cols; ++j) {
-            // Multiply corresponding elements and store in the result matrix
-            result.setValue(i, j, m1.getValues(i, j) * m2.getValues(i, j));
-        }
+
+    // Determine number of threads
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+    // Calculate rows per thread
+    int rows_per_thread = m1.rows / num_threads;
+
+    // Create threads
+    std::vector<std::thread> threads;
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        int start_row = t * rows_per_thread;
+        int end_row = (t == num_threads - 1) ? m1.rows : (t + 1) * rows_per_thread;
+
+        threads.emplace_back([&m1, &m2, &result, start_row, end_row]() {
+            for (int i = start_row; i < end_row; ++i) {
+                for (int j = 0; j < m1.cols; ++j) {
+                    result.setValue(i, j, m1.getValues(i, j) * m2.getValues(i, j));
+                }
+            }
+        });
     }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
     // Return the resulting matrix
     return result;
 }
@@ -193,66 +428,204 @@ Matrix matmul(Matrix& m1, Matrix& m2) {
 }
 
 // Matrix-vector addition (unchanged from previous example)
+// Matrix operator+(Matrix& m, Vector& v) {
+//     // Initialize matrix
+//     Matrix result(m.rows, m.cols);
+//     // Iterate over each row of the matrix
+//     for (int i = 0; i < m.rows; ++i) {
+//         // Iterate over each column of the matrix
+//         for (int j = 0; j < m.cols; ++j) {
+//             // Add the corresponding vector element to each matrix element
+//             result.setValue(i, j, m.getValues(i, j) + v.getValues(i));
+//         }
+//     }
+//     // Return the resulting matrix
+//     return result;
+// }
+
 Matrix operator+(Matrix& m, Vector& v) {
     // Initialize matrix
     Matrix result(m.rows, m.cols);
-    // Iterate over each row of the matrix
-    for (int i = 0; i < m.rows; ++i) {
-        // Iterate over each column of the matrix
-        for (int j = 0; j < m.cols; ++j) {
-            // Add the corresponding vector element to each matrix element
-            result.setValue(i, j, m.getValues(i, j) + v.getValues(i));
-        }
+
+    // Determine number of threads
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+    // Calculate rows per thread
+    int rows_per_thread = m.rows / num_threads;
+
+    // Create threads
+    std::vector<std::thread> threads;
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        int start_row = t * rows_per_thread;
+        int end_row = (t == num_threads - 1) ? m.rows : (t + 1) * rows_per_thread;
+
+        threads.emplace_back([&m, &v, &result, start_row, end_row]() {
+            for (int i = start_row; i < end_row; ++i) {
+                for (int j = 0; j < m.cols; ++j) {
+                    result.setValue(i, j, m.getValues(i, j) + v.getValues(i));
+                }
+            }
+        });
     }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
     // Return the resulting matrix
     return result;
 }
 
 // Matrix-scalar division
+// Matrix operator/(Matrix& m, double scalar) {
+//     // Initialize matrix with m.rows and m.cols
+//     Matrix result(m.rows, m.cols);
+//     // Iterate over each row of the matrix
+//     for (int i = 0; i < m.rows; ++i) {
+//         // Iterate over each column of the matrix
+//         for (int j = 0; j < m.cols; ++j) {
+//             // Divide each element by the scalar
+//             result.setValue(i, j, m.getValues(i, j) / scalar);
+//         }
+//     }
+//     // Return the resulting matrix
+//     return result;
+// }
 Matrix operator/(Matrix& m, double scalar) {
     // Initialize matrix with m.rows and m.cols
     Matrix result(m.rows, m.cols);
-    // Iterate over each row of the matrix
-    for (int i = 0; i < m.rows; ++i) {
-        // Iterate over each column of the matrix
-        for (int j = 0; j < m.cols; ++j) {
-            // Divide each element by the scalar
-            result.setValue(i, j, m.getValues(i, j) / scalar);
-        }
+
+    // Determine number of threads
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+    // Calculate rows per thread
+    int rows_per_thread = m.rows / num_threads;
+
+    // Create threads
+    std::vector<std::thread> threads;
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        int start_row = t * rows_per_thread;
+        int end_row = (t == num_threads - 1) ? m.rows : (t + 1) * rows_per_thread;
+
+        threads.emplace_back([&m, &result, scalar, start_row, end_row]() {
+            for (int i = start_row; i < end_row; ++i) {
+                for (int j = 0; j < m.cols; ++j) {
+                    result.setValue(i, j, m.getValues(i, j) / scalar);
+                }
+            }
+        });
     }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
     // Return the resulting matrix
     return result;
 }
 
 // Vector-scalar division
+// Vector operator/(Vector& v, double scalar) {
+//     // Initialize vector with v.rows
+//     Vector result(v.rows);
+//     // Iterate over each row of the vector
+//     for (int i = 0; i < v.rows; i++) {
+//         // Divide each element
+//         result.setValue(i, v.getValues(i) / scalar);
+//     }
+//     // Return the resulting vector
+//     return result;
+// }
+
 Vector operator/(Vector& v, double scalar) {
     // Initialize vector with v.rows
     Vector result(v.rows);
-    // Iterate over each row of the vector
-    for (int i = 0; i < v.rows; i++) {
-        // Divide each element
-        result.setValue(i, v.getValues(i) / scalar);
+
+    // Determine number of threads
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+    // Calculate elements per thread
+    int elements_per_thread = v.rows / num_threads;
+
+    // Create threads
+    std::vector<std::thread> threads;
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        int start_index = t * elements_per_thread;
+        int end_index = (t == num_threads - 1) ? v.rows : (t + 1) * elements_per_thread;
+
+        threads.emplace_back([&v, &result, scalar, start_index, end_index]() {
+            for (int i = start_index; i < end_index; i++) {
+                result.setValue(i, v.getValues(i) / scalar);
+            }
+        });
     }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
     // Return the resulting vector
     return result;
 }
 
 // Sum matrix columns
+// Vector sum_columns(Matrix& m) {
+//     // Initialize vector with m.rows
+//     Vector result(m.rows);
+//     // Iterate over each row of the matrix
+//     for (int i = 0; i < m.rows; ++i) {
+//         // Initialize sum to 0
+//         double sum = 0;
+//         // Iterate over each column of the matrix
+//         for (int j = 0; j < m.cols; ++j) {
+//             // Add the element to the sum
+//             sum += m.getValues(i, j);
+//         }
+//         // Store the sum in the result vector
+//         result.setValue(i, sum);
+//     }
+//     // Return the result vector
+//     return result;
+// }
 Vector sum_columns(Matrix& m) {
     // Initialize vector with m.rows
     Vector result(m.rows);
-    // Iterate over each row of the matrix
-    for (int i = 0; i < m.rows; ++i) {
-        // Initialize sum to 0
-        double sum = 0;
-        // Iterate over each column of the matrix
-        for (int j = 0; j < m.cols; ++j) {
-            // Add the element to the sum
-            sum += m.getValues(i, j);
-        }
-        // Store the sum in the result vector
-        result.setValue(i, sum);
+
+    // Determine number of threads
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    num_threads = (num_threads == 0 || num_threads > 16) ? 4 : num_threads;
+
+    // Calculate rows per thread
+    int rows_per_thread = m.rows / num_threads;
+
+    // Create threads
+    std::vector<std::thread> threads;
+    for (unsigned int t = 0; t < num_threads; ++t) {
+        int start_row = t * rows_per_thread;
+        int end_row = (t == num_threads - 1) ? m.rows : (t + 1) * rows_per_thread;
+
+        threads.emplace_back([&m, &result, start_row, end_row]() {
+            for (int i = start_row; i < end_row; ++i) {
+                double sum = 0;
+                for (int j = 0; j < m.cols; ++j) {
+                    sum += m.getValues(i, j);
+                }
+                result.setValue(i, sum);
+            }
+        });
     }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
     // Return the result vector
     return result;
 }

@@ -78,7 +78,10 @@ double CatCrossEntropy::function(Matrix& Y, Matrix& Y_hat) {
 
 //////////////////////////////////////////////////////////////////
 // Layer Class
-Layer::Layer(int input_num, int output_num, std::string activation_func) {
+Layer::Layer(int input_num,
+             int output_num,
+             std::string activation_func,
+             int batch_size) {
     activation = activation_func;
     W = new Matrix(output_num, input_num);
     b = new Vector(output_num);
@@ -86,11 +89,11 @@ Layer::Layer(int input_num, int output_num, std::string activation_func) {
     random_matrix(W);
     random_vector(b);
 
-    Z = nullptr;
-    A = nullptr;
-    dZ = nullptr;
-    dW = nullptr;
-    db = nullptr;
+    Z = new Matrix(output_num, batch_size);
+    A = new Matrix(output_num, batch_size);
+    dZ = new Matrix(output_num, batch_size);
+    dW = new Matrix(output_num, input_num);
+    db = new Vector(output_num);
 }
 
 Layer::~Layer() {
@@ -153,13 +156,7 @@ void NeuralNetwork::forward(Matrix& X) {
 //////////////////////////////////////////////////////////////////
     // Initialize Matrix A
     Matrix A(X.rows, X.cols);
-
-    // Copy from Matrix X into Matrix A
-    for (int i = 0; i < X.rows; i++) {
-        for (int j = 0; j < X.cols; j++) {
-            A.setValue(i, j, X.getValues(i, j));
-        }
-    }
+    A = X;
 
 //////////////////////////////////////////////////////////////////
     // Initialize Sigmoid object
@@ -179,12 +176,9 @@ void NeuralNetwork::forward(Matrix& X) {
         Matrix Z = Z_temp + *layer->b;
         
         // Create a new Matrix for Z and copy values
-        layer->Z = new Matrix(Z.rows, Z.cols);
-        for (int i = 0; i < Z.rows; i++) {
-            for (int j = 0; j < Z.cols; j++) {
-                layer->Z->setValue(i, j, Z.getValues(i, j));
-            }
-        }
+        // layer->Z = new Matrix(Z.rows, Z.cols);
+        *layer->Z = Z;
+
 
 //////////////////////////////////////////////////////////////////
         // Calculate A
@@ -200,21 +194,13 @@ void NeuralNetwork::forward(Matrix& X) {
         }
 
         // Create a new matrix for A copy values
-        layer->A = new Matrix(Z.rows, Z.cols);
-        for (int i = 0; i < Z.rows; i++) {
-            for (int j = 0; j < Z.cols; j++) {
-                layer->A->setValue(i, j, Z.getValues(i, j));
-            }
-        }
+        // layer->A = new Matrix(Z.rows, Z.cols);
+        *layer->A = Z;
 
 //////////////////////////////////////////////////////////////////
         // Update A for the next iteration
         Matrix A_temp(layer->A->rows, layer->A->cols);
-        for (int i = 0; i < layer->A->rows; i++) {
-            for (int j = 0; j < layer->A->cols; j++) {
-                A_temp.setValue(i, j, layer->A->getValues(i, j));
-            }
-        }
+        A_temp = *layer->A;
 
         // Deallocate Memory
         for (int i = 0; i < A.rows; i++) {
@@ -228,12 +214,7 @@ void NeuralNetwork::forward(Matrix& X) {
         A.data = new double*[A.rows];
 
         // Copy Values
-        for (int i = 0; i < A.rows; i++) {
-            A.data[i] = new double[A.cols];
-            for (int j = 0; j < A.cols; j++) {
-                A.setValue(i, j, A_temp.getValues(i, j));
-            }
-        }
+        A = A_temp;
 
     }
 }
@@ -257,16 +238,16 @@ void NeuralNetwork::backward(Matrix& X,
 
 //////////////////////////////////////////////////////////////////
 // Initialize matrices for gradients
-        // Initialize a Matrix for current layer's dZ
-        layers[i]->dZ = new Matrix(layers[i]->A->rows,
-                                   layers[i]->A->cols);
+        // // Initialize a Matrix for current layer's dZ
+        // layers[i]->dZ = new Matrix(layers[i]->A->rows,
+        //                            layers[i]->A->cols);
 
-        // Initialize a Matrix for current layer's dW
-        layers[i]->dW = new Matrix(layers[i]->W->rows,
-                                   layers[i]->W->cols);
+        // // Initialize a Matrix for current layer's dW
+        // layers[i]->dW = new Matrix(layers[i]->W->rows,
+        //                            layers[i]->W->cols);
 
-        // Initialize a Vector for current layer's db
-        layers[i]->db = new Vector(layers[i]->b->rows);
+        // // Initialize a Vector for current layer's db
+        // layers[i]->db = new Vector(layers[i]->b->rows);
 
 //////////////////////////////////////////////////////////////////
 // Initialize pointer to current layer
@@ -281,11 +262,7 @@ void NeuralNetwork::backward(Matrix& X,
             Matrix dZ_temp = *layers[i]->A - Y;
 
             // Copy the values to layer's dZ using the pointer to layer
-            for (int i = 0; i < dZ_temp.rows; i++) {
-                for (int j = 0; j < dZ_temp.cols; j++) {
-                    layer->dZ->setValue(i, j, dZ_temp.getValues(i, j));
-                }
-            }
+            *layer->dZ = dZ_temp;
 
         }
         // Calculate dZ: all other layers
@@ -304,12 +281,8 @@ void NeuralNetwork::backward(Matrix& X,
 
             // Make a copy of pervious layers Z
             Matrix Z_deriv(layers[i]->Z->rows, layers[i]->Z->cols);
-            for (int row = 0; row < layers[i]->Z->rows; row++) {
-                for (int col = 0; col < layers[i]->Z->cols; col++) {
-                    Z_deriv.setValue(row, col,
-                    layers[i]->Z->getValues(row, col));
-                }
-            }
+            Z_deriv = *layers[i]->Z;
+
 
             if (layers[i]->activation == "Sigmoid") {
                 // Compute Sigmoid derivative
@@ -319,12 +292,7 @@ void NeuralNetwork::backward(Matrix& X,
             Matrix dZ = dZ_temp * Z_deriv;
 
             // Copy the values to layer's dZ using the pointer to layer
-            for (int i = 0; i < dZ.rows; i++) {
-                for (int j = 0; j < dZ.cols; j++) {
-                    layer->dZ->setValue(i, j, dZ.getValues(i, j));
-                }
-            }
-            
+            *layer->dZ = dZ;
         }
 
 //////////////////////////////////////////////////////////////////
@@ -341,11 +309,7 @@ void NeuralNetwork::backward(Matrix& X,
             Matrix dW = dW_temp / m;
 
             // Copy the values to layer's dW using the pointer to layer
-            for (int i = 0; i < dW.rows; i++) {
-                for (int j = 0; j < dW.cols; j++) {
-                    layer->dW->setValue(i, j, dW.getValues(i, j));
-                }
-            }
+            *layer->dW = dW;
         }
         // Calculate dW: first layer
         else {
@@ -359,11 +323,7 @@ void NeuralNetwork::backward(Matrix& X,
             Matrix dW = dW_temp / m;
 
             // Copy the values to layer's dW using the pointer to layer
-            for (int i = 0; i < dW.rows; i++) {
-                for (int j = 0; j < dW.cols; j++) {
-                    layer->dW->setValue(i, j, dW.getValues(i, j));
-                }
-            }
+            *layer->dW = dW;
         }
 
 //////////////////////////////////////////////////////////////////
@@ -375,9 +335,7 @@ void NeuralNetwork::backward(Matrix& X,
         Vector db = db_temp / m;
 
         // Copy the values to layer's db using the pointer to layer
-        for (int i = 0; i < db.rows; i++) {
-            layer->db->setValue(i, db.getValues(i));
-        }
+        *layer->db = db;
     }
 }
 
@@ -521,7 +479,7 @@ void NeuralNetwork::train(Matrix& X_train,
 
     // Start the timer
     std::clock_t start_time = std::clock();
-    
+
     // Iterate through epochs
     for (int epoch = 0; epoch < epochs; ++epoch) {
         // Initialize variables
@@ -543,6 +501,9 @@ void NeuralNetwork::train(Matrix& X_train,
             // Temporary lists
             std::vector<double> acc_temp_list;
             std::vector<double> loss_temp_list;
+            // Initialize Matrices
+            Matrix X_batch(X_train.rows, batch_size);
+            Matrix Y_batch(Y_train.rows, batch_size);
             // Loop through mini-batches
             for (int i = 0; i < X_train.cols; i += batch_size) {
                 // Get end index
@@ -550,9 +511,12 @@ void NeuralNetwork::train(Matrix& X_train,
                 // Check if end index is greater than total columns
                 if (end_idx > X_train.cols) end_idx = X_train.cols;
 
-                // Get mini-batches
-                Matrix X_batch = X_train.iloc(0, X_train.rows, i, end_idx);
-                Matrix Y_batch = Y_train.iloc(0, Y_train.rows, i, end_idx);
+                // // Get mini-batches
+                // Matrix X_batch = X_train.iloc(0, X_train.rows, i, end_idx);
+                // Matrix Y_batch = Y_train.iloc(0, Y_train.rows, i, end_idx);
+                // Use slice function to operate on existing matrices
+                X_train.slice(0, X_train.rows, i, end_idx, X_batch);
+                Y_train.slice(0, Y_train.rows, i, end_idx, Y_batch);
                
                 // Gradient Descent
                 gradient_descent(X_batch, Y_batch, loss, learning_rate);
@@ -566,6 +530,7 @@ void NeuralNetwork::train(Matrix& X_train,
                     double loss_batch = ce.function(Y_batch, *getOutput());
                     loss_temp_list.push_back(loss_batch);
                 }
+
             }
             // Calculate average accuracy and loss
             acc = 0.0;
@@ -681,7 +646,7 @@ void NeuralNetwork::load_config(std::string filepath) {
             int input_num = std::stoi(tokens[0]);
             int output_num = std::stoi(tokens[1]);
             std::string activation = tokens[2];
-            add_layer(new Layer(input_num, output_num, activation));
+            add_layer(new Layer(input_num, output_num, activation, 8));
         }
     }
 
