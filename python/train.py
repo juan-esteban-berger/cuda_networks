@@ -30,9 +30,10 @@ X_train = X_train / 255.
 ####################################################################
 nn = NeuralNetwork()
 
-nn.add_layer(Layer(784, 200, Sigmoid()))
-nn.add_layer(Layer(200, 200, Sigmoid()))
-nn.add_layer(Layer(200, 10, Softmax()))
+batch_size = 8
+nn.add_layer(Layer(784, 200, Sigmoid(), batch_size))
+nn.add_layer(Layer(200, 200, Sigmoid(), batch_size))
+nn.add_layer(Layer(200, 10, Softmax(), batch_size))
 
 print("Training...")
 nn.train(X_train,
@@ -42,8 +43,7 @@ nn.train(X_train,
          learning_rate=0.1,
          loss=CatCrossEntropy(),
          optimizer="mini_batch_gradient_descent",
-         # batch_size=1000,
-         batch_size=8,
+         batch_size=batch_size,
          history_path="models/python_history.csv")
 
 print("Saving Model...")

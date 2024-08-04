@@ -29,7 +29,10 @@ class CatCrossEntropy():
 ####################################################################
 # Layer Class
 class Layer:
-    def __init__(self, input_num, output_num, activation):
+    def __init__(self, input_num, output_num, activation, batch_size=1000):
+
+        self.batch_size = batch_size
+
         self.W = np.random.rand(output_num, input_num) - 0.5
         self.b = np.random.rand(output_num, 1) - 0.5
        
@@ -173,11 +176,12 @@ class NeuralNetwork():
             input_num = layer.W.shape[1]
             output_num = layer.W.shape[0]
             activation = layer.activation.__class__.__name__
+            batch_size = layer.batch_size
             config.append(','.join([str(input_num),
                                     str(output_num),
-                                    activation]))
+                                    activation,
+                                    str(batch_size)]))
         config_str = "\n".join(config)
-
         with open(filepath, 'w') as f:
             f.write(config_str)
 
@@ -191,17 +195,17 @@ class NeuralNetwork():
     def load_config(self, filepath):
         with open(filepath, 'r') as f:
             lines = f.readlines()
-
         self.layers = []
         for line in lines:
-            input_num, output_num, activation = line.strip().split(',')
+            input_num, output_num, activation, batch_size = line.strip().split(',')
             input_num = int(input_num)
             output_num = int(output_num)
+            batch_size = int(batch_size)
             if activation == 'Sigmoid':
                 activation = Sigmoid()
             elif activation == 'Softmax':
                 activation = Softmax()
-            self.add_layer(Layer(input_num, output_num, activation))
+            self.add_layer(Layer(input_num, output_num, activation, batch_size))
 
     def load_weights(self, filepath):
         with open(filepath, 'r') as f:
