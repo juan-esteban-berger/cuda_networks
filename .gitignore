@@ -12,6 +12,9 @@ cpp/lib/
 cpp/gen_context.sh
 cpp/context.txt
 
+# models directory
+models/
+
 # Binary files and executables
 *.exe
 *.dll

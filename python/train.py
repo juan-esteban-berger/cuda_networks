@@ -12,7 +12,9 @@ from neural_network import Sigmoid, Softmax, CatCrossEntropy
 print("Loading Data...")
 X_train = pd.read_csv('data/X_train.csv', header=None).to_numpy()
 Y_train = pd.read_csv('data/Y_train.csv', header=None).to_numpy()
-
+# X_train = pd.read_csv('data/X_train.csv', header=None).head(10000).to_numpy()
+# Y_train = pd.read_csv('data/Y_train.csv', header=None).head(10000).to_numpy()
+# 
 print(f"X_train: {X_train.shape}")
 print(f"Y_train: {Y_train.shape}")
 
@@ -35,11 +37,13 @@ nn.add_layer(Layer(200, 10, Softmax()))
 print("Training...")
 nn.train(X_train,
          Y_train,
-         epochs=200,
+         # epochs=200,
+         epochs=3,
          learning_rate=0.1,
          loss=CatCrossEntropy(),
          optimizer="mini_batch_gradient_descent",
-         batch_size=1000,
+         # batch_size=1000,
+         batch_size=8,
          history_path="models/python_history.csv")
 
 print("Saving Model...")
