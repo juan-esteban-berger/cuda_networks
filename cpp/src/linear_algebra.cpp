@@ -680,6 +680,13 @@ Matrix* transpose_matrix(Matrix* m) {
     
     return transposed;
 }
+void transpose(Matrix* m, Matrix& result) {
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->cols; j++) {
+            result.setValue(j, i, m->getValues(i, j));
+        }
+    }
+}
 
 //////////////////////////////////////////////////////////////////
 // Normalization Functions

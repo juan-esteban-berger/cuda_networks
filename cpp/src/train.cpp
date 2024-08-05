@@ -24,7 +24,8 @@ int main() {
 
     // // Define matrix dimensions
     // int num_rows = 10000;
-    int num_rows = 1000;
+    // int num_rows = 1000;
+    int num_rows = 8;
     int X_train_rows = num_rows;
     int X_train_cols = 784;
     int Y_train_rows = num_rows;
@@ -70,7 +71,8 @@ int main() {
     std::cout << "Training..." << std::endl;
     // int epochs = 200;
     // int epochs = 10; // stack overflow in 4th epoch
-    int epochs = 3;
+    // int epochs = 3;
+    int epochs = 1;
     double learning_rate = 0.1;
     std::string loss = "CatCrossEntropy";
     std::string optimizer = "mini_batch_gradient_descent";

@@ -21,3 +21,7 @@ models/
 *.so
 *.o
 *.out
+
+# Valgrind
+v1-valgrind-out.txt
+val.sh
