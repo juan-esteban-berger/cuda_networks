@@ -8,6 +8,9 @@
 #include "linear_algebra/test_matrix_initialize.cu"
 #include "linear_algebra/test_matrix_print.cu"
 #include "linear_algebra/test_matrix_randomize.cu"
+#include "linear_algebra/test_vector_initialize.cu"
+#include "linear_algebra/test_vector_print.cu"
+#include "linear_algebra/test_vector_randomize.cu"
 
 /**
  * @brief Main function to run all tests.
