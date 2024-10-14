@@ -51,6 +51,12 @@ public:
      */
     double* get_data() const;
 
+    /**
+     * @brief Creates a deep copy of the vector.
+     * @return A new Vector object with the same content as the original.
+     */
+    Vector copy() const;
+
 private:
     int rows;    ///< Number of elements in the vector
     double* d_data;  ///< Device data pointer

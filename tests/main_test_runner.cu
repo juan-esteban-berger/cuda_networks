@@ -12,10 +12,11 @@
 // #include "linear_algebra/test_matrix_preview_mnist_images.cu"
 // #include "linear_algebra/test_matrix_relu.cu"
 // #include "linear_algebra/test_matrix_softmax.cu"
-#include "linear_algebra/test_matrix_copy.cu"
+// #include "linear_algebra/test_matrix_copy.cu"
 // #include "linear_algebra/test_vector_initialize.cu"
 // #include "linear_algebra/test_vector_print.cu"
 // #include "linear_algebra/test_vector_randomize.cu"
+#include "linear_algebra/test_vector_copy.cu"
 
 /**
  * @brief Main function to run all tests.
