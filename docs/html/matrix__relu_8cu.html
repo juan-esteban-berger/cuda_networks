@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CUDA Networks: tests/main_test_runner.cu File Reference</title>
+<title>CUDA Networks: src/linear_algebra/matrix_relu.cu File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -84,69 +84,80 @@ $(function(){ initResizable(false); });
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_59425e443f801f1f2fd8bbe4959a3ccf.html">tests</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_06a3a9cfd0b865f1926a0e96bd073aa9.html">linear_algebra</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">main_test_runner.cu File Reference</div></div>
+  <div class="headertitle"><div class="title">matrix_relu.cu File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Main test runner to execute all test cases.  
+<p>Implementation of the ReLU activation function for matrices.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;gtest/gtest.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="test__matrix__relu_8cu_source.html">linear_algebra/test_matrix_relu.cu</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="matrix_8h_source.html">matrix.h</a>&quot;</code><br />
+<code>#include &lt;cuda_runtime.h&gt;</code><br />
 </div>
-<p><a href="main__test__runner_8cu_source.html">Go to the source code of this file.</a></p>
+<p><a href="matrix__relu_8cu_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627" id="r_a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
-<tr class="memdesc:a3c04138a5bfe5d72780bb7e82a18e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main function to run all tests.  <br /></td></tr>
-<tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48353edd451a98007ee2e6612996decf" id="r_a48353edd451a98007ee2e6612996decf"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48353edd451a98007ee2e6612996decf">reluKernel</a> (const double *input, double *output, int size)</td></tr>
+<tr class="memdesc:a48353edd451a98007ee2e6612996decf"><td class="mdescLeft">&#160;</td><td class="mdescRight">CUDA kernel for applying the ReLU activation function element-wise.  <br /></td></tr>
+<tr class="separator:a48353edd451a98007ee2e6612996decf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Main test runner to execute all test cases. </p>
+<div class="textblock"><p>Implementation of the ReLU activation function for matrices. </p>
 
-<p class="definition">Definition in file <a class="el" href="main__test__runner_8cu_source.html">main_test_runner.cu</a>.</p>
+<p class="definition">Definition in file <a class="el" href="matrix__relu_8cu_source.html">matrix_relu.cu</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a3c04138a5bfe5d72780bb7e82a18e627" name="a3c04138a5bfe5d72780bb7e82a18e627"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c04138a5bfe5d72780bb7e82a18e627">&#9670;&#160;</a></span>main()</h2>
+<a id="a48353edd451a98007ee2e6612996decf" name="a48353edd451a98007ee2e6612996decf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48353edd451a98007ee2e6612996decf">&#9670;&#160;</a></span>reluKernel()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int main </td>
+          <td class="memname">__global__ void reluKernel </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
+          <td class="paramtype">const double *</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char **</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>&#160;)</td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>output</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>size</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Main function to run all tests. </p>
+<p>CUDA kernel for applying the ReLU activation function element-wise. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">argc</td><td>Number of command-line arguments. </td></tr>
-    <tr><td class="paramname">argv</td><td>Array of command-line argument strings. </td></tr>
+    <tr><td class="paramname">input</td><td>Pointer to the input matrix data. </td></tr>
+    <tr><td class="paramname">output</td><td>Pointer to the output matrix data. </td></tr>
+    <tr><td class="paramname">size</td><td>Total number of elements in the matrix. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Integer 0 upon successful run, non-zero otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="main__test__runner_8cu_source.html#l00025">25</a> of file <a class="el" href="main__test__runner_8cu_source.html">main_test_runner.cu</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   25</span>                                {</div>
-<div class="line"><span class="lineno">   26</span>    ::testing::InitGoogleTest(&amp;argc, argv);</div>
-<div class="line"><span class="lineno">   27</span>    <span class="keywordflow">return</span> RUN_ALL_TESTS();</div>
-<div class="line"><span class="lineno">   28</span>}</div>
+<p class="definition">Definition at line <a class="el" href="matrix__relu_8cu_source.html#l00015">15</a> of file <a class="el" href="matrix__relu_8cu_source.html">matrix_relu.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   15</span>                                                                          {</div>
+<div class="line"><span class="lineno">   16</span>    <span class="comment">// Calculate the global thread index</span></div>
+<div class="line"><span class="lineno">   17</span>    <span class="keywordtype">int</span> idx = blockIdx.x * blockDim.x + threadIdx.x;</div>
+<div class="line"><span class="lineno">   18</span>    </div>
+<div class="line"><span class="lineno">   19</span>    <span class="comment">// Check if the thread is within the matrix bounds</span></div>
+<div class="line"><span class="lineno">   20</span>    <span class="keywordflow">if</span> (idx &lt; size) {</div>
+<div class="line"><span class="lineno">   21</span>        <span class="comment">// Apply ReLU: max(0, x)</span></div>
+<div class="line"><span class="lineno">   22</span>        output[idx] = fmax(0.0, input[idx]);</div>
+<div class="line"><span class="lineno">   23</span>    }</div>
+<div class="line"><span class="lineno">   24</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

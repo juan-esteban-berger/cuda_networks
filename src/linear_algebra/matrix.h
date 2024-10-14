@@ -86,6 +86,12 @@ public:
      */
     void preview_image(int row_index, int image_size_x, int image_size_y) const;
 
+    /**
+     * @brief Applies the ReLU activation function to the matrix.
+     * @return A new Matrix object with ReLU applied.
+     */
+    Matrix relu() const;
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix
