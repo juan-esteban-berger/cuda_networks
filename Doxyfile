@@ -1,4 +1,4 @@
-PROJECT_NAME           = "CUDA Neural Networks"
+PROJECT_NAME           = "CUDA Networks"
 OUTPUT_DIRECTORY       = ./docs
 INPUT                  = ./src ./tests
 INPUT                 += src/mainpage.h
