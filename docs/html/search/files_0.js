@@ -14,5 +14,6 @@ var searchData=
   ['matrix_5frandomize_2ecu_11',['matrix_randomize.cu',['../matrix__randomize_8cu.html',1,'']]],
   ['matrix_5fread_5fcsv_2ecu_12',['matrix_read_csv.cu',['../matrix__read__csv_8cu.html',1,'']]],
   ['matrix_5fread_5fcsv_5flimited_2ecu_13',['matrix_read_csv_limited.cu',['../matrix__read__csv__limited_8cu.html',1,'']]],
-  ['matrix_5frelu_2ecu_14',['matrix_relu.cu',['../matrix__relu_8cu.html',1,'']]]
+  ['matrix_5frelu_2ecu_14',['matrix_relu.cu',['../matrix__relu_8cu.html',1,'']]],
+  ['matrix_5fsoftmax_2ecu_15',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]]
 ];

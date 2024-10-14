@@ -92,6 +92,12 @@ public:
      */
     Matrix relu() const;
 
+    /**
+     * @brief Applies the softmax function to the matrix column-wise.
+     * @return A new Matrix object with softmax applied.
+     */
+    Matrix softmax() const;
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix

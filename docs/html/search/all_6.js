@@ -17,11 +17,13 @@ var searchData=
   ['matrix_5fread_5fcsv_2ecu_14',['matrix_read_csv.cu',['../matrix__read__csv_8cu.html',1,'']]],
   ['matrix_5fread_5fcsv_5flimited_2ecu_15',['matrix_read_csv_limited.cu',['../matrix__read__csv__limited_8cu.html',1,'']]],
   ['matrix_5frelu_2ecu_16',['matrix_relu.cu',['../matrix__relu_8cu.html',1,'']]],
-  ['matrixinitializetest_17',['MatrixInitializeTest',['../classMatrixInitializeTest.html',1,'']]],
-  ['matrixpreviewmnistimagestest_18',['MatrixPreviewMNISTImagesTest',['../classMatrixPreviewMNISTImagesTest.html',1,'']]],
-  ['matrixprinttest_19',['MatrixPrintTest',['../classMatrixPrintTest.html',1,'']]],
-  ['matrixrandomizetest_20',['MatrixRandomizeTest',['../classMatrixRandomizeTest.html',1,'']]],
-  ['matrixreadcsvlimitedtest_21',['MatrixReadCSVLimitedTest',['../classMatrixReadCSVLimitedTest.html',1,'']]],
-  ['matrixreadcsvtest_22',['MatrixReadCSVTest',['../classMatrixReadCSVTest.html',1,'']]],
-  ['matrixrelutest_23',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]]
+  ['matrix_5fsoftmax_2ecu_17',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]],
+  ['matrixinitializetest_18',['MatrixInitializeTest',['../classMatrixInitializeTest.html',1,'']]],
+  ['matrixpreviewmnistimagestest_19',['MatrixPreviewMNISTImagesTest',['../classMatrixPreviewMNISTImagesTest.html',1,'']]],
+  ['matrixprinttest_20',['MatrixPrintTest',['../classMatrixPrintTest.html',1,'']]],
+  ['matrixrandomizetest_21',['MatrixRandomizeTest',['../classMatrixRandomizeTest.html',1,'']]],
+  ['matrixreadcsvlimitedtest_22',['MatrixReadCSVLimitedTest',['../classMatrixReadCSVLimitedTest.html',1,'']]],
+  ['matrixreadcsvtest_23',['MatrixReadCSVTest',['../classMatrixReadCSVTest.html',1,'']]],
+  ['matrixrelutest_24',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]],
+  ['matrixsoftmaxtest_25',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]]
 ];

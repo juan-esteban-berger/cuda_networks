@@ -7,5 +7,6 @@ var searchData=
   ['matrixrandomizetest_4',['MatrixRandomizeTest',['../classMatrixRandomizeTest.html',1,'']]],
   ['matrixreadcsvlimitedtest_5',['MatrixReadCSVLimitedTest',['../classMatrixReadCSVLimitedTest.html',1,'']]],
   ['matrixreadcsvtest_6',['MatrixReadCSVTest',['../classMatrixReadCSVTest.html',1,'']]],
-  ['matrixrelutest_7',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]]
+  ['matrixrelutest_7',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]],
+  ['matrixsoftmaxtest_8',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]]
 ];
