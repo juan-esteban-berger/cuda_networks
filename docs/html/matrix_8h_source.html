@@ -152,17 +152,24 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">     * @return double* Pointer to the matrix data on the device</span></div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">double</span>* <a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">int</span> rows;    <span class="comment">///&lt; Number of rows in the matrix</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">int</span> cols;    <span class="comment">///&lt; Number of columns in the matrix</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">double</span>* d_data;  <span class="comment">///&lt; Device data pointer</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
-</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment"></span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">     * @brief Read data from a CSV file into the matrix</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">     * @param filename Path to the CSV file</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classMatrix.html#a1824b5df7055208215e721fb076d3ce8">read_csv</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* filename);</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#endif </span><span class="comment">// MATRIX_H</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">int</span> rows;    <span class="comment">///&lt; Number of rows in the matrix</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">int</span> cols;    <span class="comment">///&lt; Number of columns in the matrix</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordtype">double</span>* d_data;  <span class="comment">///&lt; Device data pointer</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>};</div>
+</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif </span><span class="comment">// MATRIX_H</span></div>
 <div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="#l00013">matrix.h:13</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a0fc53752b2f67ada126c2d53a157ee7c"><div class="ttname"><a href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">Matrix::get_rows</a></div><div class="ttdeci">int get_rows() const</div><div class="ttdoc">Get the number of rows in the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__get__rows_8cu_source.html#l00007">matrix_get_rows.cu:7</a></div></div>
+<div class="ttc" id="aclassMatrix_html_a1824b5df7055208215e721fb076d3ce8"><div class="ttname"><a href="classMatrix.html#a1824b5df7055208215e721fb076d3ce8">Matrix::read_csv</a></div><div class="ttdeci">void read_csv(const char *filename)</div><div class="ttdoc">Read data from a CSV file into the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__read__csv_8cu_source.html#l00012">matrix_read_csv.cu:12</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a3b785fe27e519f80d20d4b60ef4319ae"><div class="ttname"><a href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">Matrix::get_data</a></div><div class="ttdeci">double * get_data() const</div><div class="ttdoc">Get the raw data pointer of the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__get__data_8cu_source.html#l00007">matrix_get_data.cu:7</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a3c7ae73d23a17db578f7226ec4030050"><div class="ttname"><a href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">Matrix::get_cols</a></div><div class="ttdeci">int get_cols() const</div><div class="ttdoc">Get the number of columns in the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__get__cols_8cu_source.html#l00007">matrix_get_cols.cu:7</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a5b20a6960b75adb45b31657ffcd1723a"><div class="ttname"><a href="classMatrix.html#a5b20a6960b75adb45b31657ffcd1723a">Matrix::print</a></div><div class="ttdeci">void print(int decimals)</div><div class="ttdoc">Print the matrix contents.</div><div class="ttdef"><b>Definition</b> <a href="matrix__print_8cu_source.html#l00011">matrix_print.cu:11</a></div></div>

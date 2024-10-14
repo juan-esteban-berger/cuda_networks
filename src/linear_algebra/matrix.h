@@ -58,6 +58,26 @@ public:
      */
     double* get_data() const;
 
+    /**
+     * @brief Read data from a CSV file into the matrix
+     * @param filename Path to the CSV file
+     */
+    void read_csv(const char* filename);
+
+    // /**
+    //  * @brief Read a subset of data from a CSV file into the matrix
+    //  * @param filename Path to the CSV file
+    //  * @param startRow Starting row to read from the CSV file (0-based index)
+    //  * @param endRow Ending row to read from the CSV file (exclusive)
+    //  * @param fileRows Total number of rows in the CSV file
+    //  * @param fileCols Total number of columns in the CSV file
+    //  */
+    // void read_csv_limited(const char* filename,
+    //                       int startRow,
+    //                       int endRow,
+    //                       int fileRows,
+    //                       int fileCols);
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix

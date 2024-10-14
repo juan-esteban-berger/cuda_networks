@@ -13,7 +13,9 @@ var searchData=
   ['matrix_5finitialize_2ecu_10',['matrix_initialize.cu',['../matrix__initialize_8cu.html',1,'']]],
   ['matrix_5fprint_2ecu_11',['matrix_print.cu',['../matrix__print_8cu.html',1,'']]],
   ['matrix_5frandomize_2ecu_12',['matrix_randomize.cu',['../matrix__randomize_8cu.html',1,'']]],
-  ['matrixinitializetest_13',['MatrixInitializeTest',['../classMatrixInitializeTest.html',1,'']]],
-  ['matrixprinttest_14',['MatrixPrintTest',['../classMatrixPrintTest.html',1,'']]],
-  ['matrixrandomizetest_15',['MatrixRandomizeTest',['../classMatrixRandomizeTest.html',1,'']]]
+  ['matrix_5fread_5fcsv_2ecu_13',['matrix_read_csv.cu',['../matrix__read__csv_8cu.html',1,'']]],
+  ['matrixinitializetest_14',['MatrixInitializeTest',['../classMatrixInitializeTest.html',1,'']]],
+  ['matrixprinttest_15',['MatrixPrintTest',['../classMatrixPrintTest.html',1,'']]],
+  ['matrixrandomizetest_16',['MatrixRandomizeTest',['../classMatrixRandomizeTest.html',1,'']]],
+  ['matrixreadcsvtest_17',['MatrixReadCSVTest',['../classMatrixReadCSVTest.html',1,'']]]
 ];
