@@ -5,14 +5,15 @@
 #include <gtest/gtest.h>
 
 // Include all test files
-// #include "linear_algebra/test_matrix_initialize.cu"
-// #include "linear_algebra/test_matrix_print.cu"
-// #include "linear_algebra/test_matrix_randomize.cu"
-// #include "linear_algebra/test_matrix_read_csv.cu"
+#include "linear_algebra/test_matrix_initialize.cu"
+#include "linear_algebra/test_matrix_print.cu"
+#include "linear_algebra/test_matrix_randomize.cu"
+#include "linear_algebra/test_matrix_read_csv.cu"
 #include "linear_algebra/test_matrix_read_csv_limited.cu"
-// #include "linear_algebra/test_vector_initialize.cu"
-// #include "linear_algebra/test_vector_print.cu"
-// #include "linear_algebra/test_vector_randomize.cu"
+#include "linear_algebra/test_matrix_preview_mnist_images.cu"
+#include "linear_algebra/test_vector_initialize.cu"
+#include "linear_algebra/test_vector_print.cu"
+#include "linear_algebra/test_vector_randomize.cu"
 
 /**
  * @brief Main function to run all tests.

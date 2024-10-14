@@ -129,6 +129,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8ed4918dfffe960a71614d28dc468b77" id="r_a8ed4918dfffe960a71614d28dc468b77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ed4918dfffe960a71614d28dc468b77">read_csv_limited</a> (const char *filename, int startRow, int endRow, int fileRows, int fileCols)</td></tr>
 <tr class="memdesc:a8ed4918dfffe960a71614d28dc468b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a subset of data from a CSV file into the matrix.  <br /></td></tr>
 <tr class="separator:a8ed4918dfffe960a71614d28dc468b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefcddab2b5a779e88caca54ab48a2f8b" id="r_aefcddab2b5a779e88caca54ab48a2f8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefcddab2b5a779e88caca54ab48a2f8b">preview_image</a> (int row_index, int image_size_x, int image_size_y) const</td></tr>
+<tr class="memdesc:aefcddab2b5a779e88caca54ab48a2f8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preview a single image from the matrix.  <br /></td></tr>
+<tr class="separator:aefcddab2b5a779e88caca54ab48a2f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a matrix with GPU-accelerated operations. </p>
@@ -298,6 +301,88 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">    9</span>    <span class="comment">// Use cudaMemset to set all elements of d_data to 0</span></div>
 <div class="line"><span class="lineno">   10</span>    cudaMemset(d_data, 0, rows * cols * <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>));</div>
 <div class="line"><span class="lineno">   11</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aefcddab2b5a779e88caca54ab48a2f8b" name="aefcddab2b5a779e88caca54ab48a2f8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefcddab2b5a779e88caca54ab48a2f8b">&#9670;&#160;</a></span>preview_image()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Matrix::preview_image </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>row_index</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>image_size_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>image_size_y</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Preview a single image from the matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">row_index</td><td>Index of the row containing the image data </td></tr>
+    <tr><td class="paramname">image_size_x</td><td>Number of rows in the image </td></tr>
+    <tr><td class="paramname">image_size_y</td><td>Number of columns in the image </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__preview__image_8cu_source.html#l00011">11</a> of file <a class="el" href="matrix__preview__image_8cu_source.html">matrix_preview_image.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   11</span>                                                                                  {</div>
+<div class="line"><span class="lineno">   12</span>    <span class="comment">// Check if the row_index is within the valid range</span></div>
+<div class="line"><span class="lineno">   13</span>    <span class="keywordflow">if</span> (row_index &lt; 0 || row_index &gt;= rows) {</div>
+<div class="line"><span class="lineno">   14</span>        <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Invalid row index&quot;</span>);</div>
+<div class="line"><span class="lineno">   15</span>    }</div>
+<div class="line"><span class="lineno">   16</span> </div>
+<div class="line"><span class="lineno">   17</span>    <span class="comment">// Check if the image dimensions fit within the matrix columns</span></div>
+<div class="line"><span class="lineno">   18</span>    <span class="keywordflow">if</span> (image_size_x * image_size_y &gt; cols) {</div>
+<div class="line"><span class="lineno">   19</span>        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Image dimensions exceed matrix column count&quot;</span>);</div>
+<div class="line"><span class="lineno">   20</span>    }</div>
+<div class="line"><span class="lineno">   21</span> </div>
+<div class="line"><span class="lineno">   22</span>    <span class="comment">// Allocate host memory to store a single row of the matrix</span></div>
+<div class="line"><span class="lineno">   23</span>    <span class="keywordtype">double</span>* h_data = <span class="keyword">new</span> <span class="keywordtype">double</span>[cols];</div>
+<div class="line"><span class="lineno">   24</span> </div>
+<div class="line"><span class="lineno">   25</span>    <span class="comment">// Copy the specified row from device (GPU) memory to host memory</span></div>
+<div class="line"><span class="lineno">   26</span>    cudaMemcpy(h_data, d_data + row_index * cols, cols * <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>), cudaMemcpyDeviceToHost);</div>
+<div class="line"><span class="lineno">   27</span> </div>
+<div class="line"><span class="lineno">   28</span>    <span class="comment">// Iterate over each row of the image</span></div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; image_size_x; ++i) {</div>
+<div class="line"><span class="lineno">   30</span>        <span class="comment">// Iterate over each column of the image</span></div>
+<div class="line"><span class="lineno">   31</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; image_size_y; ++j) {</div>
+<div class="line"><span class="lineno">   32</span>            <span class="comment">// Calculate the index in the flattened array</span></div>
+<div class="line"><span class="lineno">   33</span>            <span class="keywordtype">int</span> index = i * image_size_y + j;</div>
+<div class="line"><span class="lineno">   34</span> </div>
+<div class="line"><span class="lineno">   35</span>            <span class="comment">// Round the pixel value to the nearest integer</span></div>
+<div class="line"><span class="lineno">   36</span>            <span class="keywordtype">int</span> value = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(std::round(h_data[index]));</div>
+<div class="line"><span class="lineno">   37</span> </div>
+<div class="line"><span class="lineno">   38</span>            <span class="comment">// Print spaces for zero values (background)</span></div>
+<div class="line"><span class="lineno">   39</span>            <span class="keywordflow">if</span> (value == 0) {</div>
+<div class="line"><span class="lineno">   40</span>                std::cout &lt;&lt; <span class="stringliteral">&quot;    &quot;</span>;</div>
+<div class="line"><span class="lineno">   41</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   42</span>                <span class="comment">// Print non-zero values with 3-digit width</span></div>
+<div class="line"><span class="lineno">   43</span>                std::cout &lt;&lt; std::setw(3) &lt;&lt; value &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><span class="lineno">   44</span>            }</div>
+<div class="line"><span class="lineno">   45</span>        }</div>
+<div class="line"><span class="lineno">   46</span>        <span class="comment">// Move to the next line after each row of the image</span></div>
+<div class="line"><span class="lineno">   47</span>        std::cout &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">   48</span>    }</div>
+<div class="line"><span class="lineno">   49</span>    <span class="comment">// Print an extra newline for separation</span></div>
+<div class="line"><span class="lineno">   50</span>    std::cout &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">   51</span> </div>
+<div class="line"><span class="lineno">   52</span>    <span class="comment">// Free the allocated host memory</span></div>
+<div class="line"><span class="lineno">   53</span>    <span class="keyword">delete</span>[] h_data;</div>
+<div class="line"><span class="lineno">   54</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -593,6 +678,7 @@ Public Member Functions</h2></td></tr>
 <li>src/linear_algebra/<a class="el" href="matrix__get__data_8cu_source.html">matrix_get_data.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__get__rows_8cu_source.html">matrix_get_rows.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__initialize_8cu_source.html">matrix_initialize.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="matrix__preview__image_8cu_source.html">matrix_preview_image.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__print_8cu_source.html">matrix_print.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__randomize_8cu_source.html">matrix_randomize.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__read__csv_8cu_source.html">matrix_read_csv.cu</a></li>

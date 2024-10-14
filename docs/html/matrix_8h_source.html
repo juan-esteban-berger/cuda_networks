@@ -172,15 +172,23 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                          <span class="keywordtype">int</span> endRow,</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                          <span class="keywordtype">int</span> fileRows,</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                          <span class="keywordtype">int</span> fileCols);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordtype">int</span> rows;    <span class="comment">///&lt; Number of rows in the matrix</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordtype">int</span> cols;    <span class="comment">///&lt; Number of columns in the matrix</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordtype">double</span>* d_data;  <span class="comment">///&lt; Device data pointer</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment"></span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment">     * @brief Preview a single image from the matrix</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment">     * @param row_index Index of the row containing the image data</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">     * @param image_size_x Number of rows in the image</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">     * @param image_size_y Number of columns in the image</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classMatrix.html#aefcddab2b5a779e88caca54ab48a2f8b">preview_image</a>(<span class="keywordtype">int</span> row_index, <span class="keywordtype">int</span> image_size_x, <span class="keywordtype">int</span> image_size_y) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordtype">int</span> rows;    <span class="comment">///&lt; Number of rows in the matrix</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordtype">int</span> cols;    <span class="comment">///&lt; Number of columns in the matrix</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordtype">double</span>* d_data;  <span class="comment">///&lt; Device data pointer</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>};</div>
 </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="preprocessor">#endif </span><span class="comment">// MATRIX_H</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="preprocessor">#endif </span><span class="comment">// MATRIX_H</span></div>
 <div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="#l00013">matrix.h:13</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a0fc53752b2f67ada126c2d53a157ee7c"><div class="ttname"><a href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">Matrix::get_rows</a></div><div class="ttdeci">int get_rows() const</div><div class="ttdoc">Get the number of rows in the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__get__rows_8cu_source.html#l00007">matrix_get_rows.cu:7</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a1824b5df7055208215e721fb076d3ce8"><div class="ttname"><a href="classMatrix.html#a1824b5df7055208215e721fb076d3ce8">Matrix::read_csv</a></div><div class="ttdeci">void read_csv(const char *filename)</div><div class="ttdoc">Read data from a CSV file into the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__read__csv_8cu_source.html#l00012">matrix_read_csv.cu:12</a></div></div>
@@ -192,6 +200,7 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclassMatrix_html_a97f5333eca4b41d8a44d2ee881423ff5"><div class="ttname"><a href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">Matrix::initialize</a></div><div class="ttdeci">void initialize()</div><div class="ttdoc">Initialize the matrix (typically sets all elements to zero)</div><div class="ttdef"><b>Definition</b> <a href="matrix__initialize_8cu_source.html#l00008">matrix_initialize.cu:8</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a9b1c3627f573d78a2f08623fdfef990f"><div class="ttname"><a href="classMatrix.html#a9b1c3627f573d78a2f08623fdfef990f">Matrix::~Matrix</a></div><div class="ttdeci">~Matrix()</div><div class="ttdoc">Destroy the Matrix object.</div><div class="ttdef"><b>Definition</b> <a href="matrix__destructor_8cu_source.html#l00008">matrix_destructor.cu:8</a></div></div>
 <div class="ttc" id="aclassMatrix_html_ac240c55c0d61c3667f645a32d22ff1c3"><div class="ttname"><a href="classMatrix.html#ac240c55c0d61c3667f645a32d22ff1c3">Matrix::randomize</a></div><div class="ttdeci">void randomize()</div><div class="ttdoc">Randomize the matrix elements with values between -0.5 and 0.5.</div><div class="ttdef"><b>Definition</b> <a href="matrix__randomize_8cu_source.html#l00043">matrix_randomize.cu:43</a></div></div>
+<div class="ttc" id="aclassMatrix_html_aefcddab2b5a779e88caca54ab48a2f8b"><div class="ttname"><a href="classMatrix.html#aefcddab2b5a779e88caca54ab48a2f8b">Matrix::preview_image</a></div><div class="ttdeci">void preview_image(int row_index, int image_size_x, int image_size_y) const</div><div class="ttdoc">Preview a single image from the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__preview__image_8cu_source.html#l00011">matrix_preview_image.cu:11</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

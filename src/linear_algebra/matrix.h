@@ -78,6 +78,14 @@ public:
                           int fileRows,
                           int fileCols);
 
+    /**
+     * @brief Preview a single image from the matrix
+     * @param row_index Index of the row containing the image data
+     * @param image_size_x Number of rows in the image
+     * @param image_size_y Number of columns in the image
+     */
+    void preview_image(int row_index, int image_size_x, int image_size_y) const;
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix
