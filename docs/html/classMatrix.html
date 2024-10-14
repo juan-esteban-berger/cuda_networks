@@ -126,6 +126,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1824b5df7055208215e721fb076d3ce8" id="r_a1824b5df7055208215e721fb076d3ce8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1824b5df7055208215e721fb076d3ce8">read_csv</a> (const char *filename)</td></tr>
 <tr class="memdesc:a1824b5df7055208215e721fb076d3ce8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from a CSV file into the matrix.  <br /></td></tr>
 <tr class="separator:a1824b5df7055208215e721fb076d3ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ed4918dfffe960a71614d28dc468b77" id="r_a8ed4918dfffe960a71614d28dc468b77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ed4918dfffe960a71614d28dc468b77">read_csv_limited</a> (const char *filename, int startRow, int endRow, int fileRows, int fileCols)</td></tr>
+<tr class="memdesc:a8ed4918dfffe960a71614d28dc468b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a subset of data from a CSV file into the matrix.  <br /></td></tr>
+<tr class="separator:a8ed4918dfffe960a71614d28dc468b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a matrix with GPU-accelerated operations. </p>
@@ -485,6 +488,103 @@ Public Member Functions</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a8ed4918dfffe960a71614d28dc468b77" name="a8ed4918dfffe960a71614d28dc468b77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ed4918dfffe960a71614d28dc468b77">&#9670;&#160;</a></span>read_csv_limited()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Matrix::read_csv_limited </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>filename</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>startRow</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>endRow</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>fileRows</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>fileCols</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read a subset of data from a CSV file into the matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Path to the CSV file </td></tr>
+    <tr><td class="paramname">startRow</td><td>Starting row to read from the CSV file (0-based index) </td></tr>
+    <tr><td class="paramname">endRow</td><td>Ending row to read from the CSV file (exclusive) </td></tr>
+    <tr><td class="paramname">fileRows</td><td>Total number of rows in the CSV file </td></tr>
+    <tr><td class="paramname">fileCols</td><td>Total number of columns in the CSV file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__read__csv__limited_8cu_source.html#l00012">12</a> of file <a class="el" href="matrix__read__csv__limited_8cu_source.html">matrix_read_csv_limited.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   16</span>                                            {</div>
+<div class="line"><span class="lineno">   17</span>    <span class="comment">// Open the CSV file</span></div>
+<div class="line"><span class="lineno">   18</span>    std::ifstream file(filename);</div>
+<div class="line"><span class="lineno">   19</span>    <span class="keywordflow">if</span> (!file.is_open()) {</div>
+<div class="line"><span class="lineno">   20</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Error opening file&quot;</span>);</div>
+<div class="line"><span class="lineno">   21</span>    }</div>
+<div class="line"><span class="lineno">   22</span> </div>
+<div class="line"><span class="lineno">   23</span>    <span class="comment">// Check if the specified range is valid</span></div>
+<div class="line"><span class="lineno">   24</span>    <span class="keywordflow">if</span> (startRow &lt; 0 || endRow &gt; fileRows || startRow &gt;= endRow) {</div>
+<div class="line"><span class="lineno">   25</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Invalid row range specified&quot;</span>);</div>
+<div class="line"><span class="lineno">   26</span>    }</div>
+<div class="line"><span class="lineno">   27</span> </div>
+<div class="line"><span class="lineno">   28</span>    <span class="comment">// Check if the matrix dimensions match the specified range and file columns</span></div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">if</span> (rows != endRow - startRow || cols != fileCols) {</div>
+<div class="line"><span class="lineno">   30</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Matrix dimensions do not match the specified range and file columns&quot;</span>);</div>
+<div class="line"><span class="lineno">   31</span>    }</div>
+<div class="line"><span class="lineno">   32</span> </div>
+<div class="line"><span class="lineno">   33</span>    <span class="comment">// Vector to temporarily store the data read from the CSV</span></div>
+<div class="line"><span class="lineno">   34</span>    std::vector&lt;double&gt; temp_data(rows * cols);</div>
+<div class="line"><span class="lineno">   35</span>    std::string line, value;</div>
+<div class="line"><span class="lineno">   36</span>    <span class="keywordtype">int</span> currentRow = 0;</div>
+<div class="line"><span class="lineno">   37</span> </div>
+<div class="line"><span class="lineno">   38</span>    <span class="comment">// Read the CSV file line by line</span></div>
+<div class="line"><span class="lineno">   39</span>    <span class="keywordflow">while</span> (std::getline(file, line) &amp;&amp; currentRow &lt; fileRows) {</div>
+<div class="line"><span class="lineno">   40</span>        <span class="comment">// Process only the rows within the specified range</span></div>
+<div class="line"><span class="lineno">   41</span>        <span class="keywordflow">if</span> (currentRow &gt;= startRow &amp;&amp; currentRow &lt; endRow) {</div>
+<div class="line"><span class="lineno">   42</span>            std::istringstream s(line);</div>
+<div class="line"><span class="lineno">   43</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> col = 0; col &lt; fileCols; ++col) {</div>
+<div class="line"><span class="lineno">   44</span>                <span class="comment">// Parse each value in the line, separated by commas</span></div>
+<div class="line"><span class="lineno">   45</span>                <span class="keywordflow">if</span> (!std::getline(s, value, <span class="charliteral">&#39;,&#39;</span>)) {</div>
+<div class="line"><span class="lineno">   46</span>                    <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Insufficient columns in CSV file&quot;</span>);</div>
+<div class="line"><span class="lineno">   47</span>                }</div>
+<div class="line"><span class="lineno">   48</span>                <span class="comment">// Convert the string value to double and store it in the temporary vector</span></div>
+<div class="line"><span class="lineno">   49</span>                temp_data[(currentRow - startRow) * cols + col] = std::stod(value);</div>
+<div class="line"><span class="lineno">   50</span>            }</div>
+<div class="line"><span class="lineno">   51</span>        }</div>
+<div class="line"><span class="lineno">   52</span>        currentRow++;</div>
+<div class="line"><span class="lineno">   53</span>    }</div>
+<div class="line"><span class="lineno">   54</span> </div>
+<div class="line"><span class="lineno">   55</span>    <span class="comment">// Check if we read enough rows</span></div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">if</span> (currentRow &lt; endRow) {</div>
+<div class="line"><span class="lineno">   57</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Insufficient rows in CSV file&quot;</span>);</div>
+<div class="line"><span class="lineno">   58</span>    }</div>
+<div class="line"><span class="lineno">   59</span> </div>
+<div class="line"><span class="lineno">   60</span>    <span class="comment">// Copy data from the temporary vector to the device (GPU) memory</span></div>
+<div class="line"><span class="lineno">   61</span>    cudaMemcpy(d_data, temp_data.data(), rows * cols * <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>), cudaMemcpyHostToDevice);</div>
+<div class="line"><span class="lineno">   62</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/linear_algebra/<a class="el" href="matrix_8h_source.html">matrix.h</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__constructor_8cu_source.html">matrix_constructor.cu</a></li>
@@ -496,6 +596,7 @@ Public Member Functions</h2></td></tr>
 <li>src/linear_algebra/<a class="el" href="matrix__print_8cu_source.html">matrix_print.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__randomize_8cu_source.html">matrix_randomize.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__read__csv_8cu_source.html">matrix_read_csv.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="matrix__read__csv__limited_8cu_source.html">matrix_read_csv_limited.cu</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
