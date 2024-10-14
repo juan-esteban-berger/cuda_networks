@@ -10,6 +10,9 @@ TEST_DIR = tests
 SRCS = $(wildcard $(SRC_DIR)/*.cu)
 OBJS = $(patsubst $(SRC_DIR)/%.cu,$(BUILD_DIR)/%.o,$(SRCS))
 
+COMPUTE_SANITIZER = /opt/cuda/extras/compute-sanitizer/compute-sanitizer
+SANITIZER_LIB = /opt/cuda/extras/compute-sanitizer
+
 all: test
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cu
@@ -29,4 +32,7 @@ clean:
 test: $(BUILD_DIR)/test_matrix_init
 	$(BUILD_DIR)/test_matrix_init
 
-.PHONY: all clean test
+memcheck: $(BUILD_DIR)/test_matrix_init
+	LD_LIBRARY_PATH=$(SANITIZER_LIB):$$LD_LIBRARY_PATH $(COMPUTE_SANITIZER) --tool memcheck $(BUILD_DIR)/test_matrix_init
+
+.PHONY: all clean test memcheck
