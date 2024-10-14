@@ -98,6 +98,12 @@ public:
      */
     Matrix softmax() const;
 
+    /**
+     * @brief Creates a deep copy of the matrix.
+     * @return A new Matrix object with the same content as the original.
+     */
+    Matrix copy() const;
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix

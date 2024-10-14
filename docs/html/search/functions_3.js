@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['preview_5fimage_0',['preview_image',['../classMatrix.html#aefcddab2b5a779e88caca54ab48a2f8b',1,'Matrix']]],
-  ['print_1',['print',['../classMatrix.html#a5b20a6960b75adb45b31657ffcd1723a',1,'Matrix::print()'],['../classVector.html#aff9a907c480149b5f2d5d95bdf56ca99',1,'Vector::print()']]]
+  ['main_0',['main',['../main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main_test_runner.cu']]],
+  ['matrix_1',['Matrix',['../classMatrix.html#a7213414e405fd1c81c394d5053721fa7',1,'Matrix']]]
 ];

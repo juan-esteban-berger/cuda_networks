@@ -138,6 +138,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aeb9c2727e603c5658d74361b33f03b28" id="r_aeb9c2727e603c5658d74361b33f03b28"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMatrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb9c2727e603c5658d74361b33f03b28">softmax</a> () const</td></tr>
 <tr class="memdesc:aeb9c2727e603c5658d74361b33f03b28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the softmax function to the matrix column-wise.  <br /></td></tr>
 <tr class="separator:aeb9c2727e603c5658d74361b33f03b28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8afa90bb283ee32506690e5eb3b97ac0" id="r_a8afa90bb283ee32506690e5eb3b97ac0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMatrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8afa90bb283ee32506690e5eb3b97ac0">copy</a> () const</td></tr>
+<tr class="memdesc:a8afa90bb283ee32506690e5eb3b97ac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a deep copy of the matrix.  <br /></td></tr>
+<tr class="separator:a8afa90bb283ee32506690e5eb3b97ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a matrix with GPU-accelerated operations. </p>
@@ -207,6 +210,42 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8afa90bb283ee32506690e5eb3b97ac0" name="a8afa90bb283ee32506690e5eb3b97ac0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8afa90bb283ee32506690e5eb3b97ac0">&#9670;&#160;</a></span>copy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMatrix.html">Matrix</a> Matrix::copy </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a deep copy of the matrix. </p>
+<dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="classMatrix.html" title="Represents a matrix with GPU-accelerated operations.">Matrix</a> object with the same content as the original. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__copy_8cu_source.html#l00013">13</a> of file <a class="el" href="matrix__copy_8cu_source.html">matrix_copy.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   13</span>                          {</div>
+<div class="line"><span class="lineno">   14</span>    <span class="comment">// Create a new matrix with the same dimensions</span></div>
+<div class="line"><span class="lineno">   15</span>    <a class="code hl_class" href="classMatrix.html">Matrix</a> result(rows, cols);</div>
+<div class="line"><span class="lineno">   16</span>    </div>
+<div class="line"><span class="lineno">   17</span>    <span class="comment">// Calculate the total number of elements</span></div>
+<div class="line"><span class="lineno">   18</span>    <span class="keywordtype">int</span> size = rows * cols;</div>
+<div class="line"><span class="lineno">   19</span>    </div>
+<div class="line"><span class="lineno">   20</span>    <span class="comment">// Copy the data from the current matrix to the new matrix</span></div>
+<div class="line"><span class="lineno">   21</span>    cudaMemcpy(result.d_data, d_data, size * <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>), cudaMemcpyDeviceToDevice);</div>
+<div class="line"><span class="lineno">   22</span>    </div>
+<div class="line"><span class="lineno">   23</span>    <span class="comment">// Return the new matrix</span></div>
+<div class="line"><span class="lineno">   24</span>    <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">   25</span>}</div>
+<div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00013">matrix.h:13</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a3c7ae73d23a17db578f7226ec4030050" name="a3c7ae73d23a17db578f7226ec4030050"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3c7ae73d23a17db578f7226ec4030050">&#9670;&#160;</a></span>get_cols()</h2>
 
@@ -716,7 +755,6 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   48</span>    </div>
 <div class="line"><span class="lineno">   49</span>    <span class="keywordflow">return</span> result;</div>
 <div class="line"><span class="lineno">   50</span>}</div>
-<div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00013">matrix.h:13</a></div></div>
 <div class="ttc" id="amatrix__relu_8cu_html_a48353edd451a98007ee2e6612996decf"><div class="ttname"><a href="matrix__relu_8cu.html#a48353edd451a98007ee2e6612996decf">reluKernel</a></div><div class="ttdeci">__global__ void reluKernel(const double *input, double *output, int size)</div><div class="ttdoc">CUDA kernel for applying the ReLU activation function element-wise.</div><div class="ttdef"><b>Definition</b> <a href="matrix__relu_8cu_source.html#l00015">matrix_relu.cu:15</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -765,6 +803,7 @@ Public Member Functions</h2></td></tr>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/linear_algebra/<a class="el" href="matrix_8h_source.html">matrix.h</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__constructor_8cu_source.html">matrix_constructor.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="matrix__copy_8cu_source.html">matrix_copy.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__destructor_8cu_source.html">matrix_destructor.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__get__cols_8cu_source.html">matrix_get_cols.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__get__data_8cu_source.html">matrix_get_data.cu</a></li>
