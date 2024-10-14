@@ -4,35 +4,40 @@ INCLUDE = -I./src -I/usr/include/gtest
 LIBS = -lgtest -lgtest_main
 
 SRC_DIR = src/linear_algebra
-BUILD_DIR = build/src/linear_algebra
+BUILD_DIR = build
+SRC_BUILD_DIR = $(BUILD_DIR)/src/linear_algebra
 TEST_DIR = tests
 
 SRCS = $(wildcard $(SRC_DIR)/*.cu)
-OBJS = $(patsubst $(SRC_DIR)/%.cu,$(BUILD_DIR)/%.o,$(SRCS))
+OBJS = $(patsubst $(SRC_DIR)/%.cu,$(SRC_BUILD_DIR)/%.o,$(SRCS))
+
+TEST_SRCS = $(wildcard $(TEST_DIR)/*.cu)
+TEST_OBJS = $(patsubst $(TEST_DIR)/%.cu,$(SRC_BUILD_DIR)/%.o,$(TEST_SRCS))
 
 COMPUTE_SANITIZER = /opt/cuda/extras/compute-sanitizer/compute-sanitizer
 SANITIZER_LIB = /opt/cuda/extras/compute-sanitizer
 
-all: test
+all: $(BUILD_DIR)/run_all_tests
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cu
-	@mkdir -p $(BUILD_DIR)
+$(SRC_BUILD_DIR)/%.o: $(SRC_DIR)/%.cu
+	@mkdir -p $(SRC_BUILD_DIR)
 	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -c $< -o $@
 
-$(BUILD_DIR)/test_matrix_init: $(OBJS) $(BUILD_DIR)/test_matrix_init.o
+$(SRC_BUILD_DIR)/%.o: $(TEST_DIR)/%.cu
+	@mkdir -p $(SRC_BUILD_DIR)
+	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -c $< -o $@
+
+$(BUILD_DIR)/run_all_tests: $(OBJS) $(TEST_OBJS)
+	@mkdir -p $(BUILD_DIR)
 	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -o $@ $^ $(LIBS)
-
-$(BUILD_DIR)/test_matrix_init.o: $(TEST_DIR)/test_matrix_init.cu
-	@mkdir -p $(BUILD_DIR)
-	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)
 
-test: $(BUILD_DIR)/test_matrix_init
-	$(BUILD_DIR)/test_matrix_init
+test: $(BUILD_DIR)/run_all_tests
+	$(BUILD_DIR)/run_all_tests
 
-memcheck: $(BUILD_DIR)/test_matrix_init
-	LD_LIBRARY_PATH=$(SANITIZER_LIB):$$LD_LIBRARY_PATH $(COMPUTE_SANITIZER) --tool memcheck $(BUILD_DIR)/test_matrix_init
+memcheck: $(BUILD_DIR)/run_all_tests
+	LD_LIBRARY_PATH=$(SANITIZER_LIB):$$LD_LIBRARY_PATH $(COMPUTE_SANITIZER) --tool memcheck $(BUILD_DIR)/run_all_tests
 
 .PHONY: all clean test memcheck

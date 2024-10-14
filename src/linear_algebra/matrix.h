@@ -30,9 +30,15 @@ public:
     void initialize();
 
     /**
-     * @brief Print the matrix contents
+     * @brief Randomize the matrix elements with values between -0.5 and 0.5
      */
-    void print();
+    void randomize();
+
+    /**
+     * @brief Print the matrix contents
+     * @param decimals Number of decimal places to display
+     */
+    void print(int decimals);
 
     /**
      * @brief Get the number of rows in the matrix

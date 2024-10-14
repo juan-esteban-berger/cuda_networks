@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['teardown_0',['TearDown',['../classMatrixTest.html#a32fd9f0db017c0f0a10939d669518aa7',1,'MatrixTest']]],
-  ['test_5ff_1',['TEST_F',['../test__matrix_8cu.html#a5f22fd07e0f0ce760a3376639eef2c74',1,'test_matrix.cu']]]
+  ['setup_0',['SetUp',['../classMatrixInitTest.html#a4f2ef65aed5c44f81ef6b51196481a47',1,'MatrixInitTest::SetUp()'],['../classMatrixPrintTest.html#ace860d6a07aa0395f6285d204b3f62f4',1,'MatrixPrintTest::SetUp()'],['../classMatrixRandomizeTest.html#abe3785ca88e06575f5fd935090128e53',1,'MatrixRandomizeTest::SetUp()']]]
 ];
