@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CUDA Neural Networks: src/linear_algebra/matrix_get_data.cu Source File</title>
+<title>CUDA Networks: src/linear_algebra/matrix_get_data.cu Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CUDA Neural Networks
+   <div id="projectname">CUDA Networks
    </div>
   </td>
  </tr>
@@ -100,8 +100,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="foldopen" id="foldopen00007" data-start="{" data-end="}">
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">    7</a></span><span class="keywordtype">double</span>* <a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">Matrix::get_data</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keywordflow">return</span> d_data; <span class="comment">// Return the pointer to the GPU memory</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>}</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="comment">// Return the pointer to the GPU memory</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keywordflow">return</span> d_data;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>}</div>
 </div>
 <div class="ttc" id="aclassMatrix_html_a3b785fe27e519f80d20d4b60ef4319ae"><div class="ttname"><a href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">Matrix::get_data</a></div><div class="ttdeci">double * get_data() const</div><div class="ttdoc">Get the raw data pointer of the matrix.</div><div class="ttdef"><b>Definition</b> <a href="#l00007">matrix_get_data.cu:7</a></div></div>
 <div class="ttc" id="amatrix_8h_html"><div class="ttname"><a href="matrix_8h.html">matrix.h</a></div><div class="ttdoc">Defines the Matrix class for GPU-accelerated matrix operations.</div></div>

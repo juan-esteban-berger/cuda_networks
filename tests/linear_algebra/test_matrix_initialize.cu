@@ -1,5 +1,5 @@
 /**
- * @file test_matrix_init.cu
+ * @file test_matrix_initialize.cu
  * @brief Unit tests for the Matrix::initialize method.
  */
 
@@ -9,10 +9,10 @@
 #include <iostream>
 
 /**
- * @class MatrixInitTest
- * @brief Test fixture for the Matrix::initialize tests.
+ * @class MatrixInitializeTest
+ * @brief Test fixture for the Matrix::initialize method tests.
  */
-class MatrixInitTest : public ::testing::Test {
+class MatrixInitializeTest : public ::testing::Test {
 protected:
     void SetUp() override {}
     void TearDown() override {}
@@ -20,9 +20,12 @@ protected:
 
 /**
  * @test
- * @brief Test that Matrix::initialize() sets all elements to zero.
+ * @brief Verify that Matrix::initialize sets all elements to zero.
+ *
+ * This test creates a matrix, initializes it, and confirms that all
+ * elements are set to zero. It also prints the matrix for visual verification.
  */
-TEST_F(MatrixInitTest, InitializeToZero) {
+TEST_F(MatrixInitializeTest, InitializeToZero) {
     Matrix m(3, 4);  // Create a 3x4 matrix
     m.initialize();  // Initialize the matrix (should set all elements to 0)
 

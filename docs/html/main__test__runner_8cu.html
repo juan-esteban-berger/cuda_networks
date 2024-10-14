@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CUDA Neural Networks: tests/main_test_runner.cu File Reference</title>
+<title>CUDA Networks: tests/main_test_runner.cu File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CUDA Neural Networks
+   <div id="projectname">CUDA Networks
    </div>
   </td>
  </tr>
@@ -98,6 +98,9 @@ $(function(){ initResizable(false); });
 <p>Main test runner to execute all test cases.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;gtest/gtest.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="test__matrix__initialize_8cu_source.html">linear_algebra/test_matrix_initialize.cu</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="test__matrix__print_8cu_source.html">linear_algebra/test_matrix_print.cu</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="test__matrix__randomize_8cu_source.html">linear_algebra/test_matrix_randomize.cu</a>&quot;</code><br />
 </div>
 <p><a href="main__test__runner_8cu_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -141,11 +144,11 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Integer 0 upon successful run, non-zero otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="main__test__runner_8cu_source.html#l00014">14</a> of file <a class="el" href="main__test__runner_8cu_source.html">main_test_runner.cu</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   14</span>                                {</div>
-<div class="line"><span class="lineno">   15</span>    ::testing::InitGoogleTest(&amp;argc, argv);</div>
-<div class="line"><span class="lineno">   16</span>    <span class="keywordflow">return</span> RUN_ALL_TESTS();</div>
-<div class="line"><span class="lineno">   17</span>}</div>
+<p class="definition">Definition at line <a class="el" href="main__test__runner_8cu_source.html#l00018">18</a> of file <a class="el" href="main__test__runner_8cu_source.html">main_test_runner.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   18</span>                                {</div>
+<div class="line"><span class="lineno">   19</span>    ::testing::InitGoogleTest(&amp;argc, argv);</div>
+<div class="line"><span class="lineno">   20</span>    <span class="keywordflow">return</span> RUN_ALL_TESTS();</div>
+<div class="line"><span class="lineno">   21</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

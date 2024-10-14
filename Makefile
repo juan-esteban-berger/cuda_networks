@@ -11,9 +11,6 @@ TEST_DIR = tests
 SRCS = $(wildcard $(SRC_DIR)/*.cu)
 OBJS = $(patsubst $(SRC_DIR)/%.cu,$(SRC_BUILD_DIR)/%.o,$(SRCS))
 
-TEST_SRCS = $(wildcard $(TEST_DIR)/*.cu)
-TEST_OBJS = $(patsubst $(TEST_DIR)/%.cu,$(SRC_BUILD_DIR)/%.o,$(TEST_SRCS))
-
 COMPUTE_SANITIZER = /opt/cuda/extras/compute-sanitizer/compute-sanitizer
 SANITIZER_LIB = /opt/cuda/extras/compute-sanitizer
 
@@ -23,11 +20,7 @@ $(SRC_BUILD_DIR)/%.o: $(SRC_DIR)/%.cu
 	@mkdir -p $(SRC_BUILD_DIR)
 	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -c $< -o $@
 
-$(SRC_BUILD_DIR)/%.o: $(TEST_DIR)/%.cu
-	@mkdir -p $(SRC_BUILD_DIR)
-	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -c $< -o $@
-
-$(BUILD_DIR)/run_all_tests: $(OBJS) $(TEST_OBJS)
+$(BUILD_DIR)/run_all_tests: $(OBJS) $(TEST_DIR)/main_test_runner.cu
 	@mkdir -p $(BUILD_DIR)
 	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -o $@ $^ $(LIBS)
 

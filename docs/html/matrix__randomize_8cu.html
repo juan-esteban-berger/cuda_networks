@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CUDA Neural Networks: src/linear_algebra/matrix_randomize.cu File Reference</title>
+<title>CUDA Networks: src/linear_algebra/matrix_randomize.cu File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CUDA Neural Networks
+   <div id="projectname">CUDA Networks
    </div>
   </td>
  </tr>
@@ -156,22 +156,27 @@ Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="matrix__randomize_8cu_source.html#l00017">17</a> of file <a class="el" href="matrix__randomize_8cu_source.html">matrix_randomize.cu</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   17</span>                                                                                      {</div>
-<div class="line"><span class="lineno">   18</span>    <span class="keywordtype">int</span> idx = blockIdx.x * blockDim.x + threadIdx.x;</div>
-<div class="line"><span class="lineno">   19</span>    <span class="keywordtype">int</span> totalElements = rows * cols;</div>
-<div class="line"><span class="lineno">   20</span> </div>
-<div class="line"><span class="lineno">   21</span>    <span class="comment">// Ensure the thread&#39;s index is within the matrix bounds</span></div>
-<div class="line"><span class="lineno">   22</span>    <span class="keywordflow">if</span> (idx &lt; totalElements) {</div>
-<div class="line"><span class="lineno">   23</span>        <span class="keywordtype">int</span> row = idx / cols;</div>
-<div class="line"><span class="lineno">   24</span>        <span class="keywordtype">int</span> col = idx % cols;</div>
-<div class="line"><span class="lineno">   25</span> </div>
-<div class="line"><span class="lineno">   26</span>        <span class="comment">// Initialize a random state for this thread</span></div>
-<div class="line"><span class="lineno">   27</span>        curandState state;</div>
-<div class="line"><span class="lineno">   28</span>        curand_init(seed, idx, 0, &amp;state);</div>
-<div class="line"><span class="lineno">   29</span> </div>
-<div class="line"><span class="lineno">   30</span>        <span class="comment">// Assign a random value between -0.5 and 0.5 to the current matrix element</span></div>
-<div class="line"><span class="lineno">   31</span>        data[row * cols + col] = curand_uniform(&amp;state) - 0.5;</div>
-<div class="line"><span class="lineno">   32</span>    }</div>
-<div class="line"><span class="lineno">   33</span>}</div>
+<div class="line"><span class="lineno">   18</span>    <span class="comment">// Calculate the global thread index</span></div>
+<div class="line"><span class="lineno">   19</span>    <span class="keywordtype">int</span> idx = blockIdx.x * blockDim.x + threadIdx.x;</div>
+<div class="line"><span class="lineno">   20</span>    <span class="keywordtype">int</span> totalElements = rows * cols;</div>
+<div class="line"><span class="lineno">   21</span> </div>
+<div class="line"><span class="lineno">   22</span>    <span class="comment">// Ensure the thread&#39;s index is within the matrix bounds</span></div>
+<div class="line"><span class="lineno">   23</span>    <span class="keywordflow">if</span> (idx &lt; totalElements) {</div>
+<div class="line"><span class="lineno">   24</span>        <span class="comment">// Calculate the row and column for this thread</span></div>
+<div class="line"><span class="lineno">   25</span>        <span class="keywordtype">int</span> row = idx / cols;</div>
+<div class="line"><span class="lineno">   26</span>        <span class="keywordtype">int</span> col = idx % cols;</div>
+<div class="line"><span class="lineno">   27</span> </div>
+<div class="line"><span class="lineno">   28</span>        <span class="comment">// Initialize a random state for this thread</span></div>
+<div class="line"><span class="lineno">   29</span>        curandState state;</div>
+<div class="line"><span class="lineno">   30</span>        curand_init(seed, idx, 0, &amp;state);</div>
+<div class="line"><span class="lineno">   31</span> </div>
+<div class="line"><span class="lineno">   32</span>        <span class="comment">// Generate a random value between 0 and 1, then shift it to be between -0.5 and 0.5</span></div>
+<div class="line"><span class="lineno">   33</span>        <span class="keywordtype">double</span> randomValue = curand_uniform(&amp;state) - 0.5;</div>
+<div class="line"><span class="lineno">   34</span> </div>
+<div class="line"><span class="lineno">   35</span>        <span class="comment">// Assign the random value to the current matrix element</span></div>
+<div class="line"><span class="lineno">   36</span>        data[row * cols + col] = randomValue;</div>
+<div class="line"><span class="lineno">   37</span>    }</div>
+<div class="line"><span class="lineno">   38</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

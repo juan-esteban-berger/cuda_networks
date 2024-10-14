@@ -2,8 +2,12 @@
  * @file main_test_runner.cu
  * @brief Main test runner to execute all test cases.
  */
-
 #include <gtest/gtest.h>
+
+// Include all test files
+#include "linear_algebra/test_matrix_initialize.cu"
+#include "linear_algebra/test_matrix_print.cu"
+#include "linear_algebra/test_matrix_randomize.cu"
 
 /**
  * @brief Main function to run all tests.

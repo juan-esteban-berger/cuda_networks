@@ -5,5 +5,6 @@
 #include "matrix.h"
 
 double* Matrix::get_data() const {
-    return d_data; // Return the pointer to the GPU memory
+    // Return the pointer to the GPU memory
+    return d_data;
 }
