@@ -1,0 +1,17 @@
+PROJECT_NAME           = "CUDA Neural Networks"
+OUTPUT_DIRECTORY       = ./docs
+INPUT                  = ./src ./tests
+INPUT                 += src/mainpage.h
+RECURSIVE              = YES
+EXTRACT_ALL            = YES
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_EXTRA_STYLESHEET  = doxygen-awesome.css
+GENERATE_LATEX         = NO
+FILE_PATTERNS          = *.cu *.h
+EXTENSION_MAPPING      = cu=C++
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+STRIP_CODE_COMMENTS    = NO
+REFERENCES_LINK_SOURCE = YES
+USE_MDFILE_AS_MAINPAGE = src/mainpage.h
