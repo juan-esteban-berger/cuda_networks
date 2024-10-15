@@ -171,6 +171,11 @@ public:
      */
     Vector argmax() const;
 
+    /**
+     * @brief Transposes the matrix and returns a new Matrix object.
+     * @return A new Matrix object containing the transposed data.
+     */
+    Matrix transpose() const;
 
 private:
     int rows;    ///< Number of rows in the matrix

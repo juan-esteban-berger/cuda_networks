@@ -25,5 +25,6 @@ var searchData=
   ['matrix_5frelu_5fderivative_2ecu_22',['matrix_relu_derivative.cu',['../matrix__relu__derivative_8cu.html',1,'']]],
   ['matrix_5fsoftmax_2ecu_23',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]],
   ['matrix_5fsubtract_2ecu_24',['matrix_subtract.cu',['../matrix__subtract_8cu.html',1,'']]],
-  ['matrix_5fsum_2ecu_25',['matrix_sum.cu',['../matrix__sum_8cu.html',1,'']]]
+  ['matrix_5fsum_2ecu_25',['matrix_sum.cu',['../matrix__sum_8cu.html',1,'']]],
+  ['matrix_5ftranspose_2ecu_26',['matrix_transpose.cu',['../matrix__transpose_8cu.html',1,'']]]
 ];

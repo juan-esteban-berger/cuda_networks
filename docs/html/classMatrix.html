@@ -168,6 +168,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6035fa0600c2388cbd098172688c470f" id="r_a6035fa0600c2388cbd098172688c470f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classVector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6035fa0600c2388cbd098172688c470f">argmax</a> () const</td></tr>
 <tr class="memdesc:a6035fa0600c2388cbd098172688c470f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the argmax of each column in the matrix.  <br /></td></tr>
 <tr class="separator:a6035fa0600c2388cbd098172688c470f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a759661b75b9681f3a89ff75e27933b3a" id="r_a759661b75b9681f3a89ff75e27933b3a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMatrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a759661b75b9681f3a89ff75e27933b3a">transpose</a> () const</td></tr>
+<tr class="memdesc:a759661b75b9681f3a89ff75e27933b3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transposes the matrix and returns a new <a class="el" href="classMatrix.html" title="Represents a matrix with GPU-accelerated operations.">Matrix</a> object.  <br /></td></tr>
+<tr class="separator:a759661b75b9681f3a89ff75e27933b3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a matrix with GPU-accelerated operations. </p>
@@ -1323,6 +1326,57 @@ Public Member Functions</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a759661b75b9681f3a89ff75e27933b3a" name="a759661b75b9681f3a89ff75e27933b3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a759661b75b9681f3a89ff75e27933b3a">&#9670;&#160;</a></span>transpose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMatrix.html">Matrix</a> Matrix::transpose </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transposes the matrix and returns a new <a class="el" href="classMatrix.html" title="Represents a matrix with GPU-accelerated operations.">Matrix</a> object. </p>
+<p>Transposes the matrix and returns a new <a class="el" href="classMatrix.html" title="Represents a matrix with GPU-accelerated operations.">Matrix</a> object containing the transposed data.</p>
+<dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="classMatrix.html" title="Represents a matrix with GPU-accelerated operations.">Matrix</a> object containing the transposed data.</dd>
+<dd>
+A new <a class="el" href="classMatrix.html" title="Represents a matrix with GPU-accelerated operations.">Matrix</a> object with transposed dimensions. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__transpose_8cu_source.html#l00036">36</a> of file <a class="el" href="matrix__transpose_8cu_source.html">matrix_transpose.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   36</span>                               {</div>
+<div class="line"><span class="lineno">   37</span>    <span class="comment">// Create a new matrix to hold the transposed data</span></div>
+<div class="line"><span class="lineno">   38</span>    <a class="code hl_class" href="classMatrix.html">Matrix</a> result(cols, rows);</div>
+<div class="line"><span class="lineno">   39</span> </div>
+<div class="line"><span class="lineno">   40</span>    <span class="comment">// Define block dimensions (16x16 is common for matrix operations)</span></div>
+<div class="line"><span class="lineno">   41</span>    dim3 threadsPerBlock(16, 16);</div>
+<div class="line"><span class="lineno">   42</span> </div>
+<div class="line"><span class="lineno">   43</span>    <span class="comment">// Calculate grid dimensions to cover the entire matrix</span></div>
+<div class="line"><span class="lineno">   44</span>    dim3 numBlocks((cols + threadsPerBlock.x - 1) / threadsPerBlock.x,</div>
+<div class="line"><span class="lineno">   45</span>                   (rows + threadsPerBlock.y - 1) / threadsPerBlock.y);</div>
+<div class="line"><span class="lineno">   46</span> </div>
+<div class="line"><span class="lineno">   47</span>    <span class="comment">// Launch the CUDA kernel to perform transposition</span></div>
+<div class="line"><span class="lineno">   48</span>    <a class="code hl_function" href="matrix__transpose_8cu.html#ab390c33d136e73e42c65cc9703c73942">matrixTransposeKernel&lt;&lt;&lt;numBlocks, threadsPerBlock&gt;</a>&gt;&gt;(d_data, result.d_data, rows, cols);</div>
+<div class="line"><span class="lineno">   49</span> </div>
+<div class="line"><span class="lineno">   50</span>    <span class="comment">// Check for kernel launch errors</span></div>
+<div class="line"><span class="lineno">   51</span>    cudaError_t cudaStatus = cudaGetLastError();</div>
+<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">if</span> (cudaStatus != cudaSuccess) {</div>
+<div class="line"><span class="lineno">   53</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Kernel launch failed: &quot;</span> + std::string(cudaGetErrorString(cudaStatus)));</div>
+<div class="line"><span class="lineno">   54</span>    }</div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>    <span class="comment">// Synchronize device to ensure completion</span></div>
+<div class="line"><span class="lineno">   57</span>    cudaDeviceSynchronize();</div>
+<div class="line"><span class="lineno">   58</span> </div>
+<div class="line"><span class="lineno">   59</span>    <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">   60</span>}</div>
+<div class="ttc" id="amatrix__transpose_8cu_html_ab390c33d136e73e42c65cc9703c73942"><div class="ttname"><a href="matrix__transpose_8cu.html#ab390c33d136e73e42c65cc9703c73942">matrixTransposeKernel</a></div><div class="ttdeci">__global__ void matrixTransposeKernel(const double *input, double *output, int rows, int cols)</div><div class="ttdoc">CUDA kernel for matrix transposition.</div><div class="ttdef"><b>Definition</b> <a href="matrix__transpose_8cu_source.html#l00018">matrix_transpose.cu:18</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/linear_algebra/<a class="el" href="matrix_8h_source.html">matrix.h</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__add__vector_8cu_source.html">matrix_add_vector.cu</a></li>
@@ -1348,6 +1402,7 @@ Public Member Functions</h2></td></tr>
 <li>src/linear_algebra/<a class="el" href="matrix__softmax_8cu_source.html">matrix_softmax.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__subtract_8cu_source.html">matrix_subtract.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__sum_8cu_source.html">matrix_sum.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="matrix__transpose_8cu_source.html">matrix_transpose.cu</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

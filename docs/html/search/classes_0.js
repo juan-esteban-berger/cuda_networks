@@ -18,5 +18,6 @@ var searchData=
   ['matrixrelutest_15',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]],
   ['matrixsoftmaxtest_16',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]],
   ['matrixsubtracttest_17',['MatrixSubtractTest',['../classMatrixSubtractTest.html',1,'']]],
-  ['matrixsumtest_18',['MatrixSumTest',['../classMatrixSumTest.html',1,'']]]
+  ['matrixsumtest_18',['MatrixSumTest',['../classMatrixSumTest.html',1,'']]],
+  ['matrixtransposetest_19',['MatrixTransposeTest',['../classMatrixTransposeTest.html',1,'']]]
 ];
