@@ -98,6 +98,12 @@ public:
     Matrix relu() const;
 
     /**
+     * @brief Applies the derivative of the ReLU activation function to the matrix.
+     * @return A new Matrix object with ReLU derivative applied.
+     */
+    Matrix relu_derivative() const;
+
+    /**
      * @brief Applies the softmax function to the matrix column-wise.
      * @return A new Matrix object with softmax applied.
      */

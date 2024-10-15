@@ -6,5 +6,7 @@ var searchData=
   ['read_5fcsv_3',['read_csv',['../classMatrix.html#a1824b5df7055208215e721fb076d3ce8',1,'Matrix']]],
   ['read_5fcsv_5flimited_4',['read_csv_limited',['../classMatrix.html#a8ed4918dfffe960a71614d28dc468b77',1,'Matrix']]],
   ['relu_5',['relu',['../classMatrix.html#abb60ccf9f0d6fff33ad5a2a273f2f0f4',1,'Matrix']]],
-  ['relukernel_6',['reluKernel',['../matrix__relu_8cu.html#a48353edd451a98007ee2e6612996decf',1,'matrix_relu.cu']]]
+  ['relu_5fderivative_6',['relu_derivative',['../classMatrix.html#ab8c07cab9922491fe1cf51a8fce5428e',1,'Matrix']]],
+  ['reluderivativekernel_7',['reluDerivativeKernel',['../matrix__relu__derivative_8cu.html#a1bf811df44d566aad875df2257c1041b',1,'matrix_relu_derivative.cu']]],
+  ['relukernel_8',['reluKernel',['../matrix__relu_8cu.html#a48353edd451a98007ee2e6612996decf',1,'matrix_relu.cu']]]
 ];

@@ -13,8 +13,9 @@ var searchData=
   ['matrixrandomizetest_10',['MatrixRandomizeTest',['../classMatrixRandomizeTest.html',1,'']]],
   ['matrixreadcsvlimitedtest_11',['MatrixReadCSVLimitedTest',['../classMatrixReadCSVLimitedTest.html',1,'']]],
   ['matrixreadcsvtest_12',['MatrixReadCSVTest',['../classMatrixReadCSVTest.html',1,'']]],
-  ['matrixrelutest_13',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]],
-  ['matrixsoftmaxtest_14',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]],
-  ['matrixsubtracttest_15',['MatrixSubtractTest',['../classMatrixSubtractTest.html',1,'']]],
-  ['matrixsumtest_16',['MatrixSumTest',['../classMatrixSumTest.html',1,'']]]
+  ['matrixreluderivativetest_13',['MatrixReluDerivativeTest',['../classMatrixReluDerivativeTest.html',1,'']]],
+  ['matrixrelutest_14',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]],
+  ['matrixsoftmaxtest_15',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]],
+  ['matrixsubtracttest_16',['MatrixSubtractTest',['../classMatrixSubtractTest.html',1,'']]],
+  ['matrixsumtest_17',['MatrixSumTest',['../classMatrixSumTest.html',1,'']]]
 ];

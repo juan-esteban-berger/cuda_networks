@@ -13,11 +13,12 @@ var searchData=
   ['test_5fmatrix_5fread_5fcsv_2ecu_10',['test_matrix_read_csv.cu',['../test__matrix__read__csv_8cu.html',1,'']]],
   ['test_5fmatrix_5fread_5fcsv_5flimited_2ecu_11',['test_matrix_read_csv_limited.cu',['../test__matrix__read__csv__limited_8cu.html',1,'']]],
   ['test_5fmatrix_5frelu_2ecu_12',['test_matrix_relu.cu',['../test__matrix__relu_8cu.html',1,'']]],
-  ['test_5fmatrix_5fsoftmax_2ecu_13',['test_matrix_softmax.cu',['../test__matrix__softmax_8cu.html',1,'']]],
-  ['test_5fmatrix_5fsubtract_2ecu_14',['test_matrix_subtract.cu',['../test__matrix__subtract_8cu.html',1,'']]],
-  ['test_5fmatrix_5fsum_2ecu_15',['test_matrix_sum.cu',['../test__matrix__sum_8cu.html',1,'']]],
-  ['test_5fvector_5fcopy_2ecu_16',['test_vector_copy.cu',['../test__vector__copy_8cu.html',1,'']]],
-  ['test_5fvector_5finitialize_2ecu_17',['test_vector_initialize.cu',['../test__vector__initialize_8cu.html',1,'']]],
-  ['test_5fvector_5fprint_2ecu_18',['test_vector_print.cu',['../test__vector__print_8cu.html',1,'']]],
-  ['test_5fvector_5frandomize_2ecu_19',['test_vector_randomize.cu',['../test__vector__randomize_8cu.html',1,'']]]
+  ['test_5fmatrix_5frelu_5fderivative_2ecu_13',['test_matrix_relu_derivative.cu',['../test__matrix__relu__derivative_8cu.html',1,'']]],
+  ['test_5fmatrix_5fsoftmax_2ecu_14',['test_matrix_softmax.cu',['../test__matrix__softmax_8cu.html',1,'']]],
+  ['test_5fmatrix_5fsubtract_2ecu_15',['test_matrix_subtract.cu',['../test__matrix__subtract_8cu.html',1,'']]],
+  ['test_5fmatrix_5fsum_2ecu_16',['test_matrix_sum.cu',['../test__matrix__sum_8cu.html',1,'']]],
+  ['test_5fvector_5fcopy_2ecu_17',['test_vector_copy.cu',['../test__vector__copy_8cu.html',1,'']]],
+  ['test_5fvector_5finitialize_2ecu_18',['test_vector_initialize.cu',['../test__vector__initialize_8cu.html',1,'']]],
+  ['test_5fvector_5fprint_2ecu_19',['test_vector_print.cu',['../test__vector__print_8cu.html',1,'']]],
+  ['test_5fvector_5frandomize_2ecu_20',['test_vector_randomize.cu',['../test__vector__randomize_8cu.html',1,'']]]
 ];
