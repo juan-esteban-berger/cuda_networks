@@ -140,6 +140,25 @@ public:
      */
     Matrix subtract(const Matrix& other) const;
 
+    /**
+     * @brief Sums all elements in the matrix.
+     * @return The sum of all elements in the matrix.
+     */
+    double sum() const;
+
+    /**
+     * @brief Divides all elements in the matrix by a scalar.
+     * @param scalar The scalar to divide by.
+     * @throws std::invalid_argument if scalar is zero.
+     */
+    void divide_scalar(double scalar);
+
+    /**
+     * @brief Multiplies all elements in the matrix by a scalar.
+     * @param scalar The scalar to multiply by.
+     */
+    void multiply_scalar(double scalar);
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix

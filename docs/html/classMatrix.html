@@ -153,6 +153,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8ea709e751a8d31920d0e2ae82af812d" id="r_a8ea709e751a8d31920d0e2ae82af812d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMatrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ea709e751a8d31920d0e2ae82af812d">subtract</a> (const <a class="el" href="classMatrix.html">Matrix</a> &amp;other) const</td></tr>
 <tr class="memdesc:a8ea709e751a8d31920d0e2ae82af812d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtracts another matrix from this matrix.  <br /></td></tr>
 <tr class="separator:a8ea709e751a8d31920d0e2ae82af812d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5d20002e00aae4e9df0229e972dc151" id="r_ac5d20002e00aae4e9df0229e972dc151"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5d20002e00aae4e9df0229e972dc151">sum</a> () const</td></tr>
+<tr class="memdesc:ac5d20002e00aae4e9df0229e972dc151"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sums all elements in the matrix.  <br /></td></tr>
+<tr class="separator:ac5d20002e00aae4e9df0229e972dc151"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12a5f8fc2e6c3bb59fd47351dc36d9b0" id="r_a12a5f8fc2e6c3bb59fd47351dc36d9b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12a5f8fc2e6c3bb59fd47351dc36d9b0">divide_scalar</a> (double scalar)</td></tr>
+<tr class="memdesc:a12a5f8fc2e6c3bb59fd47351dc36d9b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Divides all elements in the matrix by a scalar.  <br /></td></tr>
+<tr class="separator:a12a5f8fc2e6c3bb59fd47351dc36d9b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd1928cb615e24f7ba5a9f8a931c86e3" id="r_acd1928cb615e24f7ba5a9f8a931c86e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd1928cb615e24f7ba5a9f8a931c86e3">multiply_scalar</a> (double scalar)</td></tr>
+<tr class="memdesc:acd1928cb615e24f7ba5a9f8a931c86e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies all elements in the matrix by a scalar.  <br /></td></tr>
+<tr class="separator:acd1928cb615e24f7ba5a9f8a931c86e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a matrix with GPU-accelerated operations. </p>
@@ -316,6 +325,77 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   24</span>    <span class="keywordflow">return</span> result;</div>
 <div class="line"><span class="lineno">   25</span>}</div>
 <div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00018">matrix.h:18</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a12a5f8fc2e6c3bb59fd47351dc36d9b0" name="a12a5f8fc2e6c3bb59fd47351dc36d9b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12a5f8fc2e6c3bb59fd47351dc36d9b0">&#9670;&#160;</a></span>divide_scalar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Matrix::divide_scalar </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>scalar</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Divides all elements in the matrix by a scalar. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scalar</td><td>The scalar to divide by. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>if scalar is zero.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scalar</td><td>The scalar to divide by. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>if scalar is exactly zero. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__divide__scalar_8cu_source.html#l00047">47</a> of file <a class="el" href="matrix__divide__scalar_8cu_source.html">matrix_divide_scalar.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   47</span>                                        {</div>
+<div class="line"><span class="lineno">   48</span>    <span class="comment">// Check for division by exactly zero</span></div>
+<div class="line"><span class="lineno">   49</span>    <span class="keywordflow">if</span> (scalar == 0.0) {</div>
+<div class="line"><span class="lineno">   50</span>        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Cannot divide by exactly zero&quot;</span>);</div>
+<div class="line"><span class="lineno">   51</span>    }</div>
+<div class="line"><span class="lineno">   52</span> </div>
+<div class="line"><span class="lineno">   53</span>    <span class="comment">// Calculate total number of elements</span></div>
+<div class="line"><span class="lineno">   54</span>    <span class="keywordtype">int</span> size = rows * cols;</div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>    <span class="comment">// Define block and grid dimensions</span></div>
+<div class="line"><span class="lineno">   57</span>    <span class="keywordtype">int</span> threadsPerBlock = 256;</div>
+<div class="line"><span class="lineno">   58</span>    <span class="keywordtype">int</span> blocksPerGrid = (size + threadsPerBlock - 1) / threadsPerBlock;</div>
+<div class="line"><span class="lineno">   59</span> </div>
+<div class="line"><span class="lineno">   60</span>    <span class="comment">// Launch CUDA kernel</span></div>
+<div class="line"><span class="lineno">   61</span>    <a class="code hl_function" href="matrix__divide__scalar_8cu.html#a79aaa6eb279d8acd46ae046accc4bf31">divideScalarKernel&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;</a>&gt;&gt;(d_data, scalar, size);</div>
+<div class="line"><span class="lineno">   62</span> </div>
+<div class="line"><span class="lineno">   63</span>    <span class="comment">// Check for kernel launch errors</span></div>
+<div class="line"><span class="lineno">   64</span>    cudaError_t cudaStatus = cudaGetLastError();</div>
+<div class="line"><span class="lineno">   65</span>    <span class="keywordflow">if</span> (cudaStatus != cudaSuccess) {</div>
+<div class="line"><span class="lineno">   66</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Kernel launch failed: &quot;</span> + std::string(cudaGetErrorString(cudaStatus)));</div>
+<div class="line"><span class="lineno">   67</span>    }</div>
+<div class="line"><span class="lineno">   68</span> </div>
+<div class="line"><span class="lineno">   69</span>    <span class="comment">// Synchronize device</span></div>
+<div class="line"><span class="lineno">   70</span>    cudaDeviceSynchronize();</div>
+<div class="line"><span class="lineno">   71</span>}</div>
+<div class="ttc" id="amatrix__divide__scalar_8cu_html_a79aaa6eb279d8acd46ae046accc4bf31"><div class="ttname"><a href="matrix__divide__scalar_8cu.html#a79aaa6eb279d8acd46ae046accc4bf31">divideScalarKernel</a></div><div class="ttdeci">__global__ void divideScalarKernel(double *data, double scalar, int size)</div><div class="ttdoc">CUDA kernel for dividing matrix elements by a scalar.</div><div class="ttdef"><b>Definition</b> <a href="matrix__divide__scalar_8cu_source.html#l00018">matrix_divide_scalar.cu:18</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -553,6 +633,54 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   68</span>    <span class="keywordflow">return</span> result;</div>
 <div class="line"><span class="lineno">   69</span>}</div>
 <div class="ttc" id="amatrix__multiply__elementwise_8cu_html_a2f0b8e6479c492c1830e7c9d36a4f256"><div class="ttname"><a href="matrix__multiply__elementwise_8cu.html#a2f0b8e6479c492c1830e7c9d36a4f256">matrixMultiplyElementwiseKernel</a></div><div class="ttdeci">__global__ void matrixMultiplyElementwiseKernel(const double *a, const double *b, double *c, int rows, int cols)</div><div class="ttdoc">CUDA kernel for element-wise matrix multiplication.</div><div class="ttdef"><b>Definition</b> <a href="matrix__multiply__elementwise_8cu_source.html#l00019">matrix_multiply_elementwise.cu:19</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="acd1928cb615e24f7ba5a9f8a931c86e3" name="acd1928cb615e24f7ba5a9f8a931c86e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd1928cb615e24f7ba5a9f8a931c86e3">&#9670;&#160;</a></span>multiply_scalar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Matrix::multiply_scalar </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>scalar</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Multiplies all elements in the matrix by a scalar. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scalar</td><td>The scalar to multiply by. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__multiply__scalar_8cu_source.html#l00041">41</a> of file <a class="el" href="matrix__multiply__scalar_8cu_source.html">matrix_multiply_scalar.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>                                          {</div>
+<div class="line"><span class="lineno">   42</span>    <span class="comment">// Calculate total number of elements</span></div>
+<div class="line"><span class="lineno">   43</span>    <span class="keywordtype">int</span> size = rows * cols;</div>
+<div class="line"><span class="lineno">   44</span> </div>
+<div class="line"><span class="lineno">   45</span>    <span class="comment">// Define block and grid dimensions</span></div>
+<div class="line"><span class="lineno">   46</span>    <span class="keywordtype">int</span> threadsPerBlock = 256;</div>
+<div class="line"><span class="lineno">   47</span>    <span class="keywordtype">int</span> blocksPerGrid = (size + threadsPerBlock - 1) / threadsPerBlock;</div>
+<div class="line"><span class="lineno">   48</span> </div>
+<div class="line"><span class="lineno">   49</span>    <span class="comment">// Launch CUDA kernel</span></div>
+<div class="line"><span class="lineno">   50</span>    <a class="code hl_function" href="matrix__multiply__scalar_8cu.html#a213646181f6071c420834fcefefbea9f">multiplyScalarKernel&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;</a>&gt;&gt;(d_data, scalar, size);</div>
+<div class="line"><span class="lineno">   51</span> </div>
+<div class="line"><span class="lineno">   52</span>    <span class="comment">// Check for kernel launch errors</span></div>
+<div class="line"><span class="lineno">   53</span>    cudaError_t cudaStatus = cudaGetLastError();</div>
+<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">if</span> (cudaStatus != cudaSuccess) {</div>
+<div class="line"><span class="lineno">   55</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Kernel launch failed: &quot;</span> + std::string(cudaGetErrorString(cudaStatus)));</div>
+<div class="line"><span class="lineno">   56</span>    }</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>    <span class="comment">// Synchronize device</span></div>
+<div class="line"><span class="lineno">   59</span>    cudaDeviceSynchronize();</div>
+<div class="line"><span class="lineno">   60</span>}</div>
+<div class="ttc" id="amatrix__multiply__scalar_8cu_html_a213646181f6071c420834fcefefbea9f"><div class="ttname"><a href="matrix__multiply__scalar_8cu.html#a213646181f6071c420834fcefefbea9f">multiplyScalarKernel</a></div><div class="ttdeci">__global__ void multiplyScalarKernel(double *data, double scalar, int size)</div><div class="ttdoc">CUDA kernel for multiplying matrix elements by a scalar.</div><div class="ttdef"><b>Definition</b> <a href="matrix__multiply__scalar_8cu_source.html#l00018">matrix_multiply_scalar.cu:18</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1072,18 +1200,51 @@ Public Member Functions</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="ac5d20002e00aae4e9df0229e972dc151" name="ac5d20002e00aae4e9df0229e972dc151"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5d20002e00aae4e9df0229e972dc151">&#9670;&#160;</a></span>sum()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Matrix::sum </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sums all elements in the matrix. </p>
+<dl class="section return"><dt>Returns</dt><dd>The sum of all elements in the matrix. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__sum_8cu_source.html#l00015">15</a> of file <a class="el" href="matrix__sum_8cu_source.html">matrix_sum.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   15</span>                         {</div>
+<div class="line"><span class="lineno">   16</span>    <span class="comment">// Create a thrust device pointer from the raw CUDA pointer</span></div>
+<div class="line"><span class="lineno">   17</span>    thrust::device_ptr&lt;double&gt; d_ptr(d_data);</div>
+<div class="line"><span class="lineno">   18</span>    </div>
+<div class="line"><span class="lineno">   19</span>    <span class="comment">// Use thrust::reduce to sum all elements</span></div>
+<div class="line"><span class="lineno">   20</span>    <span class="keywordtype">double</span> result = thrust::reduce(d_ptr, d_ptr + rows * cols);</div>
+<div class="line"><span class="lineno">   21</span>    </div>
+<div class="line"><span class="lineno">   22</span>    <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">   23</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/linear_algebra/<a class="el" href="matrix_8h_source.html">matrix.h</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__add__vector_8cu_source.html">matrix_add_vector.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__constructor_8cu_source.html">matrix_constructor.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__copy_8cu_source.html">matrix_copy.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__destructor_8cu_source.html">matrix_destructor.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="matrix__divide__scalar_8cu_source.html">matrix_divide_scalar.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__get__cols_8cu_source.html">matrix_get_cols.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__get__data_8cu_source.html">matrix_get_data.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__get__rows_8cu_source.html">matrix_get_rows.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__initialize_8cu_source.html">matrix_initialize.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__multiply_8cu_source.html">matrix_multiply.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__multiply__elementwise_8cu_source.html">matrix_multiply_elementwise.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="matrix__multiply__scalar_8cu_source.html">matrix_multiply_scalar.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__preview__image_8cu_source.html">matrix_preview_image.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__print_8cu_source.html">matrix_print.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__randomize_8cu_source.html">matrix_randomize.cu</a></li>
@@ -1092,6 +1253,7 @@ Public Member Functions</h2></td></tr>
 <li>src/linear_algebra/<a class="el" href="matrix__relu_8cu_source.html">matrix_relu.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__softmax_8cu_source.html">matrix_softmax.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__subtract_8cu_source.html">matrix_subtract.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="matrix__sum_8cu_source.html">matrix_sum.cu</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
