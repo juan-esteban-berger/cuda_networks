@@ -15,7 +15,8 @@
 // #include "linear_algebra/test_matrix_copy.cu"
 // #include "linear_algebra/test_matrix_multiply.cu"
 // #include "linear_algebra/test_matrix_multiply_elementwise.cu"
-#include "linear_algebra/test_matrix_add_vector.cu"
+// #include "linear_algebra/test_matrix_add_vector.cu"
+#include "linear_algebra/test_matrix_subtract.cu"
 
 // #include "linear_algebra/test_vector_initialize.cu"
 // #include "linear_algebra/test_vector_print.cu"

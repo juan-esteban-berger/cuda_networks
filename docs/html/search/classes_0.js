@@ -12,5 +12,6 @@ var searchData=
   ['matrixreadcsvlimitedtest_9',['MatrixReadCSVLimitedTest',['../classMatrixReadCSVLimitedTest.html',1,'']]],
   ['matrixreadcsvtest_10',['MatrixReadCSVTest',['../classMatrixReadCSVTest.html',1,'']]],
   ['matrixrelutest_11',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]],
-  ['matrixsoftmaxtest_12',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]]
+  ['matrixsoftmaxtest_12',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]],
+  ['matrixsubtracttest_13',['MatrixSubtractTest',['../classMatrixSubtractTest.html',1,'']]]
 ];

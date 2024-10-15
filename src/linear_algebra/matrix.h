@@ -132,6 +132,14 @@ public:
      */
     void add_vector(const Vector& v);
 
+    /**
+     * @brief Subtracts another matrix from this matrix.
+     * @param other The matrix to subtract.
+     * @return A new Matrix object containing the result of the subtraction.
+     * @throws std::invalid_argument if matrix dimensions are not identical.
+     */
+    Matrix subtract(const Matrix& other) const;
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix

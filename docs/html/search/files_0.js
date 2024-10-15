@@ -19,5 +19,6 @@ var searchData=
   ['matrix_5fread_5fcsv_2ecu_16',['matrix_read_csv.cu',['../matrix__read__csv_8cu.html',1,'']]],
   ['matrix_5fread_5fcsv_5flimited_2ecu_17',['matrix_read_csv_limited.cu',['../matrix__read__csv__limited_8cu.html',1,'']]],
   ['matrix_5frelu_2ecu_18',['matrix_relu.cu',['../matrix__relu_8cu.html',1,'']]],
-  ['matrix_5fsoftmax_2ecu_19',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]]
+  ['matrix_5fsoftmax_2ecu_19',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]],
+  ['matrix_5fsubtract_2ecu_20',['matrix_subtract.cu',['../matrix__subtract_8cu.html',1,'']]]
 ];

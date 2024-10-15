@@ -4,6 +4,7 @@ var searchData=
   ['matrix_1',['Matrix',['../classMatrix.html#a7213414e405fd1c81c394d5053721fa7',1,'Matrix']]],
   ['matrixmultiplyelementwisekernel_2',['matrixMultiplyElementwiseKernel',['../matrix__multiply__elementwise_8cu.html#a2f0b8e6479c492c1830e7c9d36a4f256',1,'matrix_multiply_elementwise.cu']]],
   ['matrixmultiplykernel_3',['matrixMultiplyKernel',['../matrix__multiply_8cu.html#a5da92ce358993ea6c1c7c71ce04809ef',1,'matrix_multiply.cu']]],
-  ['multiply_4',['multiply',['../classMatrix.html#aabadab5dbd8f85dba1dec8d72db08d91',1,'Matrix']]],
-  ['multiply_5felementwise_5',['multiply_elementwise',['../classMatrix.html#a585ba14c3f61cc520c802b6c07a1d4e3',1,'Matrix']]]
+  ['matrixsubtractkernel_4',['matrixSubtractKernel',['../matrix__subtract_8cu.html#aa0bad1aece2844cbb9a55e9c33afcc33',1,'matrix_subtract.cu']]],
+  ['multiply_5',['multiply',['../classMatrix.html#aabadab5dbd8f85dba1dec8d72db08d91',1,'Matrix']]],
+  ['multiply_5felementwise_6',['multiply_elementwise',['../classMatrix.html#a585ba14c3f61cc520c802b6c07a1d4e3',1,'Matrix']]]
 ];
