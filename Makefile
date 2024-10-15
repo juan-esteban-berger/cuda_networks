@@ -3,21 +3,32 @@ NVCCFLAGS = -std=c++14 -O2 -arch=sm_75
 INCLUDE = -I./src -I/usr/include/gtest
 LIBS = -lgtest -lgtest_main
 
-SRC_DIR = src/linear_algebra
+SRC_DIR = src
 BUILD_DIR = build
-SRC_BUILD_DIR = $(BUILD_DIR)/src/linear_algebra
+SRC_BUILD_DIR = $(BUILD_DIR)/src
 TEST_DIR = tests
-
-SRCS = $(wildcard $(SRC_DIR)/*.cu)
-OBJS = $(patsubst $(SRC_DIR)/%.cu,$(SRC_BUILD_DIR)/%.o,$(SRCS))
 
 COMPUTE_SANITIZER = /opt/cuda/extras/compute-sanitizer/compute-sanitizer
 SANITIZER_LIB = /opt/cuda/extras/compute-sanitizer
 
+# Source files
+LINEAR_ALGEBRA_SRCS = $(wildcard $(SRC_DIR)/linear_algebra/*.cu)
+NEURAL_NETWORK_SRCS = $(wildcard $(SRC_DIR)/neural_network/*.cu)
+SRCS = $(LINEAR_ALGEBRA_SRCS) $(NEURAL_NETWORK_SRCS)
+
+# Object files
+LINEAR_ALGEBRA_OBJS = $(patsubst $(SRC_DIR)/linear_algebra/%.cu,$(SRC_BUILD_DIR)/linear_algebra/%.o,$(LINEAR_ALGEBRA_SRCS))
+NEURAL_NETWORK_OBJS = $(patsubst $(SRC_DIR)/neural_network/%.cu,$(SRC_BUILD_DIR)/neural_network/%.o,$(NEURAL_NETWORK_SRCS))
+OBJS = $(LINEAR_ALGEBRA_OBJS) $(NEURAL_NETWORK_OBJS)
+
 all: $(BUILD_DIR)/run_all_tests
 
-$(SRC_BUILD_DIR)/%.o: $(SRC_DIR)/%.cu
-	@mkdir -p $(SRC_BUILD_DIR)
+$(SRC_BUILD_DIR)/linear_algebra/%.o: $(SRC_DIR)/linear_algebra/%.cu
+	@mkdir -p $(SRC_BUILD_DIR)/linear_algebra
+	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -c $< -o $@
+
+$(SRC_BUILD_DIR)/neural_network/%.o: $(SRC_DIR)/neural_network/%.cu
+	@mkdir -p $(SRC_BUILD_DIR)/neural_network
 	$(NVCC) $(NVCCFLAGS) $(INCLUDE) -c $< -o $@
 
 $(BUILD_DIR)/run_all_tests: $(OBJS) $(TEST_DIR)/main_test_runner.cu

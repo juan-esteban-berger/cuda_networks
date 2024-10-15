@@ -8,6 +8,6 @@ var searchData=
   ['matrixtransposekernel_5',['matrixTransposeKernel',['../matrix__transpose_8cu.html#ab390c33d136e73e42c65cc9703c73942',1,'matrix_transpose.cu']]],
   ['multiply_6',['multiply',['../classMatrix.html#aabadab5dbd8f85dba1dec8d72db08d91',1,'Matrix']]],
   ['multiply_5felementwise_7',['multiply_elementwise',['../classMatrix.html#a585ba14c3f61cc520c802b6c07a1d4e3',1,'Matrix']]],
-  ['multiply_5fscalar_8',['multiply_scalar',['../classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3',1,'Matrix']]],
+  ['multiply_5fscalar_8',['multiply_scalar',['../classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3',1,'Matrix::multiply_scalar()'],['../classVector.html#a408e493ce890007097359d8f1855f891',1,'Vector::multiply_scalar()']]],
   ['multiplyscalarkernel_9',['multiplyScalarKernel',['../matrix__multiply__scalar_8cu.html#a213646181f6071c420834fcefefbea9f',1,'matrix_multiply_scalar.cu']]]
 ];

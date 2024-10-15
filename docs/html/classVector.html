@@ -123,6 +123,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aea623ea775891c3a2c801ecdf0147aa9" id="r_aea623ea775891c3a2c801ecdf0147aa9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classVector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea623ea775891c3a2c801ecdf0147aa9">copy</a> () const</td></tr>
 <tr class="memdesc:aea623ea775891c3a2c801ecdf0147aa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a deep copy of the vector.  <br /></td></tr>
 <tr class="separator:aea623ea775891c3a2c801ecdf0147aa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a408e493ce890007097359d8f1855f891" id="r_a408e493ce890007097359d8f1855f891"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a408e493ce890007097359d8f1855f891">multiply_scalar</a> (double scalar)</td></tr>
+<tr class="memdesc:a408e493ce890007097359d8f1855f891"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies all elements in the vector by a scalar.  <br /></td></tr>
+<tr class="separator:a408e493ce890007097359d8f1855f891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35ecdbbfd77a513ebb5abdf4339faa6c" id="r_a35ecdbbfd77a513ebb5abdf4339faa6c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35ecdbbfd77a513ebb5abdf4339faa6c">divide_scalar</a> (double scalar)</td></tr>
+<tr class="memdesc:a35ecdbbfd77a513ebb5abdf4339faa6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Divides all elements in the vector by a scalar.  <br /></td></tr>
+<tr class="separator:a35ecdbbfd77a513ebb5abdf4339faa6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a vector with GPU-accelerated operations. </p>
@@ -219,6 +225,65 @@ Public Member Functions</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a35ecdbbfd77a513ebb5abdf4339faa6c" name="a35ecdbbfd77a513ebb5abdf4339faa6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35ecdbbfd77a513ebb5abdf4339faa6c">&#9670;&#160;</a></span>divide_scalar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vector::divide_scalar </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>scalar</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Divides all elements in the vector by a scalar. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scalar</td><td>The scalar to divide by. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>if scalar is exactly zero. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="vector__divide__scalar_8cu_source.html#l00047">47</a> of file <a class="el" href="vector__divide__scalar_8cu_source.html">vector_divide_scalar.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   47</span>                                        {</div>
+<div class="line"><span class="lineno">   48</span>    <span class="comment">// Check for division by exactly zero</span></div>
+<div class="line"><span class="lineno">   49</span>    <span class="keywordflow">if</span> (scalar == 0.0) {</div>
+<div class="line"><span class="lineno">   50</span>        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Cannot divide by exactly zero&quot;</span>);</div>
+<div class="line"><span class="lineno">   51</span>    }</div>
+<div class="line"><span class="lineno">   52</span> </div>
+<div class="line"><span class="lineno">   53</span>    <span class="comment">// Calculate total number of elements</span></div>
+<div class="line"><span class="lineno">   54</span>    <span class="keywordtype">int</span> size = rows;</div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>    <span class="comment">// Define block and grid dimensions</span></div>
+<div class="line"><span class="lineno">   57</span>    <span class="keywordtype">int</span> threadsPerBlock = 256;</div>
+<div class="line"><span class="lineno">   58</span>    <span class="keywordtype">int</span> blocksPerGrid = (size + threadsPerBlock - 1) / threadsPerBlock;</div>
+<div class="line"><span class="lineno">   59</span> </div>
+<div class="line"><span class="lineno">   60</span>    <span class="comment">// Launch CUDA kernel</span></div>
+<div class="line"><span class="lineno">   61</span>    <a class="code hl_function" href="vector__divide__scalar_8cu.html#a40e6a81f8c9770e6a4ccea973c95472f">vectorDivideScalarKernel&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;</a>&gt;&gt;(d_data, scalar, size);</div>
+<div class="line"><span class="lineno">   62</span> </div>
+<div class="line"><span class="lineno">   63</span>    <span class="comment">// Check for kernel launch errors</span></div>
+<div class="line"><span class="lineno">   64</span>    cudaError_t cudaStatus = cudaGetLastError();</div>
+<div class="line"><span class="lineno">   65</span>    <span class="keywordflow">if</span> (cudaStatus != cudaSuccess) {</div>
+<div class="line"><span class="lineno">   66</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Kernel launch failed: &quot;</span> + std::string(cudaGetErrorString(cudaStatus)));</div>
+<div class="line"><span class="lineno">   67</span>    }</div>
+<div class="line"><span class="lineno">   68</span> </div>
+<div class="line"><span class="lineno">   69</span>    <span class="comment">// Synchronize device</span></div>
+<div class="line"><span class="lineno">   70</span>    cudaDeviceSynchronize();</div>
+<div class="line"><span class="lineno">   71</span>}</div>
+<div class="ttc" id="avector__divide__scalar_8cu_html_a40e6a81f8c9770e6a4ccea973c95472f"><div class="ttname"><a href="vector__divide__scalar_8cu.html#a40e6a81f8c9770e6a4ccea973c95472f">vectorDivideScalarKernel</a></div><div class="ttdeci">__global__ void vectorDivideScalarKernel(double *data, double scalar, int size)</div><div class="ttdoc">CUDA kernel for dividing vector elements by a scalar.</div><div class="ttdef"><b>Definition</b> <a href="vector__divide__scalar_8cu_source.html#l00018">vector_divide_scalar.cu:18</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="ad45930b5ac4d52999b81164035f33c5f" name="ad45930b5ac4d52999b81164035f33c5f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad45930b5ac4d52999b81164035f33c5f">&#9670;&#160;</a></span>get_data()</h2>
 
@@ -293,6 +358,54 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">    9</span>    <span class="comment">// Use cudaMemset to set all elements of d_data to 0</span></div>
 <div class="line"><span class="lineno">   10</span>    cudaMemset(d_data, 0, rows * <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>));</div>
 <div class="line"><span class="lineno">   11</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a408e493ce890007097359d8f1855f891" name="a408e493ce890007097359d8f1855f891"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a408e493ce890007097359d8f1855f891">&#9670;&#160;</a></span>multiply_scalar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vector::multiply_scalar </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>scalar</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Multiplies all elements in the vector by a scalar. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scalar</td><td>The scalar to multiply by. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="vector__multiply__scalar_8cu_source.html#l00041">41</a> of file <a class="el" href="vector__multiply__scalar_8cu_source.html">vector_multiply_scalar.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>                                          {</div>
+<div class="line"><span class="lineno">   42</span>    <span class="comment">// Calculate total number of elements</span></div>
+<div class="line"><span class="lineno">   43</span>    <span class="keywordtype">int</span> size = rows;</div>
+<div class="line"><span class="lineno">   44</span> </div>
+<div class="line"><span class="lineno">   45</span>    <span class="comment">// Define block and grid dimensions</span></div>
+<div class="line"><span class="lineno">   46</span>    <span class="keywordtype">int</span> threadsPerBlock = 256;</div>
+<div class="line"><span class="lineno">   47</span>    <span class="keywordtype">int</span> blocksPerGrid = (size + threadsPerBlock - 1) / threadsPerBlock;</div>
+<div class="line"><span class="lineno">   48</span> </div>
+<div class="line"><span class="lineno">   49</span>    <span class="comment">// Launch CUDA kernel</span></div>
+<div class="line"><span class="lineno">   50</span>    <a class="code hl_function" href="vector__multiply__scalar_8cu.html#a7ae2d6fe61156a72104a0c9dd57e99aa">vectorMultiplyScalarKernel&lt;&lt;&lt;blocksPerGrid, threadsPerBlock&gt;</a>&gt;&gt;(d_data, scalar, size);</div>
+<div class="line"><span class="lineno">   51</span> </div>
+<div class="line"><span class="lineno">   52</span>    <span class="comment">// Check for kernel launch errors</span></div>
+<div class="line"><span class="lineno">   53</span>    cudaError_t cudaStatus = cudaGetLastError();</div>
+<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">if</span> (cudaStatus != cudaSuccess) {</div>
+<div class="line"><span class="lineno">   55</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Kernel launch failed: &quot;</span> + std::string(cudaGetErrorString(cudaStatus)));</div>
+<div class="line"><span class="lineno">   56</span>    }</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>    <span class="comment">// Synchronize device</span></div>
+<div class="line"><span class="lineno">   59</span>    cudaDeviceSynchronize();</div>
+<div class="line"><span class="lineno">   60</span>}</div>
+<div class="ttc" id="avector__multiply__scalar_8cu_html_a7ae2d6fe61156a72104a0c9dd57e99aa"><div class="ttname"><a href="vector__multiply__scalar_8cu.html#a7ae2d6fe61156a72104a0c9dd57e99aa">vectorMultiplyScalarKernel</a></div><div class="ttdeci">__global__ void vectorMultiplyScalarKernel(double *data, double scalar, int size)</div><div class="ttdoc">CUDA kernel for multiplying vector elements by a scalar.</div><div class="ttdef"><b>Definition</b> <a href="vector__multiply__scalar_8cu_source.html#l00018">vector_multiply_scalar.cu:18</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -400,9 +513,11 @@ Public Member Functions</h2></td></tr>
 <li>src/linear_algebra/<a class="el" href="vector__constructor_8cu_source.html">vector_constructor.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="vector__copy_8cu_source.html">vector_copy.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="vector__destructor_8cu_source.html">vector_destructor.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="vector__divide__scalar_8cu_source.html">vector_divide_scalar.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="vector__get__data_8cu_source.html">vector_get_data.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="vector__get__rows_8cu_source.html">vector_get_rows.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="vector__initialize_8cu_source.html">vector_initialize.cu</a></li>
+<li>src/linear_algebra/<a class="el" href="vector__multiply__scalar_8cu_source.html">vector_multiply_scalar.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="vector__print_8cu_source.html">vector_print.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="vector__randomize_8cu_source.html">vector_randomize.cu</a></li>
 </ul>

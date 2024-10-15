@@ -1,26 +1,7 @@
 var searchData=
 [
-  ['test_5fmatrix_5fadd_5fvector_2ecu_0',['test_matrix_add_vector.cu',['../test__matrix__add__vector_8cu.html',1,'']]],
-  ['test_5fmatrix_5fargmax_2ecu_1',['test_matrix_argmax.cu',['../test__matrix__argmax_8cu.html',1,'']]],
-  ['test_5fmatrix_5fcopy_2ecu_2',['test_matrix_copy.cu',['../test__matrix__copy_8cu.html',1,'']]],
-  ['test_5fmatrix_5fdivide_5fscalar_2ecu_3',['test_matrix_divide_scalar.cu',['../test__matrix__divide__scalar_8cu.html',1,'']]],
-  ['test_5fmatrix_5finitialize_2ecu_4',['test_matrix_initialize.cu',['../test__matrix__initialize_8cu.html',1,'']]],
-  ['test_5fmatrix_5fmultiply_2ecu_5',['test_matrix_multiply.cu',['../test__matrix__multiply_8cu.html',1,'']]],
-  ['test_5fmatrix_5fmultiply_5felementwise_2ecu_6',['test_matrix_multiply_elementwise.cu',['../test__matrix__multiply__elementwise_8cu.html',1,'']]],
-  ['test_5fmatrix_5fmultiply_5fscalar_2ecu_7',['test_matrix_multiply_scalar.cu',['../test__matrix__multiply__scalar_8cu.html',1,'']]],
-  ['test_5fmatrix_5fpreview_5fmnist_5fimages_2ecu_8',['test_matrix_preview_mnist_images.cu',['../test__matrix__preview__mnist__images_8cu.html',1,'']]],
-  ['test_5fmatrix_5fprint_2ecu_9',['test_matrix_print.cu',['../test__matrix__print_8cu.html',1,'']]],
-  ['test_5fmatrix_5frandomize_2ecu_10',['test_matrix_randomize.cu',['../test__matrix__randomize_8cu.html',1,'']]],
-  ['test_5fmatrix_5fread_5fcsv_2ecu_11',['test_matrix_read_csv.cu',['../test__matrix__read__csv_8cu.html',1,'']]],
-  ['test_5fmatrix_5fread_5fcsv_5flimited_2ecu_12',['test_matrix_read_csv_limited.cu',['../test__matrix__read__csv__limited_8cu.html',1,'']]],
-  ['test_5fmatrix_5frelu_2ecu_13',['test_matrix_relu.cu',['../test__matrix__relu_8cu.html',1,'']]],
-  ['test_5fmatrix_5frelu_5fderivative_2ecu_14',['test_matrix_relu_derivative.cu',['../test__matrix__relu__derivative_8cu.html',1,'']]],
-  ['test_5fmatrix_5fsoftmax_2ecu_15',['test_matrix_softmax.cu',['../test__matrix__softmax_8cu.html',1,'']]],
-  ['test_5fmatrix_5fsubtract_2ecu_16',['test_matrix_subtract.cu',['../test__matrix__subtract_8cu.html',1,'']]],
-  ['test_5fmatrix_5fsum_2ecu_17',['test_matrix_sum.cu',['../test__matrix__sum_8cu.html',1,'']]],
-  ['test_5fmatrix_5ftranspose_2ecu_18',['test_matrix_transpose.cu',['../test__matrix__transpose_8cu.html',1,'']]],
-  ['test_5fvector_5fcopy_2ecu_19',['test_vector_copy.cu',['../test__vector__copy_8cu.html',1,'']]],
-  ['test_5fvector_5finitialize_2ecu_20',['test_vector_initialize.cu',['../test__vector__initialize_8cu.html',1,'']]],
-  ['test_5fvector_5fprint_2ecu_21',['test_vector_print.cu',['../test__vector__print_8cu.html',1,'']]],
-  ['test_5fvector_5frandomize_2ecu_22',['test_vector_randomize.cu',['../test__vector__randomize_8cu.html',1,'']]]
+  ['neural_5fnetwork_2eh_0',['neural_network.h',['../neural__network_8h.html',1,'']]],
+  ['neural_5fnetwork_5fconstructor_2ecu_1',['neural_network_constructor.cu',['../neural__network__constructor_8cu.html',1,'']]],
+  ['neural_5fnetwork_5fdestructor_2ecu_2',['neural_network_destructor.cu',['../neural__network__destructor_8cu.html',1,'']]],
+  ['neural_5fnetwork_5finitialize_2ecu_3',['neural_network_initialize.cu',['../neural__network__initialize_8cu.html',1,'']]]
 ];

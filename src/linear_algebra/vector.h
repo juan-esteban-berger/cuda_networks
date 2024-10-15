@@ -57,6 +57,19 @@ public:
      */
     Vector copy() const;
 
+    /**
+     * @brief Multiplies all elements in the vector by a scalar.
+     * @param scalar The scalar to multiply by.
+     */
+    void multiply_scalar(double scalar);
+    
+    /**
+     * @brief Divides all elements in the vector by a scalar.
+     * @param scalar The scalar to divide by.
+     * @throws std::invalid_argument if scalar is exactly zero.
+     */
+    void divide_scalar(double scalar);
+
 private:
     int rows;    ///< Number of elements in the vector
     double* d_data;  ///< Device data pointer
