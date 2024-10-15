@@ -9,6 +9,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "vector.h"
+
 /**
  * @class Matrix
  * @brief Represents a matrix with GPU-accelerated operations.
@@ -122,6 +124,13 @@ public:
      * @throws std::invalid_argument if matrix dimensions are not identical.
      */
     Matrix multiply_elementwise(const Matrix& other) const;
+
+    /**
+     * @brief Adds a vector to each column of the matrix.
+     * @param v The vector to add.
+     * @throws std::invalid_argument if vector dimension doesn't match matrix rows.
+     */
+    void add_vector(const Vector& v);
 
 private:
     int rows;    ///< Number of rows in the matrix

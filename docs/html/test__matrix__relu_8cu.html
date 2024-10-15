@@ -142,7 +142,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Verify that <a class="el" href="classMatrix.html#abb60ccf9f0d6fff33ad5a2a273f2f0f4" title="Applies the ReLU activation function to the matrix.">Matrix::relu</a> correctly applies the ReLU function. </p>
-<dl class="test"><dt><b><a class="el" href="test.html#_test000019">Test</a></b></dt><dd></dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000021">Test</a></b></dt><dd></dd></dl>
 <p>This test creates a matrix with positive and negative values, applies the ReLU function, and confirms that all negative values are set to zero while positive values remain unchanged. </p>
 
 <p class="definition">Definition at line <a class="el" href="test__matrix__relu_8cu_source.html#l00029">29</a> of file <a class="el" href="test__matrix__relu_8cu_source.html">test_matrix_relu.cu</a>.</p>
@@ -176,7 +176,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="lineno">   56</span>    <span class="comment">// Free the allocated host memory</span></div>
 <div class="line"><span class="lineno">   57</span>    <span class="keyword">delete</span>[] h_result;</div>
 <div class="line"><span class="lineno">   58</span>}</div>
-<div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00016">matrix.h:16</a></div></div>
+<div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00018">matrix.h:18</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a3b785fe27e519f80d20d4b60ef4319ae"><div class="ttname"><a href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">Matrix::get_data</a></div><div class="ttdeci">double * get_data() const</div><div class="ttdoc">Get the raw data pointer of the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__get__data_8cu_source.html#l00007">matrix_get_data.cu:7</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a5b20a6960b75adb45b31657ffcd1723a"><div class="ttname"><a href="classMatrix.html#a5b20a6960b75adb45b31657ffcd1723a">Matrix::print</a></div><div class="ttdeci">void print(int decimals)</div><div class="ttdoc">Print the matrix contents.</div><div class="ttdef"><b>Definition</b> <a href="matrix__print_8cu_source.html#l00011">matrix_print.cu:11</a></div></div>
 <div class="ttc" id="aclassMatrix_html_abb60ccf9f0d6fff33ad5a2a273f2f0f4"><div class="ttname"><a href="classMatrix.html#abb60ccf9f0d6fff33ad5a2a273f2f0f4">Matrix::relu</a></div><div class="ttdeci">Matrix relu() const</div><div class="ttdoc">Applies the ReLU activation function to the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__relu_8cu_source.html#l00030">matrix_relu.cu:30</a></div></div>

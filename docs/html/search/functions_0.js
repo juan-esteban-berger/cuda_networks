@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['copy_0',['copy',['../classMatrix.html#a8afa90bb283ee32506690e5eb3b97ac0',1,'Matrix::copy()'],['../classVector.html#aea623ea775891c3a2c801ecdf0147aa9',1,'Vector::copy()']]]
+  ['add_5fvector_0',['add_vector',['../classMatrix.html#a2f91b87d080859164e0cc70d3dbc1536',1,'Matrix']]],
+  ['addvectortomatrixkernel_1',['addVectorToMatrixKernel',['../matrix__add__vector_8cu.html#a112d5b9eb49f0556cb836bb1582e5be9',1,'matrix_add_vector.cu']]]
 ];

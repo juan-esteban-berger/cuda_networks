@@ -146,7 +146,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Verify that <a class="el" href="classMatrix.html#aeb9c2727e603c5658d74361b33f03b28" title="Applies the softmax function to the matrix column-wise.">Matrix::softmax</a> correctly applies the softmax function. </p>
-<dl class="test"><dt><b><a class="el" href="test.html#_test000020">Test</a></b></dt><dd></dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000022">Test</a></b></dt><dd></dd></dl>
 <p>This test creates a matrix with various values, applies the softmax function, and confirms that the output meets the properties of a softmax distribution. </p>
 
 <p class="definition">Definition at line <a class="el" href="test__matrix__softmax_8cu_source.html#l00043">43</a> of file <a class="el" href="test__matrix__softmax_8cu_source.html">test_matrix_softmax.cu</a>.</p>
@@ -183,7 +183,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="lineno">   73</span>    <span class="comment">// Free the allocated host memory</span></div>
 <div class="line"><span class="lineno">   74</span>    <span class="keyword">delete</span>[] h_result;</div>
 <div class="line"><span class="lineno">   75</span>}</div>
-<div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00016">matrix.h:16</a></div></div>
+<div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00018">matrix.h:18</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a3b785fe27e519f80d20d4b60ef4319ae"><div class="ttname"><a href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">Matrix::get_data</a></div><div class="ttdeci">double * get_data() const</div><div class="ttdoc">Get the raw data pointer of the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__get__data_8cu_source.html#l00007">matrix_get_data.cu:7</a></div></div>
 <div class="ttc" id="aclassMatrix_html_a5b20a6960b75adb45b31657ffcd1723a"><div class="ttname"><a href="classMatrix.html#a5b20a6960b75adb45b31657ffcd1723a">Matrix::print</a></div><div class="ttdeci">void print(int decimals)</div><div class="ttdoc">Print the matrix contents.</div><div class="ttdef"><b>Definition</b> <a href="matrix__print_8cu_source.html#l00011">matrix_print.cu:11</a></div></div>
 <div class="ttc" id="aclassMatrix_html_aeb9c2727e603c5658d74361b33f03b28"><div class="ttname"><a href="classMatrix.html#aeb9c2727e603c5658d74361b33f03b28">Matrix::softmax</a></div><div class="ttdeci">Matrix softmax() const</div><div class="ttdoc">Applies the softmax function to the matrix column-wise.</div><div class="ttdef"><b>Definition</b> <a href="matrix__softmax_8cu_source.html#l00053">matrix_softmax.cu:53</a></div></div>
@@ -210,7 +210,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Verify that <a class="el" href="classMatrix.html#aeb9c2727e603c5658d74361b33f03b28" title="Applies the softmax function to the matrix column-wise.">Matrix::softmax</a> handles extreme values correctly. </p>
-<dl class="test"><dt><b><a class="el" href="test.html#_test000021">Test</a></b></dt><dd></dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000023">Test</a></b></dt><dd></dd></dl>
 <p>This test creates a matrix with very large and very small values to ensure the softmax function handles numerical stability issues correctly. </p>
 
 <p class="definition">Definition at line <a class="el" href="test__matrix__softmax_8cu_source.html#l00084">84</a> of file <a class="el" href="test__matrix__softmax_8cu_source.html">test_matrix_softmax.cu</a>.</p>

@@ -147,11 +147,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a585ba14c3f61cc520c802b6c07a1d4e3" id="r_a585ba14c3f61cc520c802b6c07a1d4e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMatrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a585ba14c3f61cc520c802b6c07a1d4e3">multiply_elementwise</a> (const <a class="el" href="classMatrix.html">Matrix</a> &amp;other) const</td></tr>
 <tr class="memdesc:a585ba14c3f61cc520c802b6c07a1d4e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs element-wise multiplication with another matrix.  <br /></td></tr>
 <tr class="separator:a585ba14c3f61cc520c802b6c07a1d4e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f91b87d080859164e0cc70d3dbc1536" id="r_a2f91b87d080859164e0cc70d3dbc1536"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f91b87d080859164e0cc70d3dbc1536">add_vector</a> (const <a class="el" href="classVector.html">Vector</a> &amp;v)</td></tr>
+<tr class="memdesc:a2f91b87d080859164e0cc70d3dbc1536"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a vector to each column of the matrix.  <br /></td></tr>
+<tr class="separator:a2f91b87d080859164e0cc70d3dbc1536"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a matrix with GPU-accelerated operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00016">16</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00018">18</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7213414e405fd1c81c394d5053721fa7" name="a7213414e405fd1c81c394d5053721fa7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7213414e405fd1c81c394d5053721fa7">&#9670;&#160;</a></span>Matrix()</h2>
@@ -216,6 +219,67 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2f91b87d080859164e0cc70d3dbc1536" name="a2f91b87d080859164e0cc70d3dbc1536"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f91b87d080859164e0cc70d3dbc1536">&#9670;&#160;</a></span>add_vector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Matrix::add_vector </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classVector.html">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a vector to each column of the matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>The vector to add. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>if vector dimension doesn't match matrix rows. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__add__vector_8cu_source.html#l00039">39</a> of file <a class="el" href="matrix__add__vector_8cu_source.html">matrix_add_vector.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   39</span>                                       {</div>
+<div class="line"><span class="lineno">   40</span>    <span class="comment">// Check if vector dimension matches matrix rows</span></div>
+<div class="line"><span class="lineno">   41</span>    <span class="keywordflow">if</span> (rows != v.<a class="code hl_function" href="classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e">get_rows</a>()) {</div>
+<div class="line"><span class="lineno">   42</span>        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Vector dimension must match matrix rows for addition&quot;</span>);</div>
+<div class="line"><span class="lineno">   43</span>    }</div>
+<div class="line"><span class="lineno">   44</span> </div>
+<div class="line"><span class="lineno">   45</span>    <span class="comment">// Define block dimensions</span></div>
+<div class="line"><span class="lineno">   46</span>    dim3 threadsPerBlock(16, 16);</div>
+<div class="line"><span class="lineno">   47</span> </div>
+<div class="line"><span class="lineno">   48</span>    <span class="comment">// Calculate grid dimensions</span></div>
+<div class="line"><span class="lineno">   49</span>    dim3 numBlocks((cols + threadsPerBlock.x - 1) / threadsPerBlock.x,</div>
+<div class="line"><span class="lineno">   50</span>                   (rows + threadsPerBlock.y - 1) / threadsPerBlock.y);</div>
+<div class="line"><span class="lineno">   51</span> </div>
+<div class="line"><span class="lineno">   52</span>    <span class="comment">// Launch CUDA kernel</span></div>
+<div class="line"><span class="lineno">   53</span>    <a class="code hl_function" href="matrix__add__vector_8cu.html#a112d5b9eb49f0556cb836bb1582e5be9">addVectorToMatrixKernel&lt;&lt;&lt;numBlocks, threadsPerBlock&gt;</a>&gt;&gt;(d_data, v.<a class="code hl_function" href="classVector.html#ad45930b5ac4d52999b81164035f33c5f">get_data</a>(), rows, cols);</div>
+<div class="line"><span class="lineno">   54</span> </div>
+<div class="line"><span class="lineno">   55</span>    <span class="comment">// Check for kernel launch errors</span></div>
+<div class="line"><span class="lineno">   56</span>    cudaError_t cudaStatus = cudaGetLastError();</div>
+<div class="line"><span class="lineno">   57</span>    <span class="keywordflow">if</span> (cudaStatus != cudaSuccess) {</div>
+<div class="line"><span class="lineno">   58</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Kernel launch failed: &quot;</span> + std::string(cudaGetErrorString(cudaStatus)));</div>
+<div class="line"><span class="lineno">   59</span>    }</div>
+<div class="line"><span class="lineno">   60</span> </div>
+<div class="line"><span class="lineno">   61</span>    <span class="comment">// Synchronize device</span></div>
+<div class="line"><span class="lineno">   62</span>    cudaDeviceSynchronize();</div>
+<div class="line"><span class="lineno">   63</span>}</div>
+<div class="ttc" id="aclassVector_html_a2ae2d99f771475e2c0f19e84c9d7728e"><div class="ttname"><a href="classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e">Vector::get_rows</a></div><div class="ttdeci">int get_rows() const</div><div class="ttdoc">Get the number of elements in the vector.</div><div class="ttdef"><b>Definition</b> <a href="vector__get__rows_8cu_source.html#l00007">vector_get_rows.cu:7</a></div></div>
+<div class="ttc" id="aclassVector_html_ad45930b5ac4d52999b81164035f33c5f"><div class="ttname"><a href="classVector.html#ad45930b5ac4d52999b81164035f33c5f">Vector::get_data</a></div><div class="ttdeci">double * get_data() const</div><div class="ttdoc">Get the raw data pointer of the vector.</div><div class="ttdef"><b>Definition</b> <a href="vector__get__data_8cu_source.html#l00007">vector_get_data.cu:7</a></div></div>
+<div class="ttc" id="amatrix__add__vector_8cu_html_a112d5b9eb49f0556cb836bb1582e5be9"><div class="ttname"><a href="matrix__add__vector_8cu.html#a112d5b9eb49f0556cb836bb1582e5be9">addVectorToMatrixKernel</a></div><div class="ttdeci">__global__ void addVectorToMatrixKernel(double *m, const double *v, int rows, int cols)</div><div class="ttdoc">CUDA kernel for adding a vector to each column of a matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__add__vector_8cu_source.html#l00019">matrix_add_vector.cu:19</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a8afa90bb283ee32506690e5eb3b97ac0" name="a8afa90bb283ee32506690e5eb3b97ac0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8afa90bb283ee32506690e5eb3b97ac0">&#9670;&#160;</a></span>copy()</h2>
 
@@ -248,7 +312,7 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   23</span>    <span class="comment">// Return the new matrix</span></div>
 <div class="line"><span class="lineno">   24</span>    <span class="keywordflow">return</span> result;</div>
 <div class="line"><span class="lineno">   25</span>}</div>
-<div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00016">matrix.h:16</a></div></div>
+<div class="ttc" id="aclassMatrix_html"><div class="ttname"><a href="classMatrix.html">Matrix</a></div><div class="ttdoc">Represents a matrix with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="matrix_8h_source.html#l00018">matrix.h:18</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -942,6 +1006,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/linear_algebra/<a class="el" href="matrix_8h_source.html">matrix.h</a></li>
+<li>src/linear_algebra/<a class="el" href="matrix__add__vector_8cu_source.html">matrix_add_vector.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__constructor_8cu_source.html">matrix_constructor.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__copy_8cu_source.html">matrix_copy.cu</a></li>
 <li>src/linear_algebra/<a class="el" href="matrix__destructor_8cu_source.html">matrix_destructor.cu</a></li>
