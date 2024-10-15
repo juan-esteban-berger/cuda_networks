@@ -11,7 +11,7 @@
 // #include "linear_algebra/test_matrix_read_csv_limited.cu"
 // #include "linear_algebra/test_matrix_preview_mnist_images.cu"
 // #include "linear_algebra/test_matrix_relu.cu"
-#include "linear_algebra/test_matrix_relu_derivative.cu"
+// #include "linear_algebra/test_matrix_relu_derivative.cu"
 // #include "linear_algebra/test_matrix_softmax.cu"
 // #include "linear_algebra/test_matrix_copy.cu"
 // #include "linear_algebra/test_matrix_multiply.cu"
@@ -21,7 +21,8 @@
 // #include "linear_algebra/test_matrix_sum.cu"
 // #include "linear_algebra/test_matrix_divide_scalar.cu"
 // #include "linear_algebra/test_matrix_multiply_scalar.cu"
-// 
+#include "linear_algebra/test_matrix_argmax.cu"
+
 // #include "linear_algebra/test_vector_initialize.cu"
 // #include "linear_algebra/test_vector_print.cu"
 // #include "linear_algebra/test_vector_randomize.cu"

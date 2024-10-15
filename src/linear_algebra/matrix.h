@@ -165,6 +165,13 @@ public:
      */
     void multiply_scalar(double scalar);
 
+    /**
+     * @brief Computes the argmax of each column in the matrix.
+     * @return A Vector containing the row indices of the maximum values for each column.
+     */
+    Vector argmax() const;
+
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix
