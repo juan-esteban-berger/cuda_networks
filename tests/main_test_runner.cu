@@ -13,7 +13,8 @@
 // #include "linear_algebra/test_matrix_relu.cu"
 // #include "linear_algebra/test_matrix_softmax.cu"
 // #include "linear_algebra/test_matrix_copy.cu"
-#include "linear_algebra/test_matrix_multiply.cu"
+// #include "linear_algebra/test_matrix_multiply.cu"
+#include "linear_algebra/test_matrix_multiply_elementwise.cu"
 
 // #include "linear_algebra/test_vector_initialize.cu"
 // #include "linear_algebra/test_vector_print.cu"

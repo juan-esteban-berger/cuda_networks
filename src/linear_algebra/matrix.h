@@ -115,6 +115,14 @@ public:
      */
     Matrix multiply(const Matrix& other) const;
 
+    /**
+     * @brief Performs element-wise multiplication with another matrix.
+     * @param other The matrix to multiply element-wise with.
+     * @return A new Matrix object containing the result of the element-wise multiplication.
+     * @throws std::invalid_argument if matrix dimensions are not identical.
+     */
+    Matrix multiply_elementwise(const Matrix& other) const;
+
 private:
     int rows;    ///< Number of rows in the matrix
     int cols;    ///< Number of columns in the matrix
