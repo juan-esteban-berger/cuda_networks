@@ -6,6 +6,9 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <stdexcept>
+#include <string>
+
 /**
  * @class Matrix
  * @brief Represents a matrix with GPU-accelerated operations.
@@ -103,6 +106,14 @@ public:
      * @return A new Matrix object with the same content as the original.
      */
     Matrix copy() const;
+
+    /**
+     * @brief Multiplies this matrix with another matrix.
+     * @param other The matrix to multiply with.
+     * @return A new Matrix object containing the result of the multiplication.
+     * @throws std::invalid_argument if matrix dimensions are incompatible for multiplication.
+     */
+    Matrix multiply(const Matrix& other) const;
 
 private:
     int rows;    ///< Number of rows in the matrix

@@ -10,11 +10,13 @@ var searchData=
   ['matrix_5fget_5fdata_2ecu_7',['matrix_get_data.cu',['../matrix__get__data_8cu.html',1,'']]],
   ['matrix_5fget_5frows_2ecu_8',['matrix_get_rows.cu',['../matrix__get__rows_8cu.html',1,'']]],
   ['matrix_5finitialize_2ecu_9',['matrix_initialize.cu',['../matrix__initialize_8cu.html',1,'']]],
-  ['matrix_5fpreview_5fimage_2ecu_10',['matrix_preview_image.cu',['../matrix__preview__image_8cu.html',1,'']]],
-  ['matrix_5fprint_2ecu_11',['matrix_print.cu',['../matrix__print_8cu.html',1,'']]],
-  ['matrix_5frandomize_2ecu_12',['matrix_randomize.cu',['../matrix__randomize_8cu.html',1,'']]],
-  ['matrix_5fread_5fcsv_2ecu_13',['matrix_read_csv.cu',['../matrix__read__csv_8cu.html',1,'']]],
-  ['matrix_5fread_5fcsv_5flimited_2ecu_14',['matrix_read_csv_limited.cu',['../matrix__read__csv__limited_8cu.html',1,'']]],
-  ['matrix_5frelu_2ecu_15',['matrix_relu.cu',['../matrix__relu_8cu.html',1,'']]],
-  ['matrix_5fsoftmax_2ecu_16',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]]
+  ['matrix_5fmultiply_2ecu_10',['matrix_multiply.cu',['../matrix__multiply_8cu.html',1,'']]],
+  ['matrix_5fmultiply_5felementwise_2ecu_11',['matrix_multiply_elementwise.cu',['../matrix__multiply__elementwise_8cu.html',1,'']]],
+  ['matrix_5fpreview_5fimage_2ecu_12',['matrix_preview_image.cu',['../matrix__preview__image_8cu.html',1,'']]],
+  ['matrix_5fprint_2ecu_13',['matrix_print.cu',['../matrix__print_8cu.html',1,'']]],
+  ['matrix_5frandomize_2ecu_14',['matrix_randomize.cu',['../matrix__randomize_8cu.html',1,'']]],
+  ['matrix_5fread_5fcsv_2ecu_15',['matrix_read_csv.cu',['../matrix__read__csv_8cu.html',1,'']]],
+  ['matrix_5fread_5fcsv_5flimited_2ecu_16',['matrix_read_csv_limited.cu',['../matrix__read__csv__limited_8cu.html',1,'']]],
+  ['matrix_5frelu_2ecu_17',['matrix_relu.cu',['../matrix__relu_8cu.html',1,'']]],
+  ['matrix_5fsoftmax_2ecu_18',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]]
 ];
