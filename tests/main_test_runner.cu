@@ -32,6 +32,7 @@
 #include "linear_algebra/test_vector_multiply_scalar.cu"
 
 #include "neural_network/test_neural_network_initialize.cu"
+#include "neural_network/test_neural_network_forward.cu"
 
 /**
  * @brief Main function to run all tests.

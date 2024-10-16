@@ -1,13 +1,6 @@
 var searchData=
 [
-  ['main_0',['main',['../main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main_test_runner.cu']]],
-  ['matrix_1',['Matrix',['../classMatrix.html#a7213414e405fd1c81c394d5053721fa7',1,'Matrix']]],
-  ['matrixmultiplyelementwisekernel_2',['matrixMultiplyElementwiseKernel',['../matrix__multiply__elementwise_8cu.html#a2f0b8e6479c492c1830e7c9d36a4f256',1,'matrix_multiply_elementwise.cu']]],
-  ['matrixmultiplykernel_3',['matrixMultiplyKernel',['../matrix__multiply_8cu.html#a5da92ce358993ea6c1c7c71ce04809ef',1,'matrix_multiply.cu']]],
-  ['matrixsubtractkernel_4',['matrixSubtractKernel',['../matrix__subtract_8cu.html#aa0bad1aece2844cbb9a55e9c33afcc33',1,'matrix_subtract.cu']]],
-  ['matrixtransposekernel_5',['matrixTransposeKernel',['../matrix__transpose_8cu.html#ab390c33d136e73e42c65cc9703c73942',1,'matrix_transpose.cu']]],
-  ['multiply_6',['multiply',['../classMatrix.html#aabadab5dbd8f85dba1dec8d72db08d91',1,'Matrix']]],
-  ['multiply_5felementwise_7',['multiply_elementwise',['../classMatrix.html#a585ba14c3f61cc520c802b6c07a1d4e3',1,'Matrix']]],
-  ['multiply_5fscalar_8',['multiply_scalar',['../classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3',1,'Matrix::multiply_scalar()'],['../classVector.html#a408e493ce890007097359d8f1855f891',1,'Vector::multiply_scalar()']]],
-  ['multiplyscalarkernel_9',['multiplyScalarKernel',['../matrix__multiply__scalar_8cu.html#a213646181f6071c420834fcefefbea9f',1,'matrix_multiply_scalar.cu']]]
+  ['initialize_0',['initialize',['../classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5',1,'Matrix::initialize()'],['../classVector.html#a89ee4ebe53af8ebf8079ba77e49b2f6c',1,'Vector::initialize()'],['../classNeuralNetwork.html#a315b92138611dd3738b69c0258c3b06d',1,'NeuralNetwork::initialize()']]],
+  ['isapproximatelyequal_1',['isApproximatelyEqual',['../classMatrixDivideScalarTest.html#a4c14db3b3a61719c01aca73e80de0e9c',1,'MatrixDivideScalarTest::isApproximatelyEqual()'],['../classMatrixMultiplyScalarTest.html#a3c7240b9a7df8c55e4aa208173da233d',1,'MatrixMultiplyScalarTest::isApproximatelyEqual()'],['../classMatrixSoftmaxTest.html#a249c643ba0b864727882eb8a3043e739',1,'MatrixSoftmaxTest::isApproximatelyEqual()'],['../classVectorDivideScalarTest.html#ab2beac489c5ff5a676729ad789ff4507',1,'VectorDivideScalarTest::isApproximatelyEqual()'],['../classVectorMultiplyScalarTest.html#ab9c397becfdab2bf05744a2fac802fce',1,'VectorMultiplyScalarTest::isApproximatelyEqual()'],['../classNeuralNetworkForwardTest.html#ab699c56ace8834956d9c446c66932a33',1,'NeuralNetworkForwardTest::isApproximatelyEqual()']]],
+  ['issumapproximatelyone_2',['isSumApproximatelyOne',['../classMatrixSoftmaxTest.html#ad3be464bdfc7db4449f45327d42045bb',1,'MatrixSoftmaxTest']]]
 ];

@@ -34,6 +34,12 @@ public:
     void initialize();
 
     /**
+     * @brief Perform forward propagation through the network
+     * @param X Input data matrix
+     */
+    void forward(const Matrix& X);
+
+    /**
      * @brief Get the pointer to the W1 matrix data
      * @return Pointer to the W1 matrix data on the device
      */
@@ -80,6 +86,66 @@ public:
      * @return Size of the b2 vector
      */
     int get_b2_size() const { return b2.get_rows(); }
+
+    /**
+     * @brief Get the pointer to the A matrix data (input matrix)
+     * @return Pointer to the A matrix data on the device
+     */
+    double* get_A_data() const { return A.get_data(); }
+
+    /**
+     * @brief Get the dimensions of the A matrix
+     * @return std::pair<int, int> containing rows and columns of A
+     */
+    std::pair<int, int> get_A_dimensions() const { return {A.get_rows(), A.get_cols()}; }
+
+    /**
+     * @brief Get the pointer to the Z1 matrix data (pre-activation of hidden layer)
+     * @return Pointer to the Z1 matrix data on the device
+     */
+    double* get_Z1_data() const { return Z1.get_data(); }
+
+    /**
+     * @brief Get the dimensions of the Z1 matrix
+     * @return std::pair<int, int> containing rows and columns of Z1
+     */
+    std::pair<int, int> get_Z1_dimensions() const { return {Z1.get_rows(), Z1.get_cols()}; }
+
+    /**
+     * @brief Get the pointer to the A1 matrix data (activation of hidden layer)
+     * @return Pointer to the A1 matrix data on the device
+     */
+    double* get_A1_data() const { return A1.get_data(); }
+
+    /**
+     * @brief Get the dimensions of the A1 matrix
+     * @return std::pair<int, int> containing rows and columns of A1
+     */
+    std::pair<int, int> get_A1_dimensions() const { return {A1.get_rows(), A1.get_cols()}; }
+
+    /**
+     * @brief Get the pointer to the Z2 matrix data (pre-activation of output layer)
+     * @return Pointer to the Z2 matrix data on the device
+     */
+    double* get_Z2_data() const { return Z2.get_data(); }
+
+    /**
+     * @brief Get the dimensions of the Z2 matrix
+     * @return std::pair<int, int> containing rows and columns of Z2
+     */
+    std::pair<int, int> get_Z2_dimensions() const { return {Z2.get_rows(), Z2.get_cols()}; }
+
+    /**
+     * @brief Get the pointer to the A2 matrix data (activation of output layer)
+     * @return Pointer to the A2 matrix data on the device
+     */
+    double* get_A2_data() const { return A2.get_data(); }
+
+    /**
+     * @brief Get the dimensions of the A2 matrix
+     * @return std::pair<int, int> containing rows and columns of A2
+     */
+    std::pair<int, int> get_A2_dimensions() const { return {A2.get_rows(), A2.get_cols()}; }
 
 private:
     int input_size;    ///< Number of input features

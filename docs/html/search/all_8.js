@@ -3,7 +3,7 @@ var searchData=
   ['main_0',['main',['../main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main_test_runner.cu']]],
   ['main_5ftest_5frunner_2ecu_1',['main_test_runner.cu',['../main__test__runner_8cu.html',1,'']]],
   ['mainpage_2eh_2',['mainpage.h',['../mainpage_8h.html',1,'']]],
-  ['matrix_3',['Matrix',['../classMatrix.html',1,'Matrix'],['../classMatrix.html#a7213414e405fd1c81c394d5053721fa7',1,'Matrix::Matrix()']]],
+  ['matrix_3',['Matrix',['../classMatrix.html',1,'Matrix'],['../classMatrix.html#a7213414e405fd1c81c394d5053721fa7',1,'Matrix::Matrix(int rows, int cols)'],['../classMatrix.html#abcf708e864ed3d9db2c3b317c5e529ab',1,'Matrix::Matrix(const Matrix &amp;other)'],['../classMatrix.html#a75f3885769e293b3f3e236ef60a71c21',1,'Matrix::Matrix(Matrix &amp;&amp;other) noexcept']]],
   ['matrix_2eh_4',['matrix.h',['../matrix_8h.html',1,'']]],
   ['matrix_5fadd_5fvector_2ecu_5',['matrix_add_vector.cu',['../matrix__add__vector_8cu.html',1,'']]],
   ['matrix_5fargmax_2ecu_6',['matrix_argmax.cu',['../matrix__argmax_8cu.html',1,'']]],

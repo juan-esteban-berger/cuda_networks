@@ -25,6 +25,32 @@ public:
     Matrix(int rows, int cols);
 
     /**
+     * @brief Copy constructor
+     * @param other The matrix to copy from
+     */
+    Matrix(const Matrix& other);
+
+    /**
+     * @brief Move constructor
+     * @param other The matrix to move from
+     */
+    Matrix(Matrix&& other) noexcept;
+
+    /**
+     * @brief Copy assignment operator
+     * @param other The matrix to copy from
+     * @return Reference to this matrix
+     */
+    Matrix& operator=(const Matrix& other);
+
+    /**
+     * @brief Move assignment operator
+     * @param other The matrix to move from
+     * @return Reference to this matrix
+     */
+    Matrix& operator=(Matrix&& other) noexcept;
+
+    /**
      * @brief Destroy the Matrix object
      */
     ~Matrix();
