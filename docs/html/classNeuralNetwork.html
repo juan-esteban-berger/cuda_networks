@@ -114,6 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a093379f7af24d3eb57f10814d8e779e3" id="r_a093379f7af24d3eb57f10814d8e779e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a093379f7af24d3eb57f10814d8e779e3">backward</a> (const <a class="el" href="classMatrix.html">Matrix</a> &amp;X, const <a class="el" href="classMatrix.html">Matrix</a> &amp;Y)</td></tr>
 <tr class="memdesc:a093379f7af24d3eb57f10814d8e779e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform backward propagation through the network.  <br /></td></tr>
 <tr class="separator:a093379f7af24d3eb57f10814d8e779e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ab378fa892158f8c8d271cd1e5d7332" id="r_a0ab378fa892158f8c8d271cd1e5d7332"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ab378fa892158f8c8d271cd1e5d7332">update_params</a> (double learning_rate)</td></tr>
+<tr class="memdesc:a0ab378fa892158f8c8d271cd1e5d7332"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the network parameters based on computed gradients.  <br /></td></tr>
+<tr class="separator:a0ab378fa892158f8c8d271cd1e5d7332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ea83abe1546198a25f0d330d135f03f" id="r_a6ea83abe1546198a25f0d330d135f03f"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ea83abe1546198a25f0d330d135f03f">get_W1_data</a> () const</td></tr>
 <tr class="memdesc:a6ea83abe1546198a25f0d330d135f03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the pointer to the W1 matrix data.  <br /></td></tr>
 <tr class="separator:a6ea83abe1546198a25f0d330d135f03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -425,8 +428,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the A1 matrix data (activation of hidden layer) </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the A1 matrix data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00149">149</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  149</span>{ <span class="keywordflow">return</span> A1.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00155">155</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  155</span>{ <span class="keywordflow">return</span> A1.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
 <div class="ttc" id="aclassMatrix_html_a3b785fe27e519f80d20d4b60ef4319ae"><div class="ttname"><a href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">Matrix::get_data</a></div><div class="ttdeci">double * get_data() const</div><div class="ttdoc">Get the raw data pointer of the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__get__data_8cu_source.html#l00007">matrix_get_data.cu:7</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -457,8 +460,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the dimensions of the A1 matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;int, int&gt; containing rows and columns of A1 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00155">155</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  155</span>{ <span class="keywordflow">return</span> {A1.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), A1.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00161">161</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  161</span>{ <span class="keywordflow">return</span> {A1.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), A1.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
 <div class="ttc" id="aclassMatrix_html_a0fc53752b2f67ada126c2d53a157ee7c"><div class="ttname"><a href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">Matrix::get_rows</a></div><div class="ttdeci">int get_rows() const</div><div class="ttdoc">Get the number of rows in the matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__get__rows_8cu_source.html#l00007">matrix_get_rows.cu:7</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -489,8 +492,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the A2 matrix data (activation of output layer) </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the A2 matrix data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00173">173</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  173</span>{ <span class="keywordflow">return</span> A2.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00179">179</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  179</span>{ <span class="keywordflow">return</span> A2.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -520,8 +523,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the dimensions of the A2 matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;int, int&gt; containing rows and columns of A2 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00179">179</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  179</span>{ <span class="keywordflow">return</span> {A2.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), A2.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00185">185</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  185</span>{ <span class="keywordflow">return</span> {A2.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), A2.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -551,8 +554,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the A matrix data (input matrix) </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the A matrix data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00125">125</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  125</span>{ <span class="keywordflow">return</span> A.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00131">131</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  131</span>{ <span class="keywordflow">return</span> A.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -582,8 +585,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the dimensions of the A matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;int, int&gt; containing rows and columns of A </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00131">131</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  131</span>{ <span class="keywordflow">return</span> {A.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), A.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00137">137</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  137</span>{ <span class="keywordflow">return</span> {A.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), A.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -613,8 +616,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the b1 vector data. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the b1 vector data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00065">65</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>{ <span class="keywordflow">return</span> b1.<a class="code hl_function" href="classVector.html#ad45930b5ac4d52999b81164035f33c5f">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00071">71</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   71</span>{ <span class="keywordflow">return</span> b1.<a class="code hl_function" href="classVector.html#ad45930b5ac4d52999b81164035f33c5f">get_data</a>(); }</div>
 <div class="ttc" id="aclassVector_html_ad45930b5ac4d52999b81164035f33c5f"><div class="ttname"><a href="classVector.html#ad45930b5ac4d52999b81164035f33c5f">Vector::get_data</a></div><div class="ttdeci">double * get_data() const</div><div class="ttdoc">Get the raw data pointer of the vector.</div><div class="ttdef"><b>Definition</b> <a href="vector__get__data_8cu_source.html#l00007">vector_get_data.cu:7</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -645,8 +648,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the size of the b1 vector. </p>
 <dl class="section return"><dt>Returns</dt><dd>Size of the b1 vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00089">89</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   89</span>{ <span class="keywordflow">return</span> b1.<a class="code hl_function" href="classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e">get_rows</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00095">95</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   95</span>{ <span class="keywordflow">return</span> b1.<a class="code hl_function" href="classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e">get_rows</a>(); }</div>
 <div class="ttc" id="aclassVector_html_a2ae2d99f771475e2c0f19e84c9d7728e"><div class="ttname"><a href="classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e">Vector::get_rows</a></div><div class="ttdeci">int get_rows() const</div><div class="ttdoc">Get the number of elements in the vector.</div><div class="ttdef"><b>Definition</b> <a href="vector__get__rows_8cu_source.html#l00007">vector_get_rows.cu:7</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -677,8 +680,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the b2 vector data. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the b2 vector data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00071">71</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   71</span>{ <span class="keywordflow">return</span> b2.<a class="code hl_function" href="classVector.html#ad45930b5ac4d52999b81164035f33c5f">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00077">77</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   77</span>{ <span class="keywordflow">return</span> b2.<a class="code hl_function" href="classVector.html#ad45930b5ac4d52999b81164035f33c5f">get_data</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -708,8 +711,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the size of the b2 vector. </p>
 <dl class="section return"><dt>Returns</dt><dd>Size of the b2 vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00095">95</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   95</span>{ <span class="keywordflow">return</span> b2.<a class="code hl_function" href="classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e">get_rows</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00101">101</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  101</span>{ <span class="keywordflow">return</span> b2.<a class="code hl_function" href="classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e">get_rows</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -739,8 +742,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the db1 scalar. </p>
 <dl class="section return"><dt>Returns</dt><dd>The db1 scalar </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00107">107</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  107</span>{ <span class="keywordflow">return</span> db1; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00113">113</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  113</span>{ <span class="keywordflow">return</span> db1; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -770,8 +773,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the db2 scalar. </p>
 <dl class="section return"><dt>Returns</dt><dd>The db2 scalar </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00119">119</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  119</span>{ <span class="keywordflow">return</span> db2; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00125">125</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  125</span>{ <span class="keywordflow">return</span> db2; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -801,8 +804,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the DW1 matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>The DW1 matrix </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00101">101</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  101</span>{ <span class="keywordflow">return</span> DW1; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00107">107</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  107</span>{ <span class="keywordflow">return</span> DW1; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -832,8 +835,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the DW2 matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>The DW2 matrix </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00113">113</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  113</span>{ <span class="keywordflow">return</span> DW2; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00119">119</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  119</span>{ <span class="keywordflow">return</span> DW2; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -863,8 +866,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the W1 matrix data. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the W1 matrix data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00053">53</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   53</span>{ <span class="keywordflow">return</span> W1.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00059">59</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>{ <span class="keywordflow">return</span> W1.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -894,8 +897,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the dimensions of the W1 matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;int, int&gt; containing rows and columns of W1 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00077">77</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   77</span>{ <span class="keywordflow">return</span> {W1.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), W1.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00083">83</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   83</span>{ <span class="keywordflow">return</span> {W1.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), W1.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -925,8 +928,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the W2 matrix data. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the W2 matrix data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00059">59</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   59</span>{ <span class="keywordflow">return</span> W2.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00065">65</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   65</span>{ <span class="keywordflow">return</span> W2.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -956,8 +959,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the dimensions of the W2 matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;int, int&gt; containing rows and columns of W2 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00083">83</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>{ <span class="keywordflow">return</span> {W2.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), W2.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00089">89</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   89</span>{ <span class="keywordflow">return</span> {W2.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), W2.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -987,8 +990,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the Z1 matrix data (pre-activation of hidden layer) </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the Z1 matrix data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00137">137</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  137</span>{ <span class="keywordflow">return</span> Z1.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00143">143</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  143</span>{ <span class="keywordflow">return</span> Z1.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1018,8 +1021,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the dimensions of the Z1 matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;int, int&gt; containing rows and columns of Z1 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00143">143</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  143</span>{ <span class="keywordflow">return</span> {Z1.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), Z1.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00149">149</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  149</span>{ <span class="keywordflow">return</span> {Z1.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), Z1.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1049,8 +1052,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the pointer to the Z2 matrix data (pre-activation of output layer) </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the Z2 matrix data on the device </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00161">161</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  161</span>{ <span class="keywordflow">return</span> Z2.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00167">167</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  167</span>{ <span class="keywordflow">return</span> Z2.<a class="code hl_function" href="classMatrix.html#a3b785fe27e519f80d20d4b60ef4319ae">get_data</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1080,8 +1083,8 @@ Public Member Functions</h2></td></tr>
 <p>Get the dimensions of the Z2 matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;int, int&gt; containing rows and columns of Z2 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00167">167</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  167</span>{ <span class="keywordflow">return</span> {Z2.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), Z2.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
+<p class="definition">Definition at line <a class="el" href="neural__network_8h_source.html#l00173">173</a> of file <a class="el" href="neural__network_8h_source.html">neural_network.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  173</span>{ <span class="keywordflow">return</span> {Z2.<a class="code hl_function" href="classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c">get_rows</a>(), Z2.<a class="code hl_function" href="classMatrix.html#a3c7ae73d23a17db578f7226ec4030050">get_cols</a>()}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1147,6 +1150,49 @@ Public Member Functions</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a0ab378fa892158f8c8d271cd1e5d7332" name="a0ab378fa892158f8c8d271cd1e5d7332"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ab378fa892158f8c8d271cd1e5d7332">&#9670;&#160;</a></span>update_params()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NeuralNetwork::update_params </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>learning_rate</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Updates the network parameters based on computed gradients. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">learning_rate</td><td>The learning rate for the parameter update. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="neural__network__update__params_8cu_source.html#l00007">7</a> of file <a class="el" href="neural__network__update__params_8cu_source.html">neural_network_update_params.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">    7</span>                                                      {</div>
+<div class="line"><span class="lineno">    8</span>    <span class="comment">// Update weights for the first layer (W1)</span></div>
+<div class="line"><span class="lineno">    9</span>    DW1.<a class="code hl_function" href="classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3">multiply_scalar</a>(learning_rate);</div>
+<div class="line"><span class="lineno">   10</span>    W1 = W1.<a class="code hl_function" href="classMatrix.html#a8ea709e751a8d31920d0e2ae82af812d">subtract</a>(DW1);</div>
+<div class="line"><span class="lineno">   11</span> </div>
+<div class="line"><span class="lineno">   12</span>    <span class="comment">// Update bias for the first layer (b1)</span></div>
+<div class="line"><span class="lineno">   13</span>    b1.<a class="code hl_function" href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">subtract_scalar</a>(learning_rate * db1);</div>
+<div class="line"><span class="lineno">   14</span> </div>
+<div class="line"><span class="lineno">   15</span>    <span class="comment">// Update weights for the second layer (W2)</span></div>
+<div class="line"><span class="lineno">   16</span>    DW2.<a class="code hl_function" href="classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3">multiply_scalar</a>(learning_rate);</div>
+<div class="line"><span class="lineno">   17</span>    W2 = W2.<a class="code hl_function" href="classMatrix.html#a8ea709e751a8d31920d0e2ae82af812d">subtract</a>(DW2);</div>
+<div class="line"><span class="lineno">   18</span> </div>
+<div class="line"><span class="lineno">   19</span>    <span class="comment">// Update bias for the second layer (b2)</span></div>
+<div class="line"><span class="lineno">   20</span>    b2.<a class="code hl_function" href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">subtract_scalar</a>(learning_rate * db2);</div>
+<div class="line"><span class="lineno">   21</span>}</div>
+<div class="ttc" id="aclassVector_html_a11116f35adc8f9408fe21453525d6cb1"><div class="ttname"><a href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">Vector::subtract_scalar</a></div><div class="ttdeci">void subtract_scalar(double scalar)</div><div class="ttdoc">Subtracts a scalar value from all elements in the vector.</div><div class="ttdef"><b>Definition</b> <a href="vector__subtract__scalar_8cu_source.html#l00041">vector_subtract_scalar.cu:41</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/neural_network/<a class="el" href="neural__network_8h_source.html">neural_network.h</a></li>
 <li>src/neural_network/<a class="el" href="neural__network__backward_8cu_source.html">neural_network_backward.cu</a></li>
@@ -1154,6 +1200,7 @@ Public Member Functions</h2></td></tr>
 <li>src/neural_network/<a class="el" href="neural__network__destructor_8cu_source.html">neural_network_destructor.cu</a></li>
 <li>src/neural_network/<a class="el" href="neural__network__forward_8cu_source.html">neural_network_forward.cu</a></li>
 <li>src/neural_network/<a class="el" href="neural__network__initialize_8cu_source.html">neural_network_initialize.cu</a></li>
+<li>src/neural_network/<a class="el" href="neural__network__update__params_8cu_source.html">neural_network_update_params.cu</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -30,10 +30,12 @@
 #include "linear_algebra/test_vector_copy.cu"
 #include "linear_algebra/test_vector_divide_scalar.cu"
 #include "linear_algebra/test_vector_multiply_scalar.cu"
+#include "linear_algebra/test_vector_subtract_scalar.cu"
 
 #include "neural_network/test_neural_network_initialize.cu"
 #include "neural_network/test_neural_network_forward.cu"
 #include "neural_network/test_neural_network_backward.cu"
+#include "neural_network/test_neural_network_update_params.cu"
 
 /**
  * @brief Main function to run all tests.

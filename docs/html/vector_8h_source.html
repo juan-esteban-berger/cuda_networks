@@ -164,15 +164,22 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">     * @throws std::invalid_argument if scalar is exactly zero.</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVector.html#a35ecdbbfd77a513ebb5abdf4339faa6c">divide_scalar</a>(<span class="keywordtype">double</span> scalar);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">int</span> rows;    <span class="comment">///&lt; Number of elements in the vector</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">double</span>* d_data;  <span class="comment">///&lt; Device data pointer</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>};</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment"></span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment">     * @brief Subtracts a scalar value from all elements in the vector.</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">     * @param scalar The scalar value to subtract.</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">subtract_scalar</a>(<span class="keywordtype">double</span> scalar);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordtype">int</span> rows;    <span class="comment">///&lt; Number of elements in the vector</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordtype">double</span>* d_data;  <span class="comment">///&lt; Device data pointer</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>};</div>
 </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif </span><span class="comment">// VECTOR_H</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#endif </span><span class="comment">// VECTOR_H</span></div>
 <div class="ttc" id="aclassVector_html"><div class="ttname"><a href="classVector.html">Vector</a></div><div class="ttdoc">Represents a vector with GPU-accelerated operations.</div><div class="ttdef"><b>Definition</b> <a href="#l00013">vector.h:13</a></div></div>
+<div class="ttc" id="aclassVector_html_a11116f35adc8f9408fe21453525d6cb1"><div class="ttname"><a href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">Vector::subtract_scalar</a></div><div class="ttdeci">void subtract_scalar(double scalar)</div><div class="ttdoc">Subtracts a scalar value from all elements in the vector.</div><div class="ttdef"><b>Definition</b> <a href="vector__subtract__scalar_8cu_source.html#l00041">vector_subtract_scalar.cu:41</a></div></div>
 <div class="ttc" id="aclassVector_html_a2664e2508e9a33f44806d546e92cc78b"><div class="ttname"><a href="classVector.html#a2664e2508e9a33f44806d546e92cc78b">Vector::randomize</a></div><div class="ttdeci">void randomize()</div><div class="ttdoc">Randomize the vector elements with values between -0.5 and 0.5.</div><div class="ttdef"><b>Definition</b> <a href="vector__randomize_8cu_source.html#l00037">vector_randomize.cu:37</a></div></div>
 <div class="ttc" id="aclassVector_html_a2ae2d99f771475e2c0f19e84c9d7728e"><div class="ttname"><a href="classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e">Vector::get_rows</a></div><div class="ttdeci">int get_rows() const</div><div class="ttdoc">Get the number of elements in the vector.</div><div class="ttdef"><b>Definition</b> <a href="vector__get__rows_8cu_source.html#l00007">vector_get_rows.cu:7</a></div></div>
 <div class="ttc" id="aclassVector_html_a2eb3c49587a4f12cade7895ccb73f6a0"><div class="ttname"><a href="classVector.html#a2eb3c49587a4f12cade7895ccb73f6a0">Vector::~Vector</a></div><div class="ttdeci">~Vector()</div><div class="ttdoc">Destroy the Vector object.</div><div class="ttdef"><b>Definition</b> <a href="vector__destructor_8cu_source.html#l00008">vector_destructor.cu:8</a></div></div>

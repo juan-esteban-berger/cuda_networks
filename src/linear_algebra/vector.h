@@ -70,6 +70,12 @@ public:
      */
     void divide_scalar(double scalar);
 
+    /**
+     * @brief Subtracts a scalar value from all elements in the vector.
+     * @param scalar The scalar value to subtract.
+     */
+    void subtract_scalar(double scalar);
+
 private:
     int rows;    ///< Number of elements in the vector
     double* d_data;  ///< Device data pointer

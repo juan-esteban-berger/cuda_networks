@@ -47,6 +47,12 @@ public:
     void backward(const Matrix& X, const Matrix& Y);
 
     /**
+     * @brief Updates the network parameters based on computed gradients.
+     * @param learning_rate The learning rate for the parameter update.
+     */
+    void update_params(double learning_rate);
+
+    /**
      * @brief Get the pointer to the W1 matrix data
      * @return Pointer to the W1 matrix data on the device
      */

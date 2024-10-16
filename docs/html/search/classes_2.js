@@ -6,5 +6,6 @@ var searchData=
   ['vectorinitializetest_3',['VectorInitializeTest',['../classVectorInitializeTest.html',1,'']]],
   ['vectormultiplyscalartest_4',['VectorMultiplyScalarTest',['../classVectorMultiplyScalarTest.html',1,'']]],
   ['vectorprinttest_5',['VectorPrintTest',['../classVectorPrintTest.html',1,'']]],
-  ['vectorrandomizetest_6',['VectorRandomizeTest',['../classVectorRandomizeTest.html',1,'']]]
+  ['vectorrandomizetest_6',['VectorRandomizeTest',['../classVectorRandomizeTest.html',1,'']]],
+  ['vectorsubtractscalartest_7',['VectorSubtractScalarTest',['../classVectorSubtractScalarTest.html',1,'']]]
 ];

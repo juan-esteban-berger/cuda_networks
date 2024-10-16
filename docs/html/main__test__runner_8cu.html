@@ -123,9 +123,11 @@ $(function(){ initResizable(false); });
 <code>#include &quot;<a class="el" href="test__vector__copy_8cu_source.html">linear_algebra/test_vector_copy.cu</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="test__vector__divide__scalar_8cu_source.html">linear_algebra/test_vector_divide_scalar.cu</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="test__vector__multiply__scalar_8cu_source.html">linear_algebra/test_vector_multiply_scalar.cu</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="test__vector__subtract__scalar_8cu_source.html">linear_algebra/test_vector_subtract_scalar.cu</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="test__neural__network__initialize_8cu_source.html">neural_network/test_neural_network_initialize.cu</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="test__neural__network__forward_8cu_source.html">neural_network/test_neural_network_forward.cu</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="test__neural__network__backward_8cu_source.html">neural_network/test_neural_network_backward.cu</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="test__neural__network__update__params_8cu_source.html">neural_network/test_neural_network_update_params.cu</a>&quot;</code><br />
 </div>
 <p><a href="main__test__runner_8cu_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -169,11 +171,11 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Integer 0 upon successful run, non-zero otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="main__test__runner_8cu_source.html#l00044">44</a> of file <a class="el" href="main__test__runner_8cu_source.html">main_test_runner.cu</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   44</span>                                {</div>
-<div class="line"><span class="lineno">   45</span>    ::testing::InitGoogleTest(&amp;argc, argv);</div>
-<div class="line"><span class="lineno">   46</span>    <span class="keywordflow">return</span> RUN_ALL_TESTS();</div>
-<div class="line"><span class="lineno">   47</span>}</div>
+<p class="definition">Definition at line <a class="el" href="main__test__runner_8cu_source.html#l00046">46</a> of file <a class="el" href="main__test__runner_8cu_source.html">main_test_runner.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>                                {</div>
+<div class="line"><span class="lineno">   47</span>    ::testing::InitGoogleTest(&amp;argc, argv);</div>
+<div class="line"><span class="lineno">   48</span>    <span class="keywordflow">return</span> RUN_ALL_TESTS();</div>
+<div class="line"><span class="lineno">   49</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

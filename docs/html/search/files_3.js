@@ -10,5 +10,6 @@ var searchData=
   ['vector_5finitialize_2ecu_7',['vector_initialize.cu',['../vector__initialize_8cu.html',1,'']]],
   ['vector_5fmultiply_5fscalar_2ecu_8',['vector_multiply_scalar.cu',['../vector__multiply__scalar_8cu.html',1,'']]],
   ['vector_5fprint_2ecu_9',['vector_print.cu',['../vector__print_8cu.html',1,'']]],
-  ['vector_5frandomize_2ecu_10',['vector_randomize.cu',['../vector__randomize_8cu.html',1,'']]]
+  ['vector_5frandomize_2ecu_10',['vector_randomize.cu',['../vector__randomize_8cu.html',1,'']]],
+  ['vector_5fsubtract_5fscalar_2ecu_11',['vector_subtract_scalar.cu',['../vector__subtract__scalar_8cu.html',1,'']]]
 ];

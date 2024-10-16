@@ -12,12 +12,15 @@ var searchData=
   ['vector_5fmultiply_5fscalar_2ecu_9',['vector_multiply_scalar.cu',['../vector__multiply__scalar_8cu.html',1,'']]],
   ['vector_5fprint_2ecu_10',['vector_print.cu',['../vector__print_8cu.html',1,'']]],
   ['vector_5frandomize_2ecu_11',['vector_randomize.cu',['../vector__randomize_8cu.html',1,'']]],
-  ['vectorcopytest_12',['VectorCopyTest',['../classVectorCopyTest.html',1,'']]],
-  ['vectordividescalarkernel_13',['vectorDivideScalarKernel',['../vector__divide__scalar_8cu.html#a40e6a81f8c9770e6a4ccea973c95472f',1,'vector_divide_scalar.cu']]],
-  ['vectordividescalartest_14',['VectorDivideScalarTest',['../classVectorDivideScalarTest.html',1,'']]],
-  ['vectorinitializetest_15',['VectorInitializeTest',['../classVectorInitializeTest.html',1,'']]],
-  ['vectormultiplyscalarkernel_16',['vectorMultiplyScalarKernel',['../vector__multiply__scalar_8cu.html#a7ae2d6fe61156a72104a0c9dd57e99aa',1,'vector_multiply_scalar.cu']]],
-  ['vectormultiplyscalartest_17',['VectorMultiplyScalarTest',['../classVectorMultiplyScalarTest.html',1,'']]],
-  ['vectorprinttest_18',['VectorPrintTest',['../classVectorPrintTest.html',1,'']]],
-  ['vectorrandomizetest_19',['VectorRandomizeTest',['../classVectorRandomizeTest.html',1,'']]]
+  ['vector_5fsubtract_5fscalar_2ecu_12',['vector_subtract_scalar.cu',['../vector__subtract__scalar_8cu.html',1,'']]],
+  ['vectorcopytest_13',['VectorCopyTest',['../classVectorCopyTest.html',1,'']]],
+  ['vectordividescalarkernel_14',['vectorDivideScalarKernel',['../vector__divide__scalar_8cu.html#a40e6a81f8c9770e6a4ccea973c95472f',1,'vector_divide_scalar.cu']]],
+  ['vectordividescalartest_15',['VectorDivideScalarTest',['../classVectorDivideScalarTest.html',1,'']]],
+  ['vectorinitializetest_16',['VectorInitializeTest',['../classVectorInitializeTest.html',1,'']]],
+  ['vectormultiplyscalarkernel_17',['vectorMultiplyScalarKernel',['../vector__multiply__scalar_8cu.html#a7ae2d6fe61156a72104a0c9dd57e99aa',1,'vector_multiply_scalar.cu']]],
+  ['vectormultiplyscalartest_18',['VectorMultiplyScalarTest',['../classVectorMultiplyScalarTest.html',1,'']]],
+  ['vectorprinttest_19',['VectorPrintTest',['../classVectorPrintTest.html',1,'']]],
+  ['vectorrandomizetest_20',['VectorRandomizeTest',['../classVectorRandomizeTest.html',1,'']]],
+  ['vectorsubtractscalarkernel_21',['vectorSubtractScalarKernel',['../vector__subtract__scalar_8cu.html#a2638088e5bdd3ffaa7d8f63b6aa9ba7e',1,'vector_subtract_scalar.cu']]],
+  ['vectorsubtractscalartest_22',['VectorSubtractScalarTest',['../classVectorSubtractScalarTest.html',1,'']]]
 ];
