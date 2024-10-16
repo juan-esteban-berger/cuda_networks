@@ -40,6 +40,13 @@ public:
     void forward(const Matrix& X);
 
     /**
+     * @brief Perform backward propagation through the network
+     * @param X Input data matrix
+     * @param Y True labels matrix
+     */
+    void backward(const Matrix& X, const Matrix& Y);
+
+    /**
      * @brief Get the pointer to the W1 matrix data
      * @return Pointer to the W1 matrix data on the device
      */
@@ -86,6 +93,30 @@ public:
      * @return Size of the b2 vector
      */
     int get_b2_size() const { return b2.get_rows(); }
+
+    /**
+     * @brief Get the DW1 matrix
+     * @return The DW1 matrix
+     */
+    Matrix get_DW1() const { return DW1; }
+
+    /**
+     * @brief Get the db1 scalar
+     * @return The db1 scalar
+     */
+    double get_db1() const { return db1; }
+
+    /**
+     * @brief Get the DW2 matrix
+     * @return The DW2 matrix
+     */
+    Matrix get_DW2() const { return DW2; }
+
+    /**
+     * @brief Get the db2 scalar
+     * @return The db2 scalar
+     */
+    double get_db2() const { return db2; }
 
     /**
      * @brief Get the pointer to the A matrix data (input matrix)
@@ -165,10 +196,10 @@ private:
 
     Matrix DZ2;        ///< Gradient of Z2
     Matrix DW2;        ///< Gradient of W2
-    Vector Db2;        ///< Gradient of b2
+    double db2;        ///< Gradient of b2 (scalar)
     Matrix DZ1;        ///< Gradient of Z1
     Matrix DW1;        ///< Gradient of W1
-    Vector Db1;        ///< Gradient of b1
+    double db1;        ///< Gradient of b1 (scalar)
 };
 
 #endif // NEURAL_NETWORK_H

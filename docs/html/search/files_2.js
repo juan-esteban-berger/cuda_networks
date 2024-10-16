@@ -19,12 +19,13 @@ var searchData=
   ['test_5fmatrix_5fsubtract_2ecu_16',['test_matrix_subtract.cu',['../test__matrix__subtract_8cu.html',1,'']]],
   ['test_5fmatrix_5fsum_2ecu_17',['test_matrix_sum.cu',['../test__matrix__sum_8cu.html',1,'']]],
   ['test_5fmatrix_5ftranspose_2ecu_18',['test_matrix_transpose.cu',['../test__matrix__transpose_8cu.html',1,'']]],
-  ['test_5fneural_5fnetwork_5fforward_2ecu_19',['test_neural_network_forward.cu',['../test__neural__network__forward_8cu.html',1,'']]],
-  ['test_5fneural_5fnetwork_5finitialize_2ecu_20',['test_neural_network_initialize.cu',['../test__neural__network__initialize_8cu.html',1,'']]],
-  ['test_5fvector_5fcopy_2ecu_21',['test_vector_copy.cu',['../test__vector__copy_8cu.html',1,'']]],
-  ['test_5fvector_5fdivide_5fscalar_2ecu_22',['test_vector_divide_scalar.cu',['../test__vector__divide__scalar_8cu.html',1,'']]],
-  ['test_5fvector_5finitialize_2ecu_23',['test_vector_initialize.cu',['../test__vector__initialize_8cu.html',1,'']]],
-  ['test_5fvector_5fmultiply_5fscalar_2ecu_24',['test_vector_multiply_scalar.cu',['../test__vector__multiply__scalar_8cu.html',1,'']]],
-  ['test_5fvector_5fprint_2ecu_25',['test_vector_print.cu',['../test__vector__print_8cu.html',1,'']]],
-  ['test_5fvector_5frandomize_2ecu_26',['test_vector_randomize.cu',['../test__vector__randomize_8cu.html',1,'']]]
+  ['test_5fneural_5fnetwork_5fbackward_2ecu_19',['test_neural_network_backward.cu',['../test__neural__network__backward_8cu.html',1,'']]],
+  ['test_5fneural_5fnetwork_5fforward_2ecu_20',['test_neural_network_forward.cu',['../test__neural__network__forward_8cu.html',1,'']]],
+  ['test_5fneural_5fnetwork_5finitialize_2ecu_21',['test_neural_network_initialize.cu',['../test__neural__network__initialize_8cu.html',1,'']]],
+  ['test_5fvector_5fcopy_2ecu_22',['test_vector_copy.cu',['../test__vector__copy_8cu.html',1,'']]],
+  ['test_5fvector_5fdivide_5fscalar_2ecu_23',['test_vector_divide_scalar.cu',['../test__vector__divide__scalar_8cu.html',1,'']]],
+  ['test_5fvector_5finitialize_2ecu_24',['test_vector_initialize.cu',['../test__vector__initialize_8cu.html',1,'']]],
+  ['test_5fvector_5fmultiply_5fscalar_2ecu_25',['test_vector_multiply_scalar.cu',['../test__vector__multiply__scalar_8cu.html',1,'']]],
+  ['test_5fvector_5fprint_2ecu_26',['test_vector_print.cu',['../test__vector__print_8cu.html',1,'']]],
+  ['test_5fvector_5frandomize_2ecu_27',['test_vector_randomize.cu',['../test__vector__randomize_8cu.html',1,'']]]
 ];

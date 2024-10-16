@@ -122,7 +122,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="comment">// Scale b2 by 0.01 to keep initial values small</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    b2.<a class="code hl_function" href="classVector.html#a408e493ce890007097359d8f1855f891">multiply_scalar</a>(0.01);</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Initialize other matrices and vectors with zeros</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Initialize other matrices with zeros</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    A.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    Z1.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    A1.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
@@ -130,11 +130,13 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    A2.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    DZ2.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    DW2.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    Db2.<a class="code hl_function" href="classVector.html#a89ee4ebe53af8ebf8079ba77e49b2f6c">initialize</a>();</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    DZ1.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    DW1.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    Db1.<a class="code hl_function" href="classVector.html#a89ee4ebe53af8ebf8079ba77e49b2f6c">initialize</a>();</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    DZ1.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    DW1.<a class="code hl_function" href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">initialize</a>();</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Initialize scalar gradients to zero</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    db1 = 0.0;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    db2 = 0.0;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
 </div>
 <div class="ttc" id="aclassMatrix_html_a97f5333eca4b41d8a44d2ee881423ff5"><div class="ttname"><a href="classMatrix.html#a97f5333eca4b41d8a44d2ee881423ff5">Matrix::initialize</a></div><div class="ttdeci">void initialize()</div><div class="ttdoc">Initialize the matrix (typically sets all elements to zero)</div><div class="ttdef"><b>Definition</b> <a href="matrix__initialize_8cu_source.html#l00008">matrix_initialize.cu:8</a></div></div>
 <div class="ttc" id="aclassMatrix_html_ac240c55c0d61c3667f645a32d22ff1c3"><div class="ttname"><a href="classMatrix.html#ac240c55c0d61c3667f645a32d22ff1c3">Matrix::randomize</a></div><div class="ttdeci">void randomize()</div><div class="ttdoc">Randomize the matrix elements with values between -0.5 and 0.5.</div><div class="ttdef"><b>Definition</b> <a href="matrix__randomize_8cu_source.html#l00043">matrix_randomize.cu:43</a></div></div>
@@ -142,7 +144,6 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclassNeuralNetwork_html_a315b92138611dd3738b69c0258c3b06d"><div class="ttname"><a href="classNeuralNetwork.html#a315b92138611dd3738b69c0258c3b06d">NeuralNetwork::initialize</a></div><div class="ttdeci">void initialize()</div><div class="ttdoc">Initialize the neural network parameters.</div><div class="ttdef"><b>Definition</b> <a href="#l00009">neural_network_initialize.cu:9</a></div></div>
 <div class="ttc" id="aclassVector_html_a2664e2508e9a33f44806d546e92cc78b"><div class="ttname"><a href="classVector.html#a2664e2508e9a33f44806d546e92cc78b">Vector::randomize</a></div><div class="ttdeci">void randomize()</div><div class="ttdoc">Randomize the vector elements with values between -0.5 and 0.5.</div><div class="ttdef"><b>Definition</b> <a href="vector__randomize_8cu_source.html#l00037">vector_randomize.cu:37</a></div></div>
 <div class="ttc" id="aclassVector_html_a408e493ce890007097359d8f1855f891"><div class="ttname"><a href="classVector.html#a408e493ce890007097359d8f1855f891">Vector::multiply_scalar</a></div><div class="ttdeci">void multiply_scalar(double scalar)</div><div class="ttdoc">Multiplies all elements in the vector by a scalar.</div><div class="ttdef"><b>Definition</b> <a href="vector__multiply__scalar_8cu_source.html#l00041">vector_multiply_scalar.cu:41</a></div></div>
-<div class="ttc" id="aclassVector_html_a89ee4ebe53af8ebf8079ba77e49b2f6c"><div class="ttname"><a href="classVector.html#a89ee4ebe53af8ebf8079ba77e49b2f6c">Vector::initialize</a></div><div class="ttdeci">void initialize()</div><div class="ttdoc">Initialize the vector (typically sets all elements to zero)</div><div class="ttdef"><b>Definition</b> <a href="vector__initialize_8cu_source.html#l00008">vector_initialize.cu:8</a></div></div>
 <div class="ttc" id="aneural__network_8h_html"><div class="ttname"><a href="neural__network_8h.html">neural_network.h</a></div><div class="ttdoc">Defines the NeuralNetwork class for a simple feedforward neural network.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

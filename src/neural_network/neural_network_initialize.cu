@@ -27,7 +27,7 @@ void NeuralNetwork::initialize() {
     // Scale b2 by 0.01 to keep initial values small
     b2.multiply_scalar(0.01);
 
-    // Initialize other matrices and vectors with zeros
+    // Initialize other matrices with zeros
     A.initialize();
     Z1.initialize();
     A1.initialize();
@@ -35,8 +35,10 @@ void NeuralNetwork::initialize() {
     A2.initialize();
     DZ2.initialize();
     DW2.initialize();
-    Db2.initialize();
     DZ1.initialize();
     DW1.initialize();
-    Db1.initialize();
+
+    // Initialize scalar gradients to zero
+    db1 = 0.0;
+    db2 = 0.0;
 }

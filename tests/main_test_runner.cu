@@ -33,6 +33,7 @@
 
 #include "neural_network/test_neural_network_initialize.cu"
 #include "neural_network/test_neural_network_forward.cu"
+#include "neural_network/test_neural_network_backward.cu"
 
 /**
  * @brief Main function to run all tests.

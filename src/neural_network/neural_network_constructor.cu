@@ -22,10 +22,10 @@ NeuralNetwork::NeuralNetwork(int input_size,
       A2(output_size, 1),
       DZ2(output_size, 1),
       DW2(output_size, hidden_size),
-      Db2(output_size),
+      db2(0.0),
       DZ1(hidden_size, 1),
       DW1(hidden_size, input_size),
-      Db1(hidden_size) {
+      db1(0.0) {
     // Initialize the neural network parameters
     initialize();
 }

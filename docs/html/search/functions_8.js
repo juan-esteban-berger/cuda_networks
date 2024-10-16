@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['operator_3d_0',['operator=',['../classMatrix.html#a3e40db12ae78b7616ee3f099bb15f13d',1,'Matrix::operator=(const Matrix &amp;other)'],['../classMatrix.html#a74eca41e5a29b6efd57b009730d3fe60',1,'Matrix::operator=(Matrix &amp;&amp;other) noexcept']]]
+  ['neuralnetwork_0',['NeuralNetwork',['../classNeuralNetwork.html#aefea0378981b07f633678d6dd5c83321',1,'NeuralNetwork']]]
 ];

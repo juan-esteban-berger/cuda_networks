@@ -127,20 +127,21 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;<a class="code" href="test__neural__network__initialize_8cu.html">neural_network/test_neural_network_initialize.cu</a>&quot;</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="test__neural__network__forward_8cu.html">neural_network/test_neural_network_forward.cu</a>&quot;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment"></span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"> * @brief Main function to run all tests.</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> * @param argc Number of command-line arguments.</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> * @param argv Array of command-line argument strings.</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"> * @return Integer 0 upon successful run, non-zero otherwise.</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment"> */</span></div>
-<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627">   43</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv) {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    ::testing::InitGoogleTest(&amp;argc, argv);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">return</span> RUN_ALL_TESTS();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &quot;<a class="code" href="test__neural__network__backward_8cu.html">neural_network/test_neural_network_backward.cu</a>&quot;</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment"></span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> * @brief Main function to run all tests.</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> * @param argc Number of command-line arguments.</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"> * @param argv Array of command-line argument strings.</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment"> * @return Integer 0 upon successful run, non-zero otherwise.</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627">   44</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    ::testing::InitGoogleTest(&amp;argc, argv);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordflow">return</span> RUN_ALL_TESTS();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
 </div>
-<div class="ttc" id="amain__test__runner_8cu_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdoc">Main function to run all tests.</div><div class="ttdef"><b>Definition</b> <a href="#l00043">main_test_runner.cu:43</a></div></div>
+<div class="ttc" id="amain__test__runner_8cu_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdoc">Main function to run all tests.</div><div class="ttdef"><b>Definition</b> <a href="#l00044">main_test_runner.cu:44</a></div></div>
 <div class="ttc" id="atest__matrix__add__vector_8cu_html"><div class="ttname"><a href="test__matrix__add__vector_8cu.html">test_matrix_add_vector.cu</a></div><div class="ttdoc">Unit tests for the Matrix::add_vector method.</div></div>
 <div class="ttc" id="atest__matrix__argmax_8cu_html"><div class="ttname"><a href="test__matrix__argmax_8cu.html">test_matrix_argmax.cu</a></div><div class="ttdoc">Unit tests for the Matrix::argmax method.</div></div>
 <div class="ttc" id="atest__matrix__copy_8cu_html"><div class="ttname"><a href="test__matrix__copy_8cu.html">test_matrix_copy.cu</a></div><div class="ttdoc">Unit tests for the Matrix copy operations.</div></div>
@@ -160,6 +161,7 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="atest__matrix__subtract_8cu_html"><div class="ttname"><a href="test__matrix__subtract_8cu.html">test_matrix_subtract.cu</a></div><div class="ttdoc">Unit tests for the Matrix::subtract method.</div></div>
 <div class="ttc" id="atest__matrix__sum_8cu_html"><div class="ttname"><a href="test__matrix__sum_8cu.html">test_matrix_sum.cu</a></div><div class="ttdoc">Unit tests for the Matrix::sum method.</div></div>
 <div class="ttc" id="atest__matrix__transpose_8cu_html"><div class="ttname"><a href="test__matrix__transpose_8cu.html">test_matrix_transpose.cu</a></div><div class="ttdoc">Unit tests for the Matrix::transpose method.</div></div>
+<div class="ttc" id="atest__neural__network__backward_8cu_html"><div class="ttname"><a href="test__neural__network__backward_8cu.html">test_neural_network_backward.cu</a></div><div class="ttdoc">Unit tests for the NeuralNetwork::backward method.</div></div>
 <div class="ttc" id="atest__neural__network__forward_8cu_html"><div class="ttname"><a href="test__neural__network__forward_8cu.html">test_neural_network_forward.cu</a></div><div class="ttdoc">Unit tests for the NeuralNetwork::forward method.</div></div>
 <div class="ttc" id="atest__neural__network__initialize_8cu_html"><div class="ttname"><a href="test__neural__network__initialize_8cu.html">test_neural_network_initialize.cu</a></div><div class="ttdoc">Unit tests for the NeuralNetwork::initialize method.</div></div>
 <div class="ttc" id="atest__vector__copy_8cu_html"><div class="ttname"><a href="test__vector__copy_8cu.html">test_vector_copy.cu</a></div><div class="ttdoc">Unit tests for the Vector::copy method.</div></div>
