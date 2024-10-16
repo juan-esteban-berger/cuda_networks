@@ -37,6 +37,7 @@
 #include "neural_network/test_neural_network_backward.cu"
 #include "neural_network/test_neural_network_update_params.cu"
 #include "neural_network/test_neural_network_get_predictions.cu"
+#include "neural_network/test_neural_network_get_accuracy.cu"
 
 /**
  * @brief Main function to run all tests.

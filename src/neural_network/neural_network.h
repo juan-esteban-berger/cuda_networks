@@ -59,6 +59,13 @@ public:
     Vector get_predictions() const;
 
     /**
+     * @brief Calculate the accuracy of predictions compared to true labels
+     * @param Y True labels matrix
+     * @return Accuracy as a fraction of correct predictions
+     */
+    double get_accuracy(const Matrix& Y) const;
+
+    /**
      * @brief Get the pointer to the W1 matrix data
      * @return Pointer to the W1 matrix data on the device
      */
