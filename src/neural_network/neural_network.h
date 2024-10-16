@@ -53,6 +53,12 @@ public:
     void update_params(double learning_rate);
 
     /**
+     * @brief Get predictions from the output layer (A2)
+     * @return Vector containing the predicted class indices
+     */
+    Vector get_predictions() const;
+
+    /**
      * @brief Get the pointer to the W1 matrix data
      * @return Pointer to the W1 matrix data on the device
      */

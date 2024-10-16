@@ -16,13 +16,14 @@ var searchData=
   ['get_5fdb2_13',['get_db2',['../classNeuralNetwork.html#a117a134c24b651258c1029b4bc0510a9',1,'NeuralNetwork']]],
   ['get_5fdw1_14',['get_DW1',['../classNeuralNetwork.html#a0a223ef3da722000f2d0247c4c84be09',1,'NeuralNetwork']]],
   ['get_5fdw2_15',['get_DW2',['../classNeuralNetwork.html#a91beec8b3087c13cdbfde6d1e77a03e4',1,'NeuralNetwork']]],
-  ['get_5frows_16',['get_rows',['../classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c',1,'Matrix::get_rows()'],['../classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e',1,'Vector::get_rows()']]],
-  ['get_5fw1_5fdata_17',['get_W1_data',['../classNeuralNetwork.html#a6ea83abe1546198a25f0d330d135f03f',1,'NeuralNetwork']]],
-  ['get_5fw1_5fdimensions_18',['get_W1_dimensions',['../classNeuralNetwork.html#a3b0b7f3cc98261339946047b53f64027',1,'NeuralNetwork']]],
-  ['get_5fw2_5fdata_19',['get_W2_data',['../classNeuralNetwork.html#a04ce695f9fb965ba2db31f09a358424f',1,'NeuralNetwork']]],
-  ['get_5fw2_5fdimensions_20',['get_W2_dimensions',['../classNeuralNetwork.html#ae9093572186b4d2185d8176717359e15',1,'NeuralNetwork']]],
-  ['get_5fz1_5fdata_21',['get_Z1_data',['../classNeuralNetwork.html#af9461983a02626ae0bdf5e9ee6b42413',1,'NeuralNetwork']]],
-  ['get_5fz1_5fdimensions_22',['get_Z1_dimensions',['../classNeuralNetwork.html#acde53c23b351cdc5517363bcd49d55b8',1,'NeuralNetwork']]],
-  ['get_5fz2_5fdata_23',['get_Z2_data',['../classNeuralNetwork.html#a4b6411f38d1ad2bf275570fda34f0a6b',1,'NeuralNetwork']]],
-  ['get_5fz2_5fdimensions_24',['get_Z2_dimensions',['../classNeuralNetwork.html#a6c8fad310a15118e3b6e811d67fd7f0f',1,'NeuralNetwork']]]
+  ['get_5fpredictions_16',['get_predictions',['../classNeuralNetwork.html#a7726311999017e65b20bf73a20437d04',1,'NeuralNetwork']]],
+  ['get_5frows_17',['get_rows',['../classMatrix.html#a0fc53752b2f67ada126c2d53a157ee7c',1,'Matrix::get_rows()'],['../classVector.html#a2ae2d99f771475e2c0f19e84c9d7728e',1,'Vector::get_rows()']]],
+  ['get_5fw1_5fdata_18',['get_W1_data',['../classNeuralNetwork.html#a6ea83abe1546198a25f0d330d135f03f',1,'NeuralNetwork']]],
+  ['get_5fw1_5fdimensions_19',['get_W1_dimensions',['../classNeuralNetwork.html#a3b0b7f3cc98261339946047b53f64027',1,'NeuralNetwork']]],
+  ['get_5fw2_5fdata_20',['get_W2_data',['../classNeuralNetwork.html#a04ce695f9fb965ba2db31f09a358424f',1,'NeuralNetwork']]],
+  ['get_5fw2_5fdimensions_21',['get_W2_dimensions',['../classNeuralNetwork.html#ae9093572186b4d2185d8176717359e15',1,'NeuralNetwork']]],
+  ['get_5fz1_5fdata_22',['get_Z1_data',['../classNeuralNetwork.html#af9461983a02626ae0bdf5e9ee6b42413',1,'NeuralNetwork']]],
+  ['get_5fz1_5fdimensions_23',['get_Z1_dimensions',['../classNeuralNetwork.html#acde53c23b351cdc5517363bcd49d55b8',1,'NeuralNetwork']]],
+  ['get_5fz2_5fdata_24',['get_Z2_data',['../classNeuralNetwork.html#a4b6411f38d1ad2bf275570fda34f0a6b',1,'NeuralNetwork']]],
+  ['get_5fz2_5fdimensions_25',['get_Z2_dimensions',['../classNeuralNetwork.html#a6c8fad310a15118e3b6e811d67fd7f0f',1,'NeuralNetwork']]]
 ];
