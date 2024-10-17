@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['main_0',['main',['../main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main_test_runner.cu']]],
+  ['main_0',['main',['../main_8cu.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;main.cu'],['../main__test__runner_8cu.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;main_test_runner.cu']]],
   ['matrix_1',['Matrix',['../classMatrix.html#a7213414e405fd1c81c394d5053721fa7',1,'Matrix::Matrix(int rows, int cols)'],['../classMatrix.html#abcf708e864ed3d9db2c3b317c5e529ab',1,'Matrix::Matrix(const Matrix &amp;other)'],['../classMatrix.html#a75f3885769e293b3f3e236ef60a71c21',1,'Matrix::Matrix(Matrix &amp;&amp;other) noexcept']]],
   ['matrixmultiplyelementwisekernel_2',['matrixMultiplyElementwiseKernel',['../matrix__multiply__elementwise_8cu.html#a2f0b8e6479c492c1830e7c9d36a4f256',1,'matrix_multiply_elementwise.cu']]],
   ['matrixmultiplykernel_3',['matrixMultiplyKernel',['../matrix__multiply_8cu.html#a5da92ce358993ea6c1c7c71ce04809ef',1,'matrix_multiply.cu']]],

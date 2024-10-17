@@ -11,5 +11,6 @@ var searchData=
   ['softmaxkernel_8',['softmaxKernel',['../matrix__softmax_8cu.html#ae6a7344a4adbff47a1ac5353cc0626d1',1,'matrix_softmax.cu']]],
   ['subtract_9',['subtract',['../classMatrix.html#a8ea709e751a8d31920d0e2ae82af812d',1,'Matrix']]],
   ['subtract_5fscalar_10',['subtract_scalar',['../classVector.html#a11116f35adc8f9408fe21453525d6cb1',1,'Vector']]],
-  ['sum_11',['sum',['../classMatrix.html#ac5d20002e00aae4e9df0229e972dc151',1,'Matrix']]]
+  ['sum_11',['sum',['../classMatrix.html#ac5d20002e00aae4e9df0229e972dc151',1,'Matrix']]],
+  ['system_20requirements_12',['System Requirements',['../index.html#requirements_sec',1,'']]]
 ];

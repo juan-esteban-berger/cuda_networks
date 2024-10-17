@@ -40,5 +40,6 @@ var searchData=
   ['test_5fvector_5fprint_2ecu_37',['test_vector_print.cu',['../test__vector__print_8cu.html',1,'']]],
   ['test_5fvector_5frandomize_2ecu_38',['test_vector_randomize.cu',['../test__vector__randomize_8cu.html',1,'']]],
   ['test_5fvector_5fsubtract_5fscalar_2ecu_39',['test_vector_subtract_scalar.cu',['../test__vector__subtract__scalar_8cu.html',1,'']]],
-  ['transpose_40',['transpose',['../classMatrix.html#a759661b75b9681f3a89ff75e27933b3a',1,'Matrix']]]
+  ['tests_40',['Running Tests',['../index.html#tests_sec',1,'']]],
+  ['transpose_41',['transpose',['../classMatrix.html#a759661b75b9681f3a89ff75e27933b3a',1,'Matrix']]]
 ];

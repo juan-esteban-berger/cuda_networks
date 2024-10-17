@@ -89,24 +89,64 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="intro_sec"></a>
-Introduction</h1>
-<p>This project implements a neural network from scratch using C++ and CUDA for GPU acceleration.</p>
-<h1><a class="anchor" id="features_sec"></a>
-Features</h1>
-<ul>
-<li>GPU-accelerated matrix operations</li>
-<li>Deep neural network implementation</li>
+Overview</h1>
+<p>Deep neural network implementation from scratch in C++ with CUDA for GPU acceleration. This project focuses on creating a neural network to classify digits using the MNIST dataset.</p>
+<p>The main features include:</p><ul>
+<li><a class="el" href="classMatrix.html" title="Represents a matrix with GPU-accelerated operations.">Matrix</a> and vector operations optimized for GPU</li>
+<li>Feedforward neural network with customizable architecture</li>
+<li>Training using backpropagation and gradient descent</li>
 <li>MNIST digit classification</li>
 </ul>
+<h1><a class="anchor" id="requirements_sec"></a>
+System Requirements</h1>
+<p>This project was developed and tested on a system with the following specifications:</p><ul>
+<li>OS: Arch Linux x86_64</li>
+<li>CPU: Intel i7-9750H (12) @ 4.500GHz</li>
+<li>GPU: NVIDIA GeForce GTX 1650 Mobile / Max-Q</li>
+<li>Memory: 16GB</li>
+<li>NVIDIA Driver Version: 560.35.03</li>
+<li>CUDA Version: 12.6</li>
+<li>CUDA Compilation Tools: Release 12.6, V12.6.77</li>
+</ul>
+<p>Please ensure your system meets these requirements or adjust accordingly.</p>
+<h1><a class="anchor" id="installation_sec"></a>
+Installation</h1>
+<ol type="1">
+<li>Clone the repository: <div class="fragment"><div class="line">git clone https:<span class="comment">//github.com/juan-esteban-berger/cuda_networks.git</span></div>
+<div class="line">cd cuda_networks</div>
+</div><!-- fragment --></li>
+<li>Ensure you have the CUDA Toolkit (version 12.6 or compatible) installed on your system.</li>
+<li>Install the Google Test library if not already present: <div class="fragment"><div class="line">sudo pacman -S gtest</div>
+</div><!-- fragment --></li>
+<li>Build the project: <div class="fragment"><div class="line">make</div>
+</div><!-- fragment --></li>
+</ol>
 <h1><a class="anchor" id="usage_sec"></a>
 Usage</h1>
-<p>[Add information about how to use your project]</p>
-<h1><a class="anchor" id="build_sec"></a>
-Building</h1>
-<p>[Add information about how to build your project]</p>
+<p>To run the MNIST classifier: </p><div class="fragment"><div class="line">make run</div>
+</div><!-- fragment --><p> This will execute the main program, which trains the neural network on the MNIST dataset and displays the training progress and final accuracy.</p>
+<div class="image">
+<img src="demo.gif" alt=""/>
+<div class="caption">
+Demo of CUDA Neural Networks</div></div>
+<h1><a class="anchor" id="tests_sec"></a>
+Running Tests</h1>
+<p>To run the test suite: </p><div class="fragment"><div class="line">make test</div>
+</div><!-- fragment --><p> This will execute all the unit tests for the project.</p>
+<h1><a class="anchor" id="memcheck_sec"></a>
+Memory Check</h1>
+<p>To run the compute sanitizer memory check: </p><div class="fragment"><div class="line">make memcheck</div>
+</div><!-- fragment --><p> This will use NVIDIA's Compute Sanitizer to check for memory errors in the CUDA code.</p>
 <h1><a class="anchor" id="license_sec"></a>
 License</h1>
-<p>This project is licensed under [Your License]. </p>
+<p>This project is licensed under the MIT License - see the LICENSE file for details.</p>
+<h1><a class="anchor" id="modifications_sec"></a>
+Modifications</h1>
+<p>If you encounter any issues running the project, you may need to:</p><ol type="1">
+<li>Adjust the <code>NVCCFLAGS</code> in the Makefile to match your GPU architecture.</li>
+<li>Ensure the paths to the CUDA Toolkit and Google Test library are correct for your system.</li>
+<li>If you're using a different CUDA version, you might need to update some CUDA function calls or syntax. </li>
+</ol>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
