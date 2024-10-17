@@ -16,8 +16,10 @@ var searchData=
   ['matrixreadcsvtest_13',['MatrixReadCSVTest',['../classMatrixReadCSVTest.html',1,'']]],
   ['matrixreluderivativetest_14',['MatrixReluDerivativeTest',['../classMatrixReluDerivativeTest.html',1,'']]],
   ['matrixrelutest_15',['MatrixReluTest',['../classMatrixReluTest.html',1,'']]],
-  ['matrixsoftmaxtest_16',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]],
-  ['matrixsubtracttest_17',['MatrixSubtractTest',['../classMatrixSubtractTest.html',1,'']]],
-  ['matrixsumtest_18',['MatrixSumTest',['../classMatrixSumTest.html',1,'']]],
-  ['matrixtransposetest_19',['MatrixTransposeTest',['../classMatrixTransposeTest.html',1,'']]]
+  ['matrixsigmoidderivativetest_16',['MatrixSigmoidDerivativeTest',['../classMatrixSigmoidDerivativeTest.html',1,'']]],
+  ['matrixsigmoidtest_17',['MatrixSigmoidTest',['../classMatrixSigmoidTest.html',1,'']]],
+  ['matrixsoftmaxtest_18',['MatrixSoftmaxTest',['../classMatrixSoftmaxTest.html',1,'']]],
+  ['matrixsubtracttest_19',['MatrixSubtractTest',['../classMatrixSubtractTest.html',1,'']]],
+  ['matrixsumtest_20',['MatrixSumTest',['../classMatrixSumTest.html',1,'']]],
+  ['matrixtransposetest_21',['MatrixTransposeTest',['../classMatrixTransposeTest.html',1,'']]]
 ];

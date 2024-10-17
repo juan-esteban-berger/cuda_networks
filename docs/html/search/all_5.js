@@ -26,5 +26,6 @@ var searchData=
   ['get_5fz1_5fdata_23',['get_Z1_data',['../classNeuralNetwork.html#af9461983a02626ae0bdf5e9ee6b42413',1,'NeuralNetwork']]],
   ['get_5fz1_5fdimensions_24',['get_Z1_dimensions',['../classNeuralNetwork.html#acde53c23b351cdc5517363bcd49d55b8',1,'NeuralNetwork']]],
   ['get_5fz2_5fdata_25',['get_Z2_data',['../classNeuralNetwork.html#a4b6411f38d1ad2bf275570fda34f0a6b',1,'NeuralNetwork']]],
-  ['get_5fz2_5fdimensions_26',['get_Z2_dimensions',['../classNeuralNetwork.html#a6c8fad310a15118e3b6e811d67fd7f0f',1,'NeuralNetwork']]]
+  ['get_5fz2_5fdimensions_26',['get_Z2_dimensions',['../classNeuralNetwork.html#a6c8fad310a15118e3b6e811d67fd7f0f',1,'NeuralNetwork']]],
+  ['gradient_5fdescent_27',['gradient_descent',['../classNeuralNetwork.html#ad29d1d07f0c2f5402fcc6e97830bae55',1,'NeuralNetwork']]]
 ];

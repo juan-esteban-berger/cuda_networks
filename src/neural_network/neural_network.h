@@ -66,6 +66,15 @@ public:
     double get_accuracy(const Matrix& Y) const;
 
     /**
+     * @brief Perform gradient descent to train the neural network
+     * @param X Input data matrix
+     * @param Y True labels matrix
+     * @param learning_rate Learning rate for parameter updates
+     * @param epochs Number of training epochs
+     */
+    void gradient_descent(const Matrix& X, const Matrix& Y, double learning_rate, int epochs);
+
+    /**
      * @brief Get the pointer to the W1 matrix data
      * @return Pointer to the W1 matrix data on the device
      */

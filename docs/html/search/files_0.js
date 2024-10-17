@@ -23,8 +23,11 @@ var searchData=
   ['matrix_5fread_5fcsv_5flimited_2ecu_20',['matrix_read_csv_limited.cu',['../matrix__read__csv__limited_8cu.html',1,'']]],
   ['matrix_5frelu_2ecu_21',['matrix_relu.cu',['../matrix__relu_8cu.html',1,'']]],
   ['matrix_5frelu_5fderivative_2ecu_22',['matrix_relu_derivative.cu',['../matrix__relu__derivative_8cu.html',1,'']]],
-  ['matrix_5fsoftmax_2ecu_23',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]],
-  ['matrix_5fsubtract_2ecu_24',['matrix_subtract.cu',['../matrix__subtract_8cu.html',1,'']]],
-  ['matrix_5fsum_2ecu_25',['matrix_sum.cu',['../matrix__sum_8cu.html',1,'']]],
-  ['matrix_5ftranspose_2ecu_26',['matrix_transpose.cu',['../matrix__transpose_8cu.html',1,'']]]
+  ['matrix_5fselect_5fbatch_2ecu_23',['matrix_select_batch.cu',['../matrix__select__batch_8cu.html',1,'']]],
+  ['matrix_5fsigmoid_2ecu_24',['matrix_sigmoid.cu',['../matrix__sigmoid_8cu.html',1,'']]],
+  ['matrix_5fsigmoid_5fderivative_2ecu_25',['matrix_sigmoid_derivative.cu',['../matrix__sigmoid__derivative_8cu.html',1,'']]],
+  ['matrix_5fsoftmax_2ecu_26',['matrix_softmax.cu',['../matrix__softmax_8cu.html',1,'']]],
+  ['matrix_5fsubtract_2ecu_27',['matrix_subtract.cu',['../matrix__subtract_8cu.html',1,'']]],
+  ['matrix_5fsum_2ecu_28',['matrix_sum.cu',['../matrix__sum_8cu.html',1,'']]],
+  ['matrix_5ftranspose_2ecu_29',['matrix_transpose.cu',['../matrix__transpose_8cu.html',1,'']]]
 ];

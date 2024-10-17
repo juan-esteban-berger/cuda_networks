@@ -4,6 +4,7 @@
  */
 #include "neural_network.h"
 #include <cuda_runtime.h>
+#include <iostream>
 
 __global__ void calculate_accuracy_kernel(const double* predictions, const double* Y, int size, int* correct_count) {
     // Calculate global thread index
@@ -21,6 +22,13 @@ __global__ void calculate_accuracy_kernel(const double* predictions, const doubl
 double NeuralNetwork::get_accuracy(const Matrix& Y) const {
     // Get predictions
     Vector predictions = get_predictions();
+    // std::cout << "Predictions:" << std::endl;
+    // predictions.print(0);
+
+    // Convert Y matrix to argmax form for comparison
+    Vector Y_argmax = Y.argmax();
+    // std::cout << "True labels (argmax):" << std::endl;
+    // Y_argmax.print(0);
 
     // Allocate device memory for correct count
     int* d_correct_count;
@@ -33,7 +41,7 @@ double NeuralNetwork::get_accuracy(const Matrix& Y) const {
 
     // Launch kernel to calculate accuracy
     calculate_accuracy_kernel<<<blocksPerGrid, threadsPerBlock>>>(
-        predictions.get_data(), Y.get_data(), Y.get_cols(), d_correct_count
+        predictions.get_data(), Y_argmax.get_data(), Y.get_cols(), d_correct_count
     );
 
     // Copy correct count from device to host

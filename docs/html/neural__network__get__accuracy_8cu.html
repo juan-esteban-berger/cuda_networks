@@ -99,6 +99,7 @@ $(function(){ initResizable(false); });
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="neural__network_8h_source.html">neural_network.h</a>&quot;</code><br />
 <code>#include &lt;cuda_runtime.h&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
 </div>
 <p><a href="neural__network__get__accuracy_8cu_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -141,19 +142,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="neural__network__get__accuracy_8cu_source.html#l00008">8</a> of file <a class="el" href="neural__network__get__accuracy_8cu_source.html">neural_network_get_accuracy.cu</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">    8</span>                                                                                                                    {</div>
-<div class="line"><span class="lineno">    9</span>    <span class="comment">// Calculate global thread index</span></div>
-<div class="line"><span class="lineno">   10</span>    <span class="keywordtype">int</span> idx = blockIdx.x * blockDim.x + threadIdx.x;</div>
-<div class="line"><span class="lineno">   11</span> </div>
-<div class="line"><span class="lineno">   12</span>    <span class="comment">// Check if thread is within bounds</span></div>
-<div class="line"><span class="lineno">   13</span>    <span class="keywordflow">if</span> (idx &lt; size) {</div>
-<div class="line"><span class="lineno">   14</span>        <span class="comment">// Increment correct_count if prediction matches true label</span></div>
-<div class="line"><span class="lineno">   15</span>        <span class="keywordflow">if</span> (predictions[idx] == Y[idx]) {</div>
-<div class="line"><span class="lineno">   16</span>            atomicAdd(correct_count, 1);</div>
-<div class="line"><span class="lineno">   17</span>        }</div>
-<div class="line"><span class="lineno">   18</span>    }</div>
-<div class="line"><span class="lineno">   19</span>}</div>
+<p class="definition">Definition at line <a class="el" href="neural__network__get__accuracy_8cu_source.html#l00009">9</a> of file <a class="el" href="neural__network__get__accuracy_8cu_source.html">neural_network_get_accuracy.cu</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">    9</span>                                                                                                                    {</div>
+<div class="line"><span class="lineno">   10</span>    <span class="comment">// Calculate global thread index</span></div>
+<div class="line"><span class="lineno">   11</span>    <span class="keywordtype">int</span> idx = blockIdx.x * blockDim.x + threadIdx.x;</div>
+<div class="line"><span class="lineno">   12</span> </div>
+<div class="line"><span class="lineno">   13</span>    <span class="comment">// Check if thread is within bounds</span></div>
+<div class="line"><span class="lineno">   14</span>    <span class="keywordflow">if</span> (idx &lt; size) {</div>
+<div class="line"><span class="lineno">   15</span>        <span class="comment">// Increment correct_count if prediction matches true label</span></div>
+<div class="line"><span class="lineno">   16</span>        <span class="keywordflow">if</span> (predictions[idx] == Y[idx]) {</div>
+<div class="line"><span class="lineno">   17</span>            atomicAdd(correct_count, 1);</div>
+<div class="line"><span class="lineno">   18</span>        }</div>
+<div class="line"><span class="lineno">   19</span>    }</div>
+<div class="line"><span class="lineno">   20</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

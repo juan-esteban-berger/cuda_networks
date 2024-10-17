@@ -12,6 +12,8 @@
 #include "linear_algebra/test_matrix_preview_mnist_images.cu"
 #include "linear_algebra/test_matrix_relu.cu"
 #include "linear_algebra/test_matrix_relu_derivative.cu"
+#include "linear_algebra/test_matrix_sigmoid.cu"
+#include "linear_algebra/test_matrix_sigmoid_derivative.cu"
 #include "linear_algebra/test_matrix_softmax.cu"
 #include "linear_algebra/test_matrix_copy.cu"
 #include "linear_algebra/test_matrix_multiply.cu"
@@ -23,6 +25,7 @@
 #include "linear_algebra/test_matrix_multiply_scalar.cu"
 #include "linear_algebra/test_matrix_argmax.cu"
 #include "linear_algebra/test_matrix_transpose.cu"
+#include "linear_algebra/test_matrix_select_batch.cu"
 
 #include "linear_algebra/test_vector_initialize.cu"
 #include "linear_algebra/test_vector_print.cu"
@@ -38,6 +41,7 @@
 #include "neural_network/test_neural_network_update_params.cu"
 #include "neural_network/test_neural_network_get_predictions.cu"
 #include "neural_network/test_neural_network_get_accuracy.cu"
+#include "neural_network/test_neural_network_gradient_descent.cu"
 
 /**
  * @brief Main function to run all tests.

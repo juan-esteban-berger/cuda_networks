@@ -130,6 +130,18 @@ public:
     Matrix relu_derivative() const;
 
     /**
+     * @brief Applies the sigmoid activation function to the matrix.
+     * @return A new Matrix object with sigmoid applied.
+     */
+    Matrix sigmoid() const;
+    
+    /**
+     * @brief Applies the derivative of the sigmoid activation function to the matrix.
+     * @return A new Matrix object with sigmoid derivative applied.
+     */
+    Matrix sigmoid_derivative() const;
+
+    /**
      * @brief Applies the softmax function to the matrix column-wise.
      * @return A new Matrix object with softmax applied.
      */
@@ -202,6 +214,17 @@ public:
      * @return A new Matrix object containing the transposed data.
      */
     Matrix transpose() const;
+
+    /**
+     * @brief Selects a subset of the matrix based on specified row and column ranges.
+     * @param start_row Starting row index (inclusive).
+     * @param end_row Ending row index (exclusive).
+     * @param start_col Starting column index (inclusive).
+     * @param end_col Ending column index (exclusive).
+     * @return A new Matrix object containing the selected subset.
+     * @throws std::out_of_range if the specified ranges are invalid.
+     */
+    Matrix select_batch(int start_row, int end_row, int start_col, int end_col) const;
 
 private:
     int rows;    ///< Number of rows in the matrix

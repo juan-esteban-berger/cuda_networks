@@ -97,27 +97,36 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * @brief Implementation of the NeuralNetwork::update_params method.</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="neural__network_8h.html">neural_network.h</a>&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="foldopen" id="foldopen00007" data-start="{" data-end="}">
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classNeuralNetwork.html#a0ab378fa892158f8c8d271cd1e5d7332">    7</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classNeuralNetwork.html#a0ab378fa892158f8c8d271cd1e5d7332">NeuralNetwork::update_params</a>(<span class="keywordtype">double</span> learning_rate) {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="comment">// Update weights for the first layer (W1)</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    DW1.<a class="code hl_function" href="classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3">multiply_scalar</a>(learning_rate);</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    W1 = W1.<a class="code hl_function" href="classMatrix.html#a8ea709e751a8d31920d0e2ae82af812d">subtract</a>(DW1);</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="comment">// Update bias for the first layer (b1)</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    b1.<a class="code hl_function" href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">subtract_scalar</a>(learning_rate * db1);</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="foldopen" id="foldopen00008" data-start="{" data-end="}">
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="classNeuralNetwork.html#a0ab378fa892158f8c8d271cd1e5d7332">    8</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classNeuralNetwork.html#a0ab378fa892158f8c8d271cd1e5d7332">NeuralNetwork::update_params</a>(<span class="keywordtype">double</span> learning_rate) {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="comment">// Update weights for the first layer (W1)</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    DW1.<a class="code hl_function" href="classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3">multiply_scalar</a>(learning_rate);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    W1 = W1.<a class="code hl_function" href="classMatrix.html#a8ea709e751a8d31920d0e2ae82af812d">subtract</a>(DW1);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="comment">// std::cout &lt;&lt; &quot;Updated W1:&quot; &lt;&lt; std::endl;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="comment">// W1.print(4);</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="comment">// Update weights for the second layer (W2)</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    DW2.<a class="code hl_function" href="classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3">multiply_scalar</a>(learning_rate);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    W2 = W2.<a class="code hl_function" href="classMatrix.html#a8ea709e751a8d31920d0e2ae82af812d">subtract</a>(DW2);</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="comment">// Update bias for the second layer (b2)</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    b2.<a class="code hl_function" href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">subtract_scalar</a>(learning_rate * db2);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="comment">// Update bias for the first layer (b1)</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    b1.<a class="code hl_function" href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">subtract_scalar</a>(learning_rate * db1);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="comment">// std::cout &lt;&lt; &quot;Updated b1:&quot; &lt;&lt; std::endl;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="comment">// b1.print(4);</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="comment">// Update weights for the second layer (W2)</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    DW2.<a class="code hl_function" href="classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3">multiply_scalar</a>(learning_rate);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    W2 = W2.<a class="code hl_function" href="classMatrix.html#a8ea709e751a8d31920d0e2ae82af812d">subtract</a>(DW2);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="comment">// std::cout &lt;&lt; &quot;Updated W2:&quot; &lt;&lt; std::endl;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="comment">// W2.print(4);</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment">// Update bias for the second layer (b2)</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    b2.<a class="code hl_function" href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">subtract_scalar</a>(learning_rate * db2);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="comment">// std::cout &lt;&lt; &quot;Updated b2:&quot; &lt;&lt; std::endl;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="comment">// b2.print(4);</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
 </div>
 <div class="ttc" id="aclassMatrix_html_a8ea709e751a8d31920d0e2ae82af812d"><div class="ttname"><a href="classMatrix.html#a8ea709e751a8d31920d0e2ae82af812d">Matrix::subtract</a></div><div class="ttdeci">Matrix subtract(const Matrix &amp;other) const</div><div class="ttdoc">Subtracts another matrix from this matrix.</div><div class="ttdef"><b>Definition</b> <a href="matrix__subtract_8cu_source.html#l00040">matrix_subtract.cu:40</a></div></div>
 <div class="ttc" id="aclassMatrix_html_acd1928cb615e24f7ba5a9f8a931c86e3"><div class="ttname"><a href="classMatrix.html#acd1928cb615e24f7ba5a9f8a931c86e3">Matrix::multiply_scalar</a></div><div class="ttdeci">void multiply_scalar(double scalar)</div><div class="ttdoc">Multiplies all elements in the matrix by a scalar.</div><div class="ttdef"><b>Definition</b> <a href="matrix__multiply__scalar_8cu_source.html#l00041">matrix_multiply_scalar.cu:41</a></div></div>
-<div class="ttc" id="aclassNeuralNetwork_html_a0ab378fa892158f8c8d271cd1e5d7332"><div class="ttname"><a href="classNeuralNetwork.html#a0ab378fa892158f8c8d271cd1e5d7332">NeuralNetwork::update_params</a></div><div class="ttdeci">void update_params(double learning_rate)</div><div class="ttdoc">Updates the network parameters based on computed gradients.</div><div class="ttdef"><b>Definition</b> <a href="#l00007">neural_network_update_params.cu:7</a></div></div>
+<div class="ttc" id="aclassNeuralNetwork_html_a0ab378fa892158f8c8d271cd1e5d7332"><div class="ttname"><a href="classNeuralNetwork.html#a0ab378fa892158f8c8d271cd1e5d7332">NeuralNetwork::update_params</a></div><div class="ttdeci">void update_params(double learning_rate)</div><div class="ttdoc">Updates the network parameters based on computed gradients.</div><div class="ttdef"><b>Definition</b> <a href="#l00008">neural_network_update_params.cu:8</a></div></div>
 <div class="ttc" id="aclassVector_html_a11116f35adc8f9408fe21453525d6cb1"><div class="ttname"><a href="classVector.html#a11116f35adc8f9408fe21453525d6cb1">Vector::subtract_scalar</a></div><div class="ttdeci">void subtract_scalar(double scalar)</div><div class="ttdoc">Subtracts a scalar value from all elements in the vector.</div><div class="ttdef"><b>Definition</b> <a href="vector__subtract__scalar_8cu_source.html#l00041">vector_subtract_scalar.cu:41</a></div></div>
 <div class="ttc" id="aneural__network_8h_html"><div class="ttname"><a href="neural__network_8h.html">neural_network.h</a></div><div class="ttdoc">Defines the NeuralNetwork class for a simple feedforward neural network.</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -9,12 +9,13 @@ var searchData=
   ['neural_5fnetwork_5fforward_2ecu_6',['neural_network_forward.cu',['../neural__network__forward_8cu.html',1,'']]],
   ['neural_5fnetwork_5fget_5faccuracy_2ecu_7',['neural_network_get_accuracy.cu',['../neural__network__get__accuracy_8cu.html',1,'']]],
   ['neural_5fnetwork_5fget_5fpredictions_2ecu_8',['neural_network_get_predictions.cu',['../neural__network__get__predictions_8cu.html',1,'']]],
-  ['neural_5fnetwork_5finitialize_2ecu_9',['neural_network_initialize.cu',['../neural__network__initialize_8cu.html',1,'']]],
-  ['neural_5fnetwork_5fupdate_5fparams_2ecu_10',['neural_network_update_params.cu',['../neural__network__update__params_8cu.html',1,'']]],
-  ['neuralnetwork_11',['NeuralNetwork',['../classNeuralNetwork.html',1,'NeuralNetwork'],['../classNeuralNetwork.html#aefea0378981b07f633678d6dd5c83321',1,'NeuralNetwork::NeuralNetwork()']]],
-  ['neuralnetworkbackwardtest_12',['NeuralNetworkBackwardTest',['../classNeuralNetworkBackwardTest.html',1,'']]],
-  ['neuralnetworkforwardtest_13',['NeuralNetworkForwardTest',['../classNeuralNetworkForwardTest.html',1,'']]],
-  ['neuralnetworkgetaccuracytest_14',['NeuralNetworkGetAccuracyTest',['../classNeuralNetworkGetAccuracyTest.html',1,'']]],
-  ['neuralnetworkgetpredictionstest_15',['NeuralNetworkGetPredictionsTest',['../classNeuralNetworkGetPredictionsTest.html',1,'']]],
-  ['neuralnetworkupdateparamstest_16',['NeuralNetworkUpdateParamsTest',['../classNeuralNetworkUpdateParamsTest.html',1,'']]]
+  ['neural_5fnetwork_5fgradient_5fdescent_2ecu_9',['neural_network_gradient_descent.cu',['../neural__network__gradient__descent_8cu.html',1,'']]],
+  ['neural_5fnetwork_5finitialize_2ecu_10',['neural_network_initialize.cu',['../neural__network__initialize_8cu.html',1,'']]],
+  ['neural_5fnetwork_5fupdate_5fparams_2ecu_11',['neural_network_update_params.cu',['../neural__network__update__params_8cu.html',1,'']]],
+  ['neuralnetwork_12',['NeuralNetwork',['../classNeuralNetwork.html',1,'NeuralNetwork'],['../classNeuralNetwork.html#aefea0378981b07f633678d6dd5c83321',1,'NeuralNetwork::NeuralNetwork()']]],
+  ['neuralnetworkbackwardtest_13',['NeuralNetworkBackwardTest',['../classNeuralNetworkBackwardTest.html',1,'']]],
+  ['neuralnetworkforwardtest_14',['NeuralNetworkForwardTest',['../classNeuralNetworkForwardTest.html',1,'']]],
+  ['neuralnetworkgetaccuracytest_15',['NeuralNetworkGetAccuracyTest',['../classNeuralNetworkGetAccuracyTest.html',1,'']]],
+  ['neuralnetworkgetpredictionstest_16',['NeuralNetworkGetPredictionsTest',['../classNeuralNetworkGetPredictionsTest.html',1,'']]],
+  ['neuralnetworkupdateparamstest_17',['NeuralNetworkUpdateParamsTest',['../classNeuralNetworkUpdateParamsTest.html',1,'']]]
 ];
