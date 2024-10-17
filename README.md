@@ -65,7 +65,7 @@ make run
 
 This will execute the main program, which trains the neural network on the MNIST dataset and displays the training progress and final accuracy.
 
-[GIF placeholder: Add a GIF here demonstrating the execution and output of the program]
+![Demo GIF](https://github.com/juan-esteban-berger/cuda_networks/blob/main/gifs/demo.gif)
 
 ## Running Tests
 
