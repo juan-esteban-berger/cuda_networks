@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cuda-networks-docs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cuda-networks-docs
+  template:
+    metadata:
+      labels:
+        app: cuda-networks-docs
+    spec:
+      containers:
+      - name: cuda-networks-docs
+        image: localhost:5000/cuda-networks-docs:latest
+        ports:
+        - containerPort: 8000

@@ -21,6 +21,9 @@ This project implements a deep neural network using C++ and CUDA for GPU acceler
 - Training using backpropagation and gradient descent
 - MNIST digit classification
 
+## Documentation
+For detailed documentation of the project, please visit the [Documentation Page](http://juanberger.com/cuda-networks-docs/).
+
 ## System Requirements
 
 This project was developed and tested on a system with the following specifications:
