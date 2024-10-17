@@ -33,7 +33,3 @@
 
 # Data
 /data/
-
-# Context clipper files
-contextoutput.txt
-.contextclipperignore
