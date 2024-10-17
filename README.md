@@ -5,6 +5,7 @@ Deep neural network implementation from scratch in C++ with CUDA for GPU acceler
 ## Table of Contents
 
 - [Overview](#overview)
+- [Documentation](#documentation)
 - [System Requirements](#system-requirements)
 - [Installation](#installation)
 - [Usage](#usage)
