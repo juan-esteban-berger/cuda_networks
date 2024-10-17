@@ -23,7 +23,7 @@ This project implements a deep neural network using C++ and CUDA for GPU acceler
 - MNIST digit classification
 
 ## Documentation
-For detailed documentation of the project, please visit the [Documentation Page](http://juanberger.com/cuda-networks-docs/).
+For detailed documentation of the project, please visit the [juanberger.com/cuda-networks-docs](http://juanberger.com/cuda-networks-docs/).
 
 ## System Requirements
 
